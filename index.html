@@ -268,7 +268,6 @@ polylines=TRACES.map(createPolyline);
 // ── Barre de filtres rapides (synchronisée avec le panneau ⊞)
 // Groupes affichés dans la barre : correspondent aux couches du panneau
 const QUICK_FILTERS = [
-  {label:"Tous",     emoji:"🗺️", layers:null},
   {label:"Adresses", emoji:"🍽️", layers:["poi-main"]},
   {label:"Patrimoine",emoji:"🏛️",layers:["poi-heritage"]},
   {label:"Balades",  emoji:"🥾", layers:["balade-trech","balade-brouel","balade-penhap"]},
@@ -283,7 +282,7 @@ QUICK_FILTERS.forEach((f,i)=>{
   const btn=document.createElement("button");
   btn.className="fb"+(i===0?" active":"");
   btn.innerHTML=`${f.emoji} ${f.label}`;
-  btn.onclick=()=>applyQuickFilter(f,btn);
+  btn.onclick=()=>{applyQuickFilter(f,btn);document.getElementById("layers-panel").classList.remove("open");};
   fs.appendChild(btn);
 });
 
@@ -359,13 +358,11 @@ function toggleLayer(row) {
   // Synchroniser barre du bas -> "Tous"
   document.querySelectorAll(".fb").forEach(b=>b.classList.remove("active"));
   document.querySelector(".fb")?.classList.add("active");
+  document.getElementById("layers-panel").classList.remove("open");
   // Remettre "Tous" actif dans la barre du bas
   document.querySelectorAll(".fb").forEach((b,i)=>b.classList.toggle("active",i===0));
 }
 
-function updateLegend() {
-  const hasCircuit=layerState["balade-trech"]||layerState["balade-brouel"]||layerState["balade-penhap"]||layerState["velo-bleu"]||layerState["velo-jaune"]||layerState["velo-rouge"]||layerState["velo-vert"];
-  
 function toggleLayersPanel() {
   document.getElementById("layers-panel").classList.toggle("open");
 }
