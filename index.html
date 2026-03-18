@@ -265,26 +265,78 @@ function createPolyline(t) {
 polylines=TRACES.map(createPolyline);
 
 
-// Filtre rapide (barre bas) - uniquement POI principaux
-const mainCats=["Tous",...new Set(POIS.filter(p=>p.layer==="poi-main"||p.layer==="poi-heritage").map(p=>p.cat))];
+// ── Barre de filtres rapides (synchronisée avec le panneau ⊞)
+// Groupes affichés dans la barre : correspondent aux couches du panneau
+const QUICK_FILTERS = [
+  {label:"Tous",     emoji:"🗺️", layers:null},
+  {label:"Adresses", emoji:"🍽️", layers:["poi-main"]},
+  {label:"Patrimoine",emoji:"🏛️",layers:["poi-heritage"]},
+  {label:"Balades",  emoji:"🥾", layers:["balade-trech","balade-brouel","balade-penhap"]},
+  {label:"Vélos",    emoji:"🚲", layers:["velo-bleu","velo-jaune","velo-rouge","velo-vert"]},
+  {label:"Plages",   emoji:"🏖️", layers:["poi-main"], cat:"Plage"},
+  {label:"Santé",    emoji:"🏥", layers:["sante"]},
+  {label:"Pratique", emoji:"🚻", layers:["toilettes","pique-nique","vtc"]},
+];
+
 const fs=document.getElementById("filter-scroll");
-mainCats.forEach(cat=>{
-  const count=cat==="Tous"?POIS.length:POIS.filter(p=>p.cat===cat).length;
-  const emoji=cat==="Tous"?"🗺️":(POIS.find(p=>p.cat===cat)?.emoji||"");
+QUICK_FILTERS.forEach((f,i)=>{
   const btn=document.createElement("button");
-  btn.className="fb"+(cat==="Tous"?" active":"");
-  btn.innerHTML=`${emoji} ${cat} <span class="cnt">${count}</span>`;
-  btn.onclick=()=>setFilter(cat,btn);
+  btn.className="fb"+(i===0?" active":"");
+  btn.innerHTML=`${f.emoji} ${f.label}`;
+  btn.onclick=()=>applyQuickFilter(f,btn);
   fs.appendChild(btn);
 });
 
-function setFilter(cat,btn) {
-  activeFilter=cat;
+function applyQuickFilter(f, btn) {
   document.querySelectorAll(".fb").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  markers.forEach(m=>{
-    const show=(cat==="Tous"||m._poi.cat===cat)&&layerState[m._poi.layer||"poi-main"];
-    show?m.addTo(map):map.removeLayer(m);
+
+  if(!f.layers) {
+    // "Tous" : remettre toutes les couches à leur état layerState
+    markers.forEach(m=>{
+      const show=layerState[m._poi.layer||"poi-main"];
+      show?m.addTo(map):map.removeLayer(m);
+    });
+    polylines.forEach(p=>{
+      layerState[p._layerId]?p.addTo(map):map.removeLayer(p);
+    });
+    // Réinitialiser les toggles du panneau selon layerState
+    syncPanelToggles();
+    return;
+  }
+
+  // Masquer toutes les couches
+  markers.forEach(m=>map.removeLayer(m));
+  polylines.forEach(p=>map.removeLayer(p));
+
+  // Afficher uniquement les couches du filtre
+  f.layers.forEach(layerId=>{
+    markers.forEach(m=>{
+      if((m._poi.layer||"poi-main")===layerId){
+        if(!f.cat||m._poi.cat===f.cat) m.addTo(map);
+      }
+    });
+    polylines.forEach(p=>{
+      if(p._layerId===layerId) p.addTo(map);
+    });
+  });
+
+  // Synchroniser les toggles du panneau ⊞
+  document.querySelectorAll(".lr[data-layer]").forEach(row=>{
+    const id=row.dataset.layer;
+    const active=f.layers.includes(id);
+    const tog=row.querySelector(".tog");
+    tog.classList.toggle("on", active);
+    tog.classList.toggle("off", !active);
+  });
+}
+
+function syncPanelToggles() {
+  document.querySelectorAll(".lr[data-layer]").forEach(row=>{
+    const id=row.dataset.layer;
+    const tog=row.querySelector(".tog");
+    tog.classList.toggle("on", !!layerState[id]);
+    tog.classList.toggle("off", !layerState[id]);
   });
 }
 
@@ -295,19 +347,20 @@ function toggleLayer(row) {
   tog.classList.toggle("on",!isOn);
   tog.classList.toggle("off",isOn);
   layerState[layerId]=!isOn;
-  // MAJ marqueurs
   markers.forEach(m=>{
     const mLayer=m._poi.layer||"poi-main";
     if(mLayer!==layerId) return;
-    const show=layerState[mLayer]&&(activeFilter==="Tous"||m._poi.cat===activeFilter);
-    show?m.addTo(map):map.removeLayer(m);
+    layerState[mLayer]?m.addTo(map):map.removeLayer(m);
   });
-  // MAJ polylines
   polylines.forEach(p=>{
     if(p._layerId!==layerId) return;
     layerState[layerId]?p.addTo(map):map.removeLayer(p);
   });
-  
+  // Synchroniser barre du bas -> "Tous"
+  document.querySelectorAll(".fb").forEach(b=>b.classList.remove("active"));
+  document.querySelector(".fb")?.classList.add("active");
+  // Remettre "Tous" actif dans la barre du bas
+  document.querySelectorAll(".fb").forEach((b,i)=>b.classList.toggle("active",i===0));
 }
 
 function updateLegend() {
