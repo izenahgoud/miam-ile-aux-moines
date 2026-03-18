@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="M'IAM Île-aux-Moines">
+<meta name="theme-color" content="#1a3a2a">
+<title>M'IAM — Île-aux-Moines</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --sea: #2a6b8a;
+  --sea-light: #4a9bb5;
+  --forest: #1a3a2a;
+  --forest-mid: #2d5e3f;
+  --forest-light: #4a8c5f;
+  --sand: #e8d5a3;
+  --sand-light: #f5edd8;
+  --cream: #faf6ed;
+  --text: #1c2b22;
+  --text-muted: #5a7060;
+  --card-bg: rgba(250,246,237,0.97);
+  --radius: 16px;
+  --shadow: 0 8px 32px rgba(26,58,42,0.18);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "DM Sans", sans-serif; background: var(--forest); color: var(--text); height: 100dvh; overflow: hidden; }
+
+/* === MAP === */
+#map { position: absolute; inset: 0; z-index: 1; }
+.leaflet-tile-pane { filter: saturate(1.1) brightness(0.97); }
+
+/* === HEADER === */
+#header {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+  padding: 12px 16px 10px;
+  background: linear-gradient(to bottom, rgba(26,58,42,0.92) 70%, transparent);
+  pointer-events: none;
+}
+#header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 22px; font-weight: 600;
+  color: var(--sand-light);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+#header p { font-size: 11px; color: rgba(232,213,163,0.7); margin-top: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* === GPS BADGE === */
+#gps-badge {
+  position: absolute; top: 16px; right: 16px; z-index: 11;
+  background: var(--forest-mid); color: var(--sand-light);
+  border-radius: 20px; padding: 6px 12px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.05em;
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; border: 1px solid rgba(232,213,163,0.25);
+  transition: background 0.2s;
+}
+#gps-badge:hover { background: var(--forest-light); }
+#gps-dot { width: 8px; height: 8px; border-radius: 50%; background: #aaa; transition: background 0.3s; }
+#gps-dot.active { background: #4fc87a; box-shadow: 0 0 6px #4fc87a; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+/* === FILTER BAR === */
+#filter-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(26,58,42,0.95) 60%, transparent);
+  overflow: hidden;
+}
+#filter-scroll {
+  display: flex; gap: 8px; padding: 4px 14px;
+  overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+#filter-scroll::-webkit-scrollbar { display: none; }
+.filter-btn {
+  flex-shrink: 0; white-space: nowrap;
+  padding: 7px 14px; border-radius: 20px;
+  background: rgba(255,255,255,0.1); color: var(--sand-light);
+  border: 1px solid rgba(232,213,163,0.2);
+  font-family: "DM Sans", sans-serif; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 5px;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--sand); color: var(--forest);
+  border-color: var(--sand);
+}
+.filter-btn .count { font-size: 10px; opacity: 0.7; }
+
+/* === LOCATE BTN === */
+#locate-btn {
+  position: absolute; bottom: 80px; right: 14px; z-index: 10;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--cream); color: var(--forest);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3); font-size: 18px;
+  transition: transform 0.15s;
+}
+#locate-btn:hover { transform: scale(1.08); }
+
+/* === ALERT POPUP === */
+#alert-popup {
+  position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
+  z-index: 20; background: var(--sea); color: white;
+  border-radius: 24px; padding: 10px 20px;
+  font-size: 13px; font-weight: 500; text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: slideDown 0.3s ease;
+  max-width: 85vw;
+  display: none;
+}
+@keyframes slideDown { from{opacity:0;top:50px} to{opacity:1;top:70px} }
+
+/* === POI PANEL === */
+#poi-panel {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 30;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+  max-height: 88dvh;
+  background: var(--cream);
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+}
+#poi-panel.open { transform: translateY(0); }
+#panel-handle { width: 36px; height: 4px; background: rgba(26,58,42,0.2); border-radius: 2px; margin: 12px auto 0; }
+#panel-inner { overflow-y: auto; max-height: calc(88dvh - 20px); padding-bottom: env(safe-area-inset-bottom); }
+#panel-close {
+  position: absolute; top: 10px; right: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(26,58,42,0.1); border: none; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  color: var(--forest); z-index: 2;
+}
+#poi-image-wrap {
+  display: none;
+  background: var(--forest);
+  width: 100%;
+}
+#poi-image-wrap.visible { display: block; }
+/* Contrer .leaflet-container img { max-width: none !important } */
+#poi-panel #poi-image {
+  display: block !important;
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  max-height: 320px !important;
+  margin: 0 auto !important;
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+}
+#poi-image-placeholder {
+  width: 100%; height: 100px;
+  background: linear-gradient(135deg, var(--forest-mid), var(--sea));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+}
+#poi-image-placeholder.hidden { display: none; }
+.poi-content { padding: 16px 18px 20px; }
+.poi-cat-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--forest); color: var(--sand-light);
+  border-radius: 12px; padding: 4px 10px; font-size: 11px; font-weight: 500;
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+}
+#poi-name {
+  font-family: "Playfair Display", serif;
+  font-size: 24px; font-weight: 600; color: var(--forest);
+  line-height: 1.2; margin-bottom: 10px;
+}
+#poi-desc {
+  font-size: 14px; line-height: 1.65; color: var(--text-muted);
+  white-space: pre-line;
+  margin-bottom: 14px;
+}
+.poi-links { display: flex; flex-direction: column; gap: 8px; }
+.poi-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 12px;
+  background: var(--forest); color: var(--sand-light);
+  text-decoration: none; font-size: 13px; font-weight: 500;
+  transition: background 0.2s;
+}
+.poi-link:hover { background: var(--forest-light); }
+.poi-dist-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(74,140,95,0.15); color: var(--forest-mid);
+  border-radius: 10px; padding: 4px 10px; font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* === Custom markers === */
+.poi-marker {
+  width: 24px; height: 24px; border-radius: 50% 50% 50% 3px;
+  transform: rotate(-45deg);
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform 0.18s;
+  position: relative;
+}
+.poi-marker:hover { transform: rotate(-45deg) scale(1.25) !important; }
+.poi-marker span { transform: rotate(45deg); font-size: 10px; line-height: 1; }
+.poi-marker.active-marker { transform: rotate(-45deg) scale(1.3) !important; box-shadow: 0 0 0 2.5px var(--sand), 0 4px 12px rgba(0,0,0,0.5); }
+
+/* === Hover tooltip === */
+.poi-tooltip {
+  position: fixed;
+  background: var(--forest); color: var(--sand-light);
+  border-radius: 10px; padding: 0;
+  font-family: "DM Sans", sans-serif;
+  pointer-events: none; z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  opacity: 0; transition: opacity 0.15s;
+  overflow: hidden;
+  width: 160px;
+  transform: translateX(-50%);
+}
+.poi-tooltip.visible { opacity: 1; }
+.poi-tooltip-img {
+  width: 100%; height: 90px; object-fit: cover;
+  display: block;
+}
+.poi-tooltip-img.hidden { display: none; }
+.poi-tooltip-placeholder {
+  width: 100%; height: 60px;
+  background: linear-gradient(135deg, var(--forest-mid), var(--sea));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.poi-tooltip-placeholder.hidden { display: none; }
+.poi-tooltip-label {
+  padding: 6px 10px 7px;
+  font-size: 12px; font-weight: 500;
+  color: var(--sand-light);
+  line-height: 1.3;
+  white-space: normal;
+  max-width: 200px;
+}
+
+/* === User location === */
+.user-dot { width: 16px; height: 16px; border-radius: 50%; background: #4fc87a; border: 3px solid white; box-shadow: 0 0 8px rgba(79,200,122,0.6); }
+
+/* === Leaflet overrides === */
+.leaflet-control-zoom { display: none; }
+.leaflet-popup { display: none; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="header">
+  <h1>M'IAM</h1>
+  <p>Île-aux-Moines · Morbihan</p>
+</div>
+
+<div id="gps-badge" onclick="toggleGPS()">
+  <div id="gps-dot"></div>
+  <span id="gps-label">GPS off</span>
+</div>
+
+<button id="locate-btn" onclick="centerOnUser()" title="Me localiser">📍</button>
+
+<div id="alert-popup"></div>
+
+<div id="filter-bar">
+  <div id="filter-scroll"></div>
+</div>
+
+<div id="poi-panel">
+  <div id="panel-handle" ondblclick="window._debugImage && window._debugImage()"></div>
+  <button id="panel-close" onclick="closePanel()">✕</button>
+  <div id="panel-inner">
+    <div id="poi-image-wrap">
+      <img id="poi-image" src="" alt="" onerror="document.getElementById('poi-image-wrap').classList.remove('visible'); document.getElementById('poi-image-placeholder').classList.remove('hidden')">
+    </div>
+    <div id="poi-image-placeholder"><span id="poi-placeholder-emoji">📍</span></div>
+    <div class="poi-content">
+      <div class="poi-cat-badge" id="poi-cat"></div>
+      <div id="poi-name"></div>
+      <div class="poi-dist-badge" id="poi-dist" style="display:none">📍 <span id="poi-dist-val"></span></div>
+      <div id="poi-desc"></div>
+      <div class="poi-links" id="poi-links"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const POIS = [{"name": "Camping municipal", "lat": 47.593718, "lon": -2.844786, "cat": "Camping", "color": "DarkGreen", "image": "", "description": "Camping municipal\ntél : 02 97 26 30 68\nhttp://www.mairie-ileauxmoines.fr/accueil/decouverte/camping_municipal", "links": [], "emoji": "⛺"}, {"name": "Chez Charlemagne", "lat": 47.598573, "lon": -2.849485, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Chez_Charlemagne.jpg/1920px-Chez_Charlemagne.jpg", "description": "Restaurant - Bar\nGrillades, Poissons\nTél : 02 97 26 32 43", "links": [["https://www.chez-charlemagne.fr/", "Voir le site"]], "emoji": "🍽️"}, {"name": "Chez Jeannette", "lat": 47.601447, "lon": -2.853945, "cat": "Bar", "color": "Blue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/7f8c9eb4af00bfeca5dfc3d57d0ad13d.jpg", "description": "Bar - Snacks - Sandwiches - Glaces\nrue Benoni Praud\ntél : 02 97 26 34 81\ntél : 06 78 02 97 16", "links": [], "emoji": "🍺"}, {"name": "DAB Distributeut Automatique de Billets", "lat": 47.597028, "lon": -2.845416, "cat": "Service", "color": "DeepSkyBlue", "image": "", "description": "la Banque Postale\nrue de la Mairie\ntél : 02 97 26 34 39", "links": [], "emoji": "🏧"}, {"name": "Ile-aux-Moines Locations", "lat": 47.601381, "lon": -2.853752, "cat": "Location vélo", "color": "SaddleBrown", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/950a3bfadb92d895f72e80fcc4cec722.png", "description": "Location de cycles\ntél : 06 50 46 90 64\nemail : contact@velocouest.fr", "links": [["http://www.velocouest.fr/ile-aux-moines-locations", "Voir le site"]], "emoji": "🚲"}, {"name": "Kerali", "lat": 47.6001, "lon": -2.851124, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kerali_0.jpg/1920px-Kerali_0.jpg", "description": "Brasserie - Crêperie\nrue Benoni Praud\ntél :", "links": [], "emoji": "🍽️"}, {"name": "KERICO Pizzeria", "lat": 47.596921, "lon": -2.84596, "cat": "Restauration rapide", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Kerico.jpg/1920px-Kerico.jpg", "description": "place du Marché\ntél : 09 80 66 60 90\n\n\n\n*chezricoiam@gmail.com*", "links": [["https://www.facebook.com/kerico_pizzeria-111032647332144/", "Voir le site"], ["https://instagram.com/kerico_pizzeria?igshid=1xstsu1zlxdep", "Voir le site"]], "emoji": "🥙"}, {"name": "KerIsa", "lat": 47.59623, "lon": -2.844858, "cat": "Hébergement", "color": "Blue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/10c31ff396dcb344650296e67784a8ae.jpg", "description": "Maison d'hôtes\nrue du presbytère\n56780 ILE AUX MOINES\ntél : 02 97 26 32 52\ntél: 06 30 17 85 45\ntél: 06 34 29 40 46\ne-mail: isabelle@kerisa.com\nhttp://www.kerisa.fr/", "links": [], "emoji": "🛏️"}, {"name": "KOS", "lat": 47.597182, "lon": -2.847723, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/KOS_Bar_Restaurant.jpg/1280px-KOS_Bar_Restaurant.jpg?_=20260306092802", "description": "Bar - Restaurant italien\n115 rue Neuve\ntél: 02 97 41 27 86\nkos56@orange.fr", "links": [["https://www.facebook.com/people/Kos-Restaurant/61572585243348/?rdid=XXLPiSSNKLn97r4t&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BXReD7jGD%2F", "Voir le site"]], "emoji": "🍽️"}, {"name": "L'Anca", "lat": 47.596086, "lon": -2.847079, "cat": "Restauration rapide", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lencas.jpg/1920px-Lencas.jpg?", "description": "Sandwiches, Moules Frites", "links": [], "emoji": "🥙"}, {"name": "l'Asphodèle", "lat": 47.596098, "lon": -2.844796, "cat": "Restauration rapide", "color": "Blue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/d6df143f6b8918ba4963b4f584287744.jpg", "description": "Restaurant, Salon de thé\nrue du Presbytere\ntél: 02 97 26 32 52\ntél: 06 34 29 40 46\ninfo@kerisa.com\nhttp://www.asphodele.com/", "links": [], "emoji": "🥙"}, {"name": "L'ATAO", "lat": 47.595988, "lon": -2.847031, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Atao_cr%C3%AAperie.jpg/1920px-Atao_cr%C3%AAperie.jpg", "description": "Brasserie - Crêperie\nplace Ru Vraz\ntél 02 97 26 33 27", "links": [], "emoji": "🍽️"}, {"name": "l'Escale", "lat": 47.596608, "lon": -2.845902, "cat": "Commerce", "color": "DarkBlue", "image": "", "description": "Livres, Boissons, Glaces, Cartes postales, Souvenirs.\ntél : 02 97 26 38 40", "links": [["http://www.ileauxmoinescale.fr", "Voir le site"]], "emoji": "🛒"}, {"name": "l'Ile à Vélo", "lat": 47.599808, "lon": -2.850882, "cat": "Location vélo", "color": "SaddleBrown", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lileavelo.jpg/960px-Lileavelo.jpg", "description": "Location de cycles\n291 Rue Bénoni PRAUD\nTél : 02 97 26 38 70\n\nemail : lile-a-velo.iam@orange.fr", "links": [["http://www.locationvelosileauxmoines.com", "Voir le site"]], "emoji": "🚲"}, {"name": "la Boutique d'Izah", "lat": 47.596722, "lon": -2.846179, "cat": "Commerce", "color": "DarkBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Boutiquedizah.jpg/1280px-Boutiquedizah.jpg", "description": "46 Place du Marché\nCadeaux-Souvenirs, Vêtements et Produits de Bretagne\ntél : 02.97.26.39.04", "links": [], "emoji": "🛒"}, {"name": "la Cabane du Trec'h", "lat": 47.605649, "lon": -2.837123, "cat": "Patrimoine & curiosités", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Cabanedutrech.jpg/1920px-Cabanedutrech.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "La Cabine", "lat": 47.596569, "lon": -2.846164, "cat": "Restauration rapide", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lacabine00.jpg/1280px-Lacabine00.jpg", "description": "", "links": [], "emoji": "🥙"}, {"name": "La Chaumière", "lat": 47.596015, "lon": -2.847221, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Lachaumiere.jpg/500px-Lachaumiere.jpg?", "description": "Crêperie, Saladerie et Brasserie\nplace Ru Vraz, le bourg\ntél 02 97 26 30 77", "links": [], "emoji": "🍽️"}, {"name": "La Girouette", "lat": 47.601105, "lon": -2.853235, "cat": "Restauration rapide", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Lagirouette.jpg/1920px-Lagirouette.jpg", "description": "Bar à vins et cave à manger\nRue Benoni Praud, 56780 Île-aux-Moines\nTél : 09 70 02 67 99", "links": [], "emoji": "🥙"}, {"name": "la Petie Brise", "lat": 47.599146, "lon": -2.850416, "cat": "Commerce", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Lapetitebrise.jpg/1920px-Lapetitebrise.jpg?_=20260301181719", "description": "Souvenirs - Produits du bord de mer\nrue Bénoni Praud\ntél : 02 97 26 32 84", "links": [], "emoji": "🛒"}, {"name": "la Petite Galerie", "lat": 47.600034, "lon": -2.851005, "cat": "Art & Artisanat", "color": "SaddleBrown", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Lapetitegalerie.jpg/960px-Lapetitegalerie.jpg", "description": "Galerie d'Art", "links": [], "emoji": "🎨"}, {"name": "La Poterie de l'Ile-aux-Moines", "lat": 47.597542, "lon": -2.843367, "cat": "Art & Artisanat", "color": "MediumSpringGreen", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/766dede70ce40d8fe120a3b526a30012.jpg", "description": "rue de l'Eglise\nhttp://ile.aux.moines.free.fr/indmenu.html", "links": [], "emoji": "🎨"}, {"name": "le Cap Horn", "lat": 47.601105, "lon": -2.853047, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Lecaphorn00.jpg/1280px-Lecaphorn00.jpg", "description": "Restaurant - Brasserie - Bar\nrue Bénoni Praud\ntél : 02 97 26 31 12\n\nContact email : lecaphorniam@gmail.com", "links": [["https://www.facebook.com/lecaphorniam/?locale=fr_FR", "Voir le site"]], "emoji": "🍽️"}, {"name": "Le Comptoir des Iles", "lat": 47.600962, "lon": -2.852755, "cat": "Restauration rapide", "color": "Blue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/aefa42bb09b0831e57d4cc7963f5c218.jpg", "description": "Sandwiches, Bar, brasserie\nrue Bénoni Praud\ntél : 02 97 26 39 62", "links": [], "emoji": "🥙"}, {"name": "Le Crialéis", "lat": 47.596798, "lon": -2.845497, "cat": "Bar", "color": "Blue", "image": "", "description": "Bar, Tabac", "links": [], "emoji": "🍺"}, {"name": "Le Phare", "lat": 47.59648, "lon": -2.846623, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Le_Phare_2025.jpg/1280px-Le_Phare_2025.jpg", "description": "Restaurant Crêperie\ntél : 07 85 23 84 87", "links": [], "emoji": "🍽️"}, {"name": "Le Pod'Bronnek", "lat": 47.59582, "lon": -2.847235, "cat": "Bar", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Podbronnek.jpg/1920px-Podbronnek.jpg", "description": "Bar, Sandwiches\ntél : 02 97 26 32 10", "links": [], "emoji": "🍺"}, {"name": "Le Relais des Mousquetaires", "lat": 47.593488, "lon": -2.850351, "cat": "Commerce", "color": "Yellow", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/9990d672cf986686b29144063a8d76e1.jpg", "description": "# Supérette ouverte toute l'année\n# Tél : 02 97 26 39 42\n**AVRIL-MAI-JUIN-SEPT 7j/7**\n9h-12h30 - 15h30-18h45\n*dimanche et jours fériés : 9h00-12h30*\n**JUILLET-AOÛT**\n9h00-12h45 - 15h30-19h00\n*dimanche et jours fériés : 9h00-12h30*\n**OCTOBRE à MARS - de lundi au samedi**\n9h00-12h30 - 15h30-18h30\n*fermé le dimanche (sauf pendant les vacances scolaires et jours fériés : ouvert de 9h00 à 12h30)*\n*FERMÉ les 25 décembre et 1er janvier*", "links": [], "emoji": "🛒"}, {"name": "le San Francisco", "lat": 47.600499, "lon": -2.852004, "cat": "Hébergement", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Hotel_San_francisco.jpg/1280px-Hotel_San_francisco.jpg", "description": "Le Port,\nrue Bénoni Praud\ntél : 02 97 26 31 52\nContact : Camille et Mathilde contact@lesanfrancisco.com\nemail : le-sanfrancisco@orange.fr", "links": [["https://lesanfrancisco.com/fr/restaurant-ile-aux-moines", "Voir le site"]], "emoji": "🛏️"}, {"name": "Les Douceurs du Golfe", "lat": 47.596304, "lon": -2.846905, "cat": "Commerce", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Boulangerie_et_patisseie.jpg/1920px-Boulangerie_et_patisseie.jpg", "description": "rue du Commerce\ntél : 02.97.60.86.60.\nBoulangerie, Patisseries,Spécialités de Bretagne,\nCafé, Sandwiches", "links": [], "emoji": "🛒"}, {"name": "Les Embruns", "lat": 47.596453, "lon": -2.846881, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Lesembruns.jpg/1920px-Lesembruns.jpg?_=20260301181711", "description": "cuisine traditionnelle, poissons et fruits de mer\nrue du Commerce, le bourg\ntél : 02 97 26 30 86\nfax : 02 97 26 31 94\nhttp://www.restaurant-ile-morbihan.com/", "links": [], "emoji": "🍽️"}, {"name": "Lili voyages", "lat": 47.600731, "lon": -2.8519, "cat": "Transport", "color": "DarkBlue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/fde2670ce0be80f4c5f2bf388c56f2fa.jpg", "description": "Visitez l'île aux Moines, la perle du Golfe du Morbihan en mini bus avec Lili Voyages.\nPartez à la découverte de sa flore unique, ses oiseaux, son histoire, ses maisons de capitaine, ses chaumières, les chemins secrets, son climat.\n**Départ du port à 11h15 / 14h / 15h15 et 16h30. Durée : 1h.\nTarif : 14€ et 11€ pour les 5 à 10 ans.**\n--\n**Réservations et renseignements : 06 88 17 24 23.**\nemail : lilivoyage@icloud.com", "links": [], "emoji": "⛴️"}, {"name": "Location du Port", "lat": 47.601031, "lon": -2.852846, "cat": "Location vélo", "color": "SaddleBrown", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/V%C3%A9locouestport.jpg/1920px-V%C3%A9locouestport.jpg", "description": "", "links": [], "emoji": "🚲"}, {"name": "MAGASIN POUR LE BATEAU CLASSIQUE & TRADITIONNEL", "lat": 47.572407, "lon": -2.855834, "cat": "Commerce", "color": "Yellow", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/5a4c7779de753176a5b58b79cf2e6333.jpg", "description": "Accastillage, Gréement, Peinture, Visserie, etc...\ntél : 02 97 26 33 10\nemail : guip56@wanadoo.fr", "links": [["http://www.chantierduguip.com", "Voir le site"]], "emoji": "🛒"}, {"name": "Mary Boat Trip", "lat": 47.596623, "lon": -2.846264, "cat": "Restaurant", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Maryboattrip.jpg/1280px-Maryboattrip.jpg?", "description": "Restaurant - Bar\nrue du Commerce\ntél : 02.97.26.32.50", "links": [], "emoji": "🍽️"}, {"name": "Mary Boat Trip", "lat": 47.596646, "lon": -2.846194, "cat": "Hébergement", "color": "Blue", "image": "https://monsite.woopic.com/383/p/IAM-CARTES/img/59e7075305fc874755353822c698a619.jpg", "description": "rue du Commerce\ntél: 02 97 26 32 50\n\ncontact@maryboattrip.com", "links": [["https://www.maryboattrip.com/", "Voir le site"]], "emoji": "🛏️"}, {"name": "P'tit Louis", "lat": 47.598422, "lon": -2.849064, "cat": "Location vélo", "color": "SaddleBrown", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/P%27titlouis.jpg/960px-P%27titlouis.jpg", "description": "Location de cycles\nrue Bénoni Praud\n56780 Ile aux Moines", "links": [], "emoji": "🚲"}, {"name": "Petit Casino", "lat": 47.596793, "lon": -2.846095, "cat": "Commerce", "color": "Yellow", "image": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Petitcasino.jpg?_=20260302093705", "description": "Supérette\nLu, Ma. Me, Je, Ve, Sa - 09:00-19:00\nPlace de La Mairie", "links": [], "emoji": "🛒"}, {"name": "Pierre MARTIN Ostréiculteur", "lat": 47.601117, "lon": -2.839298, "cat": "Restaurant", "color": "Blue", "image": "https://huitres-ileauxmoines.fr/", "description": "Dégustation d'huitres\nBeg Moussir\ntél : 02 97 26 31 56\nPortable : 06 88 58 32 91", "links": [], "emoji": "🍽️"}, {"name": "Port/Harbour", "lat": 47.601707, "lon": -2.854128, "cat": "Transport", "color": "SpringGreen", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/5dd4efaf1b3da9d0262f7ad0b9116338.jpg", "description": "**Embarquement pour le Golfe du Morbihan :**", "links": [["http://www.compagnie-du-golfe.fr", "Voir le site"], ["http://www.navix.fr/bateau/tour-du-golfe-avec-escales", "Voir le site"]], "emoji": "⛴️"}, {"name": "Sophie de Kerno", "lat": 47.596751, "lon": -2.845759, "cat": "Restauration rapide", "color": "Blue", "image": "", "description": "Food Truck - Traiteur\nCuisine familiale - Cuisine du monde (sur place ou livrée à domicile)\ndu mardi au dimanche de 9h00 à 13h00\ntél : 06 80 85 44 56", "links": [["http://sophie-de-kerno.fr", "Voir le site"], ["https://www.facebook.com/sophiedekerno", "Voir le site"]], "emoji": "🥙"}, {"name": "l'Église St Michel", "lat": 47.598531, "lon": -2.842452, "cat": "Patrimoine religieux", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Eglisestmichel.jpg?_=20260306092801", "description": "", "links": [["http://www.doyenne-arradon.fr/autour-de-nos-paroisses/lieu/33/eglise-saint-michel-de-l-ile-aux-moines", "Voir le site"], ["http://www.lavieb-aile.com/article-les-eglises-des-iles-du-ponant-vii-l-ile-aux-moines-109038057.html", "Voir le site"]], "emoji": "⛪"}, {"name": "la Cale de Brouël", "lat": 47.590816, "lon": -2.824194, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/3503377f4c9255b9567d017c1089c194.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Cale de Carlez", "lat": 47.565892, "lon": -2.854546, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/7c9dddce03368ace3f14ab3a35df48c6.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Chapelle du Guerric", "lat": 47.592443, "lon": -2.838995, "cat": "Patrimoine religieux", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/EgliseIAM.jpg/960px-EgliseIAM.jpg", "description": "", "links": [["http://lafrancedesclochers.clicforum.com/t404-Ile-aux-Moines-56780.htm", "Voir le site"]], "emoji": "⛪"}, {"name": "la Chapelle Notre Dame d'Espérance", "lat": 47.597775, "lon": -2.844906, "cat": "Patrimoine religieux", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/ChapelleNotreDamedesperance.jpg/330px-ChapelleNotreDamedesperance.jpg", "description": "wikimedia_commons=File:\nChapelle Notre Dame d'Espérance de l'Ile-aux-Moines.jpg", "links": [["http://www.doyenne-arradon.fr/autour-de-nos-paroisses/lieu/48/notre-dame-d-esperance", "Voir le site"]], "emoji": "⛪"}, {"name": "la Croix de Brouël", "lat": 47.59053, "lon": -2.82466, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/CroixBrouelIAM.jpg/960px-CroixBrouelIAM.jpg?", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Croix de Kerno", "lat": 47.585717, "lon": -2.852835, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/4780255f9fd9f8cbf6bd818a17c80dff.jpg", "description": "", "links": [["https://croixbretagne.fr/Ccb/Content/detail.jsp?id=3133", "Voir le site"]], "emoji": "🏛️"}, {"name": "la Croix de Locmiquel", "lat": 47.598375, "lon": -2.842653, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Croix_de_l%27%C3%A9glise_St_Michel.jpg/960px-Croix_de_l%27%C3%A9glise_St_Michel.jpg", "description": "", "links": [["https://croixbretagne.fr/Ccb/Content/detail.jsp?id=3135", "Voir le site"]], "emoji": "🏛️"}, {"name": "la Croix de Penhap", "lat": 47.569501, "lon": -2.855244, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/df383cc1023f48aa3f51ce6be271d785.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Croix du Bois d'Amour", "lat": 47.60066, "lon": -2.85435, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Croixduboisdamour.jpg/960px-Croixduboisdamour.jpg", "description": "Cette croix porte l'inscription 1846", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine de Kerno", "lat": 47.582185, "lon": -2.852572, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/01f855df889386c104058490f0651f02.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine de Kerquecu", "lat": 47.5883, "lon": -2.84969, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/a265f11a50b981ce69fa969443699435.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine du Guerric", "lat": 47.592761, "lon": -2.840186, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/f/300x/p/IAM-CARTES/img/4a195bd0563f26a6b4d5438773123604.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine du Guip", "lat": 47.572357, "lon": -2.855877, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/a71ae98413d28fc5cd134bae51314e0d.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine du Lério", "lat": 47.59858, "lon": -2.84963, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/0b95acf5f8f1f39025f77b8a8e8c9d8c.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine du Prado", "lat": 47.594979, "lon": -2.844225, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/2cfc50fb7867f41c0a42c36743186f83.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Fontaine du Salzen", "lat": 47.579468, "lon": -2.851998, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/SalsenIAM.jpg/1920px-SalsenIAM.jpg?", "description": "", "links": [], "emoji": "🏛️"}, {"name": "la Grande Plage", "lat": 47.598509, "lon": -2.851419, "cat": "Plage", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/La_Grande_plage.jpg/1920px-La_Grande_plage.jpg", "description": "la plus grande plage de l'Ile-aux-Moines", "links": [], "emoji": "🏖️"}, {"name": "la Place du Marché", "lat": 47.59682, "lon": -2.845856, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/2f860ade57e0d6d7838efefa9e030ce1.jpg", "description": "Place centrale du Bourg avec Mairie, Pharmacie, \nPoste, Tabac, Hotel, Restaurants,  Commerces.", "links": [], "emoji": "🏛️"}, {"name": "la Plage de Port Miquel", "lat": 47.596487, "lon": -2.841591, "cat": "Plage", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/2a3720b832450c1dae64a28666bc092c.jpg", "description": "", "links": [], "emoji": "🏖️"}, {"name": "la Plage de Tahiti", "lat": 47.575719, "lon": -2.852717, "cat": "Plage", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/e00f9be2db408124c3906dec9f0c0a9a.jpg", "description": "", "links": [], "emoji": "🏖️"}, {"name": "la Plage du Goret", "lat": 47.584385, "lon": -2.855748, "cat": "Plage", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/b0155785b50c44afa674c4a972d04cd9.jpg", "description": "", "links": [], "emoji": "🏖️"}, {"name": "la Plage du Rudel", "lat": 47.580018, "lon": -2.857229, "cat": "Plage", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/0108b8f255fd0b59f40d0e7c31af8a7d.jpg", "description": "", "links": [], "emoji": "🏖️"}, {"name": "la Plage du Vran", "lat": 47.590131, "lon": -2.845073, "cat": "Plage", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/5c22f46bac8e5f628930a35033adacc5.jpg", "description": "", "links": [], "emoji": "🏖️"}, {"name": "la Rue des Escaliers", "lat": 47.597742, "lon": -2.847406, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/e14d2d8802521c644b2d4fc22c6f630a.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "le Calvaire du Trech", "lat": 47.60706, "lon": -2.83812, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/CalvaireIAM.jpg/960px-CalvaireIAM.jpg?", "description": "", "links": [["http://patrimoine-de-france.com/morbihan/ile-aux-moines/croix-monumentale-3.php", "Voir le site"], ["https://croixbretagne.fr/Ccb/Content/detail.jsp?id=3129", "Voir le site"]], "emoji": "🏛️"}, {"name": "le Chantier du Guip", "lat": 47.572679, "lon": -2.855871, "cat": "Patrimoine & curiosités", "color": "MediumBlue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/a90ed7dc9a276f8f5364bafa52d7c148.jpg", "description": "", "links": [["https://fr.wikipedia.org/wiki/Chantier_du_Guip", "Voir le site"], ["http://www.chantierduguip.com/", "Voir le site"]], "emoji": "🏛️"}, {"name": "le Château du Guerric", "lat": 47.591621, "lon": -2.839923, "cat": "Patrimoine & curiosités", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChateauGuericIAM.jpg/1920px-ChateauGuericIAM.jpg?", "description": "", "links": [["http://www.domaine-du-guerric.com/", "Voir le site"], ["http://patrimoine.bzh/gertrude-diffusion/dossier/manoir-sainte-anne-dit-chateau-du-gueric-ile-aux-moines/b51a6a11-17bc-412c-87f4-b9ce470dac80", "Voir le site"]], "emoji": "🏛️"}, {"name": "le Cimetière", "lat": 47.59885, "lon": -2.84228, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/14e2cc6e979c6d9d6d8ef1ef91363ea7.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "le Cromlech de Kergonan", "lat": 47.590605, "lon": -2.850673, "cat": "Mégalithe", "color": "MediumBlue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/1f6019fa10d311ffd695140761f01a40.jpg", "description": "", "links": [["http://www.megalithes-morbihan.fr/site/enceinte-megalithique-de-kergonan.html", "Voir le site"]], "emoji": "🗿"}, {"name": "le Dolmen de Kerno", "lat": 47.582305, "lon": -2.855378, "cat": "Mégalithe", "color": "MediumBlue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/9fd63a38bce0266f03752edf75b2b53a.jpg", "description": "", "links": [["http://megalithes-breton.fr/56/accueil_56.php?nom=do/kerno.html", "Voir le site"]], "emoji": "🗿"}, {"name": "le Dolmen Er Boglieux", "lat": 47.571318, "lon": -2.857722, "cat": "Mégalithe", "color": "MediumBlue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/3aa16389afcf13b66884508b31e68fe3.jpg", "description": "", "links": [["http://www.megalithes-morbihan.fr/site/dolmen-de-pen-hap.html", "Voir le site"]], "emoji": "🗿"}, {"name": "le Jardin du Rinville", "lat": 47.594411, "lon": -2.850443, "cat": "Loisirs", "color": "Red", "image": "http://monsite.woopic.com/383/f/300x/p/IAM-CARTES/img/391cf93e9b2e7334dfba73b394fe1f98.jpg", "description": "**Centre de loisirs et lieu de manifestations culturelles**", "links": [], "emoji": "🌿"}, {"name": "le Puits de Locmiquel", "lat": 47.598263, "lon": -2.842079, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/9fac04bc85709d4dcb95387057d3d4ec.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "le Puits du Graz Houarn", "lat": 47.592511, "lon": -2.832005, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/77fb92439113ff63edb257b7b7bb6578.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "le Puits du Naudeux", "lat": 47.591325, "lon": -2.835782, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Puits_IAM.jpg/1920px-Puits_IAM.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "les Dolmens de Pen Nioul", "lat": 47.560376, "lon": -2.859825, "cat": "Mégalithe", "color": "MediumBlue", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/9e4b71ba4e2d6b76d7606999c5f9959a.jpg", "description": "", "links": [["http://www.t4t35.fr/Megalithes/AfficheSite.aspx?NumSite=7237", "Voir le site"]], "emoji": "🗿"}, {"name": "les Fontaines du Vran", "lat": 47.59126, "lon": -2.848066, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/b9313dd208b42350173a32b55ce5cdf9.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "les Pierres à laver de Port Miquel", "lat": 47.597236, "lon": -2.84209, "cat": "Patrimoine & curiosités", "color": "Red", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Pierrealaverportmiquel.jpg/1920px-Pierrealaverportmiquel.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "les Trois Fontaines", "lat": 47.591969, "lon": -2.854761, "cat": "Patrimoine & curiosités", "color": "Red", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/727095325bf7c6444035b6bed78d194f.jpg", "description": "", "links": [], "emoji": "🏛️"}, {"name": "Om Mani Padme Hum", "lat": 47.592157, "lon": -2.854857, "cat": "Curiosités", "color": "DarkSalmon", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/abd72ed3c4fda49728b1ae346f8056b8.jpg", "description": "OM MANI PÉMÉ HOUNG = les six syllabes OM MANI PÉMÉ HOUNG signifient qu'en fonction de la pratique d'une voie, qui est l'union indivisible d'une méthode et d'une sagesse, vous pouvez transformer votre corps, votre parole et votre esprit impurs en corps, parole et esprit purs et glorieux d'un Bouddha.", "links": [["https://fr.wikipedia.org/wiki/Om_mani_padme_hum", "Voir le site"]], "emoji": "✨"}, {"name": "Au Cachalot", "lat": 47.599674, "lon": -2.850748, "cat": "Bar", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Aucachalot.jpg/1920px-Aucachalot.jpg", "description": "Epicerie & Cave à Vin\n\n 241 Rue Benoni Praud\nTél : 02.97.26.31.52", "links": [], "emoji": "🍺"}, {"name": "Glaces artisanales", "lat": 47.599406, "lon": -2.850566, "cat": "Restauration rapide", "color": "MediumBlue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Glacesartisanales.jpg/1920px-Glacesartisanales.jpg", "description": "", "links": [], "emoji": "🥙"}, {"name": "ISLA bijoux", "lat": 47.600316, "lon": -2.85123, "cat": "Art & Artisanat", "color": "SaddleBrown", "image": "", "description": "", "links": [], "emoji": "🎨"}, {"name": "Office de tourisme ", "lat": 47.600803, "lon": -2.852159, "cat": "Information", "color": "MintCream", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Officedetourisme_0.jpg/1920px-Officedetourisme_0.jpg", "description": "", "links": [], "emoji": "ℹ️"}, {"name": "Port/Harbour", "lat": 47.601707, "lon": -2.854128, "cat": "Transport", "color": "SpringGreen", "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/5dd4efaf1b3da9d0262f7ad0b9116338.jpg", "description": "**Embarquement pour le Golfe du Morbihan :**", "links": [["http://www.compagnie-du-golfe.fr", "Voir le site"], ["http://www.navix.fr/bateau/tour-du-golfe-avec-escales", "Voir le site"]], "emoji": "⛴️"}, {"name": "Port/Harbour", "lat": 47.601099, "lon": -2.851896, "cat": "Transport", "color": "SpringGreen", "image": "", "description": "**Embarquement pour Port-Blanc avec IZENAH Croisières :**", "links": [["http://www.izenah-croisieres.com/liaisons-régulières", "Voir le site"]], "emoji": "⛴️"}, {"name": "Zone artisanale du Gregan", "lat": 47.59435, "lon": -2.843886, "cat": "Patrimoine & curiosités", "color": "Blue", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Zonedugreguan.jpg/960px-Zonedugreguan.jpg?", "description": "", "links": [], "emoji": "🏛️"}];
+
+// Cat colors
+const CAT_COLORS = {
+  "Restaurant": "#c0392b",
+  "Restauration rapide": "#e67e22",
+  "Bar": "#8e44ad",
+  "Plage": "#2980b9",
+  "Location vélo": "#8B4513",
+  "Commerce": "#16a085",
+  "Hébergement": "#2c3e50",
+  "Transport": "#27ae60",
+  "Patrimoine religieux": "#2471a3",
+  "Mégalithe": "#6d4c41",
+  "Art & Artisanat": "#8d6e63",
+  "Camping": "#1a5e25",
+  "Service": "#1a6ba0",
+  "Loisirs": "#2d5e3f",
+  "Information": "#555",
+  "Curiosités": "#7b68ee",
+  "Patrimoine & curiosités": "#5d4037",
+};
+
+let map, userMarker, userLat, userLon;
+let gpsActive = false, watchId = null;
+let activeFilter = "Tous";
+let markers = [];
+let alertedPois = new Set();
+let activeMarkerEl = null;
+
+// Init map
+map = L.map("map", {zoomControl: false, attributionControl: false})
+  .setView([47.5985, -2.848], 15);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: "© OpenStreetMap"
+}).addTo(map);
+
+// Attribution discrète
+L.control.attribution({prefix: false, position: "bottomleft"}).addTo(map);
+
+// Tooltip hover global (un seul dans le DOM, déplacé sur chaque marker)
+const tooltipEl = document.createElement("div");
+tooltipEl.className = "poi-tooltip";
+tooltipEl.innerHTML = `
+  <img class="poi-tooltip-img hidden" id="tt-img" alt="">
+  <div class="poi-tooltip-placeholder" id="tt-placeholder"><span id="tt-emoji"></span></div>
+  <div class="poi-tooltip-label" id="tt-label"></div>`;
+document.body.appendChild(tooltipEl);
+
+let tooltipTimeout;
+
+function showTooltip(markerEl, poi) {
+  clearTimeout(tooltipTimeout);
+  const img = tooltipEl.querySelector("#tt-img");
+  const ph = tooltipEl.querySelector("#tt-placeholder");
+  const emoji = tooltipEl.querySelector("#tt-emoji");
+  tooltipEl.querySelector("#tt-label").textContent = poi.name;
+  emoji.textContent = poi.emoji;
+
+  if (poi.image) {
+    img.src = poi.image;
+    img.classList.remove("hidden");
+    ph.classList.add("hidden");
+    img.onerror = () => { img.classList.add("hidden"); ph.classList.remove("hidden"); };
+  } else {
+    img.classList.add("hidden");
+    ph.classList.remove("hidden");
+  }
+
+  // Positionner via coordonnées écran (évite toute rotation héritée du marqueur)
+  const rect = markerEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const top = rect.top - 8;
+  tooltipEl.style.left = cx + "px";
+  tooltipEl.style.top = "auto";
+  tooltipEl.style.bottom = (window.innerHeight - top) + "px";
+
+  // S'assurer que le tooltip est dans le body (pas dans le marqueur)
+  if (tooltipEl.parentNode !== document.body) {
+    document.body.appendChild(tooltipEl);
+  }
+  tooltipEl.classList.add("visible");
+}
+
+function hideTooltip() {
+  tooltipTimeout = setTimeout(() => {
+    tooltipEl.classList.remove("visible");
+  }, 120);
+}
+
+// Create markers
+function createMarker(poi) {
+  const color = CAT_COLORS[poi.cat] || "#2d5e3f";
+  const icon = L.divIcon({
+    className: "",
+    html: `<div class="poi-marker" style="background:${color}"><span>${poi.emoji}</span></div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 24],
+    popupAnchor: [0, -24]
+  });
+  const m = L.marker([poi.lat, poi.lon], {icon}).addTo(map);
+
+  m.on("click", () => openPOI(poi, m));
+  m._poi = poi;
+
+  // Hover : afficher tooltip avec étiquette + photo
+  m.on("mouseover", () => {
+    const el = m.getElement()?.querySelector(".poi-marker");
+    if (el) showTooltip(el, poi);
+  });
+  m.on("mouseout", hideTooltip);
+
+  // Touch long-press pour mobile (300ms)
+  let pressTimer;
+  m.on("touchstart", () => {
+    pressTimer = setTimeout(() => {
+      const el = m.getElement()?.querySelector(".poi-marker");
+      if (el) showTooltip(el, poi);
+    }, 300);
+  });
+  m.on("touchend", () => { clearTimeout(pressTimer); hideTooltip(); });
+
+  return m;
+}
+
+markers = POIS.map(createMarker);
+
+// Filter bar
+const cats = ["Tous", ...new Set(POIS.map(p => p.cat))];
+const filterScroll = document.getElementById("filter-scroll");
+cats.forEach(cat => {
+  const count = cat === "Tous" ? POIS.length : POIS.filter(p => p.cat === cat).length;
+  const emoji = cat === "Tous" ? "🗺️" : (POIS.find(p => p.cat === cat)?.emoji || "");
+  const btn = document.createElement("button");
+  btn.className = "filter-btn" + (cat === "Tous" ? " active" : "");
+  btn.innerHTML = `${emoji} ${cat} <span class="count">${count}</span>`;
+  btn.onclick = () => setFilter(cat, btn);
+  filterScroll.appendChild(btn);
+});
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  markers.forEach(m => {
+    if (cat === "Tous" || m._poi.cat === cat) {
+      m.addTo(map);
+    } else {
+      map.removeLayer(m);
+    }
+  });
+}
+
+// Open POI panel
+function openPOI(poi, marker) {
+  // Reset active marker
+  if (activeMarkerEl) activeMarkerEl.classList.remove("active-marker");
+  const el = marker?.getElement()?.querySelector(".poi-marker");
+  if (el) { el.classList.add("active-marker"); activeMarkerEl = el; }
+
+  const panel = document.getElementById("poi-panel");
+  const img = document.getElementById("poi-image");
+  const placeholder = document.getElementById("poi-image-placeholder");
+  const placeholderEmoji = document.getElementById("poi-placeholder-emoji");
+
+  document.getElementById("poi-name").textContent = poi.name;
+  document.getElementById("poi-cat").textContent = poi.emoji + " " + poi.cat;
+  document.getElementById("poi-desc").textContent = poi.description || "";
+
+  // Image
+  if (poi.image) {
+    img.src = poi.image;
+    document.getElementById("poi-image-wrap").classList.add("visible");
+    placeholder.classList.add("hidden");
+  } else {
+    img.src = "";
+    document.getElementById("poi-image-wrap").classList.remove("visible");
+    placeholder.classList.remove("hidden");
+    placeholderEmoji.textContent = poi.emoji;
+  }
+
+  // Distance
+  const distEl = document.getElementById("poi-dist");
+  if (userLat && userLon) {
+    const d = haversine(userLat, userLon, poi.lat, poi.lon);
+    document.getElementById("poi-dist-val").textContent = d < 1000 ? Math.round(d) + " m" : (d/1000).toFixed(1) + " km";
+    distEl.style.display = "inline-flex";
+  } else {
+    distEl.style.display = "none";
+  }
+
+  // Links
+  const linksEl = document.getElementById("poi-links");
+  linksEl.innerHTML = "";
+  if (poi.links && poi.links.length) {
+    poi.links.forEach(([url, label]) => {
+      const a = document.createElement("a");
+      a.href = url; a.target = "_blank"; a.className = "poi-link";
+      a.innerHTML = `🔗 ${label.length > 40 ? label.slice(0,40)+"…" : label}`;
+      linksEl.appendChild(a);
+    });
+  }
+
+  panel.classList.add("open");
+  map.panTo([poi.lat, poi.lon], {animate: true, duration: 0.4});
+}
+
+function closePanel() {
+  document.getElementById("poi-panel").classList.remove("open");
+  if (activeMarkerEl) { activeMarkerEl.classList.remove("active-marker"); activeMarkerEl = null; }
+}
+
+// Close panel on map click
+map.on("click", closePanel);
+
+// GPS
+function toggleGPS() {
+  if (gpsActive) {
+    stopGPS();
+  } else {
+    startGPS();
+  }
+}
+
+function startGPS() {
+  if (!navigator.geolocation) {
+    showAlert("GPS non disponible sur cet appareil");
+    return;
+  }
+  watchId = navigator.geolocation.watchPosition(onPosition, onGPSError, {
+    enableHighAccuracy: true, maximumAge: 3000, timeout: 10000
+  });
+  gpsActive = true;
+  document.getElementById("gps-dot").classList.add("active");
+  document.getElementById("gps-label").textContent = "GPS on";
+}
+
+function stopGPS() {
+  if (watchId) navigator.geolocation.clearWatch(watchId);
+  gpsActive = false;
+  document.getElementById("gps-dot").classList.remove("active");
+  document.getElementById("gps-label").textContent = "GPS off";
+}
+
+function onPosition(pos) {
+  userLat = pos.coords.latitude;
+  userLon = pos.coords.longitude;
+  
+  // User dot
+  const userIcon = L.divIcon({className:"", html:`<div class="user-dot"></div>`, iconSize:[16,16], iconAnchor:[8,8]});
+  if (userMarker) {
+    userMarker.setLatLng([userLat, userLon]);
+  } else {
+    userMarker = L.marker([userLat, userLon], {icon: userIcon, zIndexOffset: 1000}).addTo(map);
+  }
+  
+  // Check proximity 50m
+  checkProximity();
+}
+
+function onGPSError(err) {
+  showAlert("Impossible d'obtenir la position GPS");
+}
+
+function centerOnUser() {
+  if (userLat && userLon) {
+    map.flyTo([userLat, userLon], 17, {duration: 1.2});
+  } else {
+    startGPS();
+    showAlert("Activation du GPS…");
+  }
+}
+
+function checkProximity() {
+  if (!userLat || !userLon) return;
+  const visiblePois = activeFilter === "Tous" ? POIS : POIS.filter(p => p.cat === activeFilter);
+  visiblePois.forEach(poi => {
+    const d = haversine(userLat, userLon, poi.lat, poi.lon);
+    if (d <= 50 && !alertedPois.has(poi.name)) {
+      alertedPois.add(poi.name);
+      showAlert(`${poi.emoji} À ${Math.round(d)} m : ${poi.name}`);
+      // Vibration si dispo
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    }
+    // Reset si on s'éloigne > 100m
+    if (d > 100) alertedPois.delete(poi.name);
+  });
+}
+
+let alertTimeout;
+function showAlert(msg) {
+  const el = document.getElementById("alert-popup");
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(alertTimeout);
+  alertTimeout = setTimeout(() => { el.style.display = "none"; }, 4000);
+}
+
+// Haversine distance (metres)
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// DEBUG - afficher les styles calculés de l'image
+window._debugImage = function() {
+  const img = document.getElementById('poi-image');
+  const wrap = document.getElementById('poi-image-wrap');
+  const cs = window.getComputedStyle(img);
+  const csw = window.getComputedStyle(wrap);
+  const info = [
+    'IMG computed styles:',
+    'display: ' + cs.display,
+    'max-width: ' + cs.maxWidth,
+    'width: ' + cs.width,
+    'height: ' + cs.height,
+    'margin: ' + cs.margin,
+    'position: ' + cs.position,
+    'naturalWidth: ' + img.naturalWidth,
+    'naturalHeight: ' + img.naturalHeight,
+    'offsetWidth: ' + img.offsetWidth,
+    'offsetHeight: ' + img.offsetHeight,
+    '---',
+    'WRAP computed styles:',
+    'display: ' + csw.display,
+    'width: ' + csw.width,
+    'offsetWidth: ' + wrap.offsetWidth,
+  ].join('\n');
+  alert(info);
+};
+
+// Service Worker for offline
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
