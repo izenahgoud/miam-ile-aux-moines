@@ -231,17 +231,6 @@ const POIS = [
     "layer": "poi-heritage"
   },
   {
-    "name": "La Poterie de l'Ile-aux-Moines",
-    "lat": 47.597542, "lon": -2.843367,
-    "cat": "Art & Artisanat",
-    "color": "MediumSpringGreen",
-    "image": "http://monsite.woopic.com/383/p/IAM-CARTES/img/766dede70ce40d8fe120a3b526a30012.jpg",
-    "description": "rue de l'Eglise\nhttp://ile.aux.moines.free.fr/indmenu.html",
-    "links": [],
-    "emoji": "🎨",
-    "layer": "poi-heritage"
-  },
-  {
     "name": "le Cap Horn",
     "lat": 47.601105, "lon": -2.853047,
     "cat": "Restaurant",
