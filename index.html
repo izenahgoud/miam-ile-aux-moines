@@ -282,7 +282,7 @@ function onPosition(pos){
 function centerOnUser(){userLat&&userLon?map.flyTo([userLat,userLon],17,{duration:1.2}):(startGPS(),showAlert("Activation du GPS…"));}
 function checkProximity(){
   if(!userLat||!userLon) return;
-  POIS.forEach(poi=>{
+  POIS.filter(p=>p.layer==="poi-heritage").forEach(poi=>{
     const d=haversine(userLat,userLon,poi.lat,poi.lon);
     if(d<=50&&!alertedPois.has(poi.name)){alertedPois.add(poi.name);showAlert(`${poi.emoji||"📍"} À ${Math.round(d)} m : ${poi.name}`);if(navigator.vibrate)navigator.vibrate([200,100,200]);}
     if(d>100) alertedPois.delete(poi.name);
