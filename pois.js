@@ -1,7 +1,7 @@
 // M'IAM — Points d'intérêt de l'Île-aux-Moines
 // Un POI par ligne — modifiable directement sur GitHub
 const POIS = [
-  {"name":"Camping municipal","lat":47.593718,"lon":-2.844786,"cat":"Camping","color":"Blue","image":"","description":"Camping municipal\ntél : 02 97 26 30 68\nhttps://www.mairie-ileauxmoines.fr/tourisme-services/camping_municipal/","links":[["https://www.mairie-ileauxmoines.fr/tourisme-services/camping_municipal/","Voir le site"]],"emoji":"⛺","layer":"poi-main"},
+  {"name":"Camping municipal","lat":47.593718,"lon":-2.844786,"cat":"Camping","color":"Blue","image":"","description":"Camping municipal\ntél : 02 97 26 30 68","links":[["https://www.mairie-ileauxmoines.fr/tourisme-services/camping_municipal/","Voir le site"]],"emoji":"⛺","layer":"poi-main"},
   {"name":"Chez Charlemagne","lat":47.598573,"lon":-2.849485,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Chez_Charlemagne.jpg/1920px-Chez_Charlemagne.jpg","description":"Restaurant - Bar\nGrillades, Poissons\nTél : 02 97 26 32 43","links":[["https://www.chez-charlemagne.fr/","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
   {"name":"Chez Jeannette","lat":47.601447,"lon":-2.853945,"cat":"Bar","color":"Blue","image":"http://monsite.woopic.com/383/p/IAM-CARTES/img/7f8c9eb4af00bfeca5dfc3d57d0ad13d.jpg","description":"Bar - Snacks - Sandwiches - Glaces\nrue Benoni Praud\ntél : 02 97 26 34 81\ntél : 06 78 02 97 16","links":[],"emoji":"🍺","layer":"poi-main"},
   {"name":"DAB Distributeut Automatique de Billets","lat":47.597028,"lon":-2.845416,"cat":"Service","color":"DeepSkyBlue","image":"","description":"la Banque Postale\nrue de la Mairie\ntél : 02 97 26 34 39","links":[],"emoji":"🏧","layer":"poi-main"},
