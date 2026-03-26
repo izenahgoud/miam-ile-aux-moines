@@ -1,7 +1,7 @@
-// M'IAM — Points d'intérêt de l'Île-aux-Moines
+// M'IAM — Points d'interet de l'Ile-aux-Moines
 // Pour modifier un POI : trouvez-le par son nom (Ctrl+F), modifiez les valeurs entre guillemets
-// Champs disponibles : name, lat, lon, cat, image, description, links, emoji, layer
-// RÈGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI
+// Champs : name, lat, lon, cat, image, description, links, emoji, layer
+// REGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI
 
 const POIS = [
   {"name":"Camping municipal","lat":47.593718,"lon":-2.844786,"cat":"Camping","color":"DarkGreen","image":"","description":"Camping municipal\ntél : 02 97 26 30 68\nhttp://www.mairie-ileauxmoines.fr/accueil/decouverte/camping_municipal","links":[],"emoji":"⛺","layer":"poi-main"},
