@@ -296,6 +296,7 @@ const PAGE_SIZE = 25;
 let deleteIdx = -1;
 
 function init() {
+  POIS.forEach((p, i) => { p._idx = i; }); // Mémorise l'index réel dans POIS
   buildStats();
   buildCatFilter();
   renderTable();
@@ -347,7 +348,7 @@ function renderTable() {
   document.getElementById('no-results').style.display = filteredPOIS.length ? 'none' : 'block';
   
   page.forEach((poi, i) => {
-    const realIdx = start + i;
+    const realIdx = poi._idx; // Index réel dans POIS (pas affecté par le filtrage)
     const img = poi.image
       ? `<img class="poi-img" src="${poi.image}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
         + `<div class="poi-img-empty" style="display:none">${poi.emoji||'📍'}</div>`
@@ -817,6 +818,7 @@ const PAGE_SIZE = 25;
 let deleteIdx = -1;
 
 function init() {
+  POIS.forEach((p, i) => { p._idx = i; }); // Mémorise l'index réel dans POIS
   buildStats();
   buildCatFilter();
   renderTable();
@@ -868,7 +870,7 @@ function renderTable() {
   document.getElementById('no-results').style.display = filteredPOIS.length ? 'none' : 'block';
   
   page.forEach((poi, i) => {
-    const realIdx = start + i;
+    const realIdx = poi._idx; // Index réel dans POIS (pas affecté par le filtrage)
     const img = poi.image
       ? `<img class="poi-img" src="${poi.image}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
         + `<div class="poi-img-empty" style="display:none">${poi.emoji||'📍'}</div>`
