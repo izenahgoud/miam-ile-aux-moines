@@ -186,7 +186,7 @@ const POIS = [
   {"name":"07 - le Greignon","lat":47.589538,"lon":-2.85651,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/commons/7/70/Plaque_N%C2%B07.jpg/1280px-Plaque_N%C2%B07.jpg","description":"","links":[],"emoji":"🔴","layer":"secours"},
   {"name":"08 - le Rahic (ouest)","lat":47.58728,"lon":-2.856038,"cat":"Secours","color":"#c0392b","image":"","description":"","links":[],"emoji":"🔴","layer":"secours"},
   {"name":"09 - le Goret","lat":47.584711,"lon":-2.855619,"cat":"Secours","color":"#c0392b","image":"","description":"","links":[],"emoji":"🔴","layer":"secours"},
-  {"name":"10 - le Goret","lat":47.583893,"lon":-2.85666,"cat":"Secours","color":"#c0392b","image":"","description":"","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"10 - le Goret","lat":47.583893,"lon":-2.85666,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/9/94/Plaque_de_secours_N%C2%B010.jpg","description":"Plaque de secours N° 10","links":[],"emoji":"🔴","layer":"secours"},
   {"name":"11 - le Rudel","lat":47.581686,"lon":-2.857078,"cat":"Secours","color":"#c0392b","image":"","description":"","links":[],"emoji":"🔴","layer":"secours"},
   {"name":"12 - le Rudel","lat":47.580032,"lon":-2.856971,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/commons/f/ff/Plaque_N%C2%B012.jpg/1280px-Plaque_N%C2%B012.jpg","description":"","links":[],"emoji":"🔴","layer":"secours"},
   {"name":"13 - Coste Hechen","lat":47.579066,"lon":-2.857502,"cat":"Secours","color":"#c0392b","image":"","description":"","links":[],"emoji":"🔴","layer":"secours"},
