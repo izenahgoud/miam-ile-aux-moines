@@ -112,7 +112,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
     <div class="lg">
       <div class="lg-title">Commerces &amp; Sites</div>
       <div class="lr" data-layer="poi-main" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#c0392b"></div><div class="ll">Restaurants, Bars,</div></div>
-      <div class="lr" data-layer="poi-main" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#8deb5e"></div><div class="ll">Alimentation, Commerces…</div></div>
+      <div class="lr" data-layer="poi-alim" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#8deb5e"></div><div class="ll">Alimentation, Commerces…</div></div>
       <div class="lr" data-layer="poi-heritage" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#5d4037"></div><div class="ll">Patrimoine &amp; Sites</div></div>
     </div>
     <div class="sep"></div>
@@ -187,7 +187,7 @@ const CAT_COLORS = {
   "Service":"#1a6ba0","Loisirs":"#2d5e3f","Information":"#555",
   "Curiosités":"#7b68ee","Patrimoine & curiosités":"#5d4037",
   "Toilettes":"#2980b9","Santé":"#e74c3c","Pique-nique":"#27ae60",
-  "Poubelles":"#7f8c8d","Secours":"#c0392b","Alimentation":"#8deb5e"
+  "Poubelles":"#7f8c8d","Secours":"#c0392b","Alimentation":"#8deb5e",
 };
 
 const TRACE_LAYER = {
@@ -207,7 +207,7 @@ function getTraceLayer(t) {
 }
 
 const layerState = {
-  "poi-main":false,"poi-heritage":false,
+  "poi-main":false,"poi-heritage":false,"poi-alim":false,
   "balade-trech":false,"balade-brouel":false,"balade-penhap":false,
   "velo-bleu":false,"velo-jaune":false,"velo-rouge":false,"velo-vert":false,
   "sante":false,"secours":false,
