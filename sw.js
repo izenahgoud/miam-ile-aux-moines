@@ -1,11 +1,11 @@
-const CACHE = "miam-iam-v1.2";
+const CACHE = "miam-iam-v1.3";
 const ASSETS = [
   "./",
   "./index.html",
 ];
 
 // Tuiles OSM à mettre en cache dynamiquement
-const TILE_CACHE = "miam-tiles-v1.2";
+const TILE_CACHE = "miam-tiles-v1.3";
 
 self.addEventListener("install", e => {
   e.waitUntil(
