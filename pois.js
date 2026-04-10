@@ -4,7 +4,7 @@
 // RÈGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI
 
 const POIS = [
-  {"name":"Camping municipal","lat":47.593718,"lon":-2.844786,"cat":"Camping","color":"DarkGreen","image":"","description":"Camping municipal\ntél : 02 97 26 30 68","links":[["http://www.mairie-ileauxmoines.fr/accueil/decouverte/camping_municipal","Voir le site"]],"emoji":"⛺","layer":"layer":"loisirs"},
+  {"name":"Camping municipal","lat":47.593718,"lon":-2.844786,"cat":"Camping","color":"DarkGreen","image":"","description":"Camping municipal\ntél : 02 97 26 30 68","links":[["https://www.mairie-ileauxmoines.fr/tourisme-services/camping-municipal/","Voir le site"]],"emoji":"⛺","layer":"layer":"loisirs"},
   {"name":"Chez Charlemagne","lat":47.598573,"lon":-2.849485,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Chez_Charlemagne.jpg/1280px-Chez_Charlemagne.jpg","description":"Restaurant - Bar\nGrillades, Poissons\nTél : 02 97 26 32 43","links":[["https://www.chez-charlemagne.fr/","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
   {"name":"Chez Jeannette","lat":47.601447,"lon":-2.853945,"cat":"Bar","color":"Blue","image":"","description":"Bar - Snacks - Sandwiches - Glaces\nrue Benoni Praud\ntél : 02 97 26 34 81\ntél : 06 78 02 97 16","links":[],"emoji":"🍺","layer":"poi-main"},
   {"name":"DAB Distributeur Automatique de Billets","lat":47.597028,"lon":-2.845416,"cat":"Service","color":"DeepSkyBlue","image":"","description":"la Banque Postale\nrue de la Mairie\ntél : 02 97 26 34 39","links":[["https://localiser.laposte.fr/morbihan/ile-aux-moines/ile-aux-moines-560870","Voir le site"]],"emoji":"🏧","layer":"dab"},
