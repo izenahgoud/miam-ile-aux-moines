@@ -1,18 +1,104 @@
-// evenements.js — mis à jour chaque semaine
+// evenements.js — Événements de l'Île-aux-Moines
+// Format attendu par index.html (BLOC 3 — initEvenements)
+//
+// Champs obligatoires :
+//   nom          : titre de l'événement
+//   date_debut   : "AAAA-MM-JJ"  ← affiché si dans les 30 prochains jours
+//   date_fin     : "AAAA-MM-JJ"  ← optionnel (même valeur que date_debut si 1 seul jour)
+//   lat / lng    : coordonnées GPS (marqueur violet sur la carte)
+//   lieu         : nom du lieu
+//   acces        : modalités d'accès (bac, parking, etc.)
+//
+// Champs optionnels :
+//   emoji        : icône affichée sur le marqueur et le panneau (défaut : 📅)
+//   heure        : ex. "10h00 – 13h00"
+//   association  : nom de l'organisateur
+//   description  : texte libre
+//   site         : URL (bouton "Site de l'événement")
+
 const EVENEMENTS = [
   {
-    id: "evt-001",
-    nom: "Cinéma en plein air",
-    association: "Passeurs de Films",
-    description: "Soirée cinéma en plein air sur la place du Marché. Dîner inclus suivi de la projection.",
-    date_debut: "2025-08-30",
-    date_fin:   "2025-08-30",
-    heure:      "19h30 – 00h00",
-    lieu:       "Place du Marché",
-    acces:      "Dîner + séance : 18 €. Réservation obligatoire.",
-    lat:  47.596771,
-    lng:  -2.845915,
-    site: null,
-    emoji: "🎬"
+    nom: "Marché des saveurs insulaires",
+    emoji: "🧺",
+    association: "Comité des fêtes IAM",
+    date_debut: "2026-06-13",
+    date_fin:   "2026-06-13",
+    heure: "9h00 – 13h00",
+    lat: 47.5960,
+    lng: -2.8462,
+    lieu: "Place de l'Église — centre bourg",
+    acces: "Bac depuis Port-Blanc (Baden) ou La Trinité-sur-Mer. Entrée libre.",
+    description: "Producteurs locaux, huîtres du Golfe, légumes de l'île, confitures artisanales, pains bio.",
+    site: ""
   },
+  {
+    nom: "Fête de la Musique — Concert au port",
+    emoji: "🎵",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut: "2026-06-21",
+    date_fin:   "2026-06-21",
+    heure: "18h00 – 23h00",
+    lat: 47.5961,
+    lng: -2.8469,
+    lieu: "Embarcadère — port de l'Île",
+    acces: "Dernier bac retour vers 23h30. Entrée libre.",
+    description: "Jazz manouche, folk breton et scène ouverte pour tous les musiciens de l'île.",
+    site: "https://www.izenah-croisieres.com"
+  },
+  {
+    nom: "Sortie découverte de l'estran",
+    emoji: "🦀",
+    association: "Office de tourisme",
+    date_debut: "2026-07-04",
+    date_fin:   "2026-07-04",
+    heure: "9h30 – 12h00",
+    lat: 47.5679,
+    lng: -2.8598,
+    lieu: "Pointe du Trec'h — côte sauvage",
+    acces: "Inscription obligatoire à l'office de tourisme. Groupes de 12 max. 5 € adulte, gratuit -12 ans.",
+    description: "Exploration des rochers et mares à marée basse avec un guide naturaliste. Bottes recommandées.",
+    site: ""
+  },
+  {
+    nom: "Régates de l'Île-aux-Moines",
+    emoji: "⛵",
+    association: "Club nautique IAM",
+    date_debut: "2026-07-18",
+    date_fin:   "2026-07-19",
+    heure: "10h00 – 17h00",
+    lat: 47.5975,
+    lng: -2.8395,
+    lieu: "Anse de Brouel — côte est",
+    acces: "Accès à pied depuis le port (15 min) ou vélo. Entrée libre. Buvette sur place.",
+    description: "Course de voiliers classiques dans le Golfe du Morbihan. Spectacle depuis le rivage.",
+    site: ""
+  },
+  {
+    nom: "Exposition — Peintres de l'île",
+    emoji: "🎨",
+    association: "Association des artistes IAM",
+    date_debut: "2026-07-25",
+    date_fin:   "2026-08-09",
+    heure: "10h00 – 19h00",
+    lat: 47.5958,
+    lng: -2.8471,
+    lieu: "Salle des fêtes — route de Penhap",
+    acces: "Entrée libre. Œuvres en vente.",
+    description: "Vernissage et exposition collective de 12 artistes résidents. Peintures, aquarelles et photographies.",
+    site: ""
+  },
+  {
+    nom: "Concours de pêche — Jeunes pêcheurs",
+    emoji: "🎣",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut: "2026-08-01",
+    date_fin:   "2026-08-01",
+    heure: "8h00 – 12h00",
+    lat: 47.5962,
+    lng: -2.8471,
+    lieu: "Cales du port",
+    acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
+    description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
+    site: ""
+  }
 ];
