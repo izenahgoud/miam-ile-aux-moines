@@ -480,10 +480,19 @@ function initEvenements() {
 
 function ouvrirPanneauEvenement(evt) {
   if(activeMarkerEl) activeMarkerEl.classList.remove('active-marker');
+// APRÈS
+const img = document.getElementById('poi-image');
+const ph  = document.getElementById('poi-image-placeholder');
+if(evt.image){
+  img.src = evt.image;
+  document.getElementById('poi-image-wrap').classList.add('visible');
+  ph.classList.add('hidden');
+} else {
+  img.src = '';
   document.getElementById('poi-image-wrap').classList.remove('visible');
-  const ph = document.getElementById('poi-image-placeholder');
   ph.classList.remove('hidden');
   document.getElementById('poi-placeholder-emoji').textContent = evt.emoji||'📅';
+}
   const catEl = document.getElementById('poi-cat');
   catEl.style.background = '#9b59b6';
   catEl.textContent = '🗓 '+(evt.association||'Événement');
