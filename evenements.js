@@ -71,7 +71,8 @@ const EVENEMENTS = [
     lieu: "Anse de Brouel — côte est",
     acces: "Accès à pied depuis le port (15 min) ou vélo. Entrée libre. Buvette sur place.",
     description: "Course de voiliers classiques dans le Golfe du Morbihan. Spectacle depuis le rivage.",
-    site: ""
+    image: "https://exemple.fr/photo-regates.jpg",  // ← URL d'une image
+  site:  "https://clubnautique-iam.fr",            // ← bouton "Voir le site"
   },
   {
     nom: "Exposition — Peintres de l'île",
