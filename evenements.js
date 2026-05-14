@@ -49,17 +49,17 @@ const EVENEMENTS = [
     site: "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
   },
   {
-    nom: "Sortie découverte de l'estran",
-    emoji: "🦀",
-    association: "Office de tourisme",
-    date_debut: "2026-07-04",
-    date_fin:   "2026-07-04",
-    heure: "9h30 – 12h00",
-    lat: 47.5679,
-    lng: -2.8598,
-    lieu: "Pointe du Trec'h — côte sauvage",
-    acces: "Inscription obligatoire à l'office de tourisme. Groupes de 12 max. 5 € adulte, gratuit -12 ans.",
-    description: "Exploration des rochers et mares à marée basse avec un guide naturaliste. Bottes recommandées.",
+    nom: "Soirée Théâtre",
+    emoji: "🎭",
+    association: "Compagnie du Caillou",
+    date_debut: "2026-06-06",
+    date_fin:   "2026-06-06",
+    heure: "15h00 & 18h00",
+    lat: 47.597088,
+    lng: -2.845835,
+    lieu: "Salle annexe de la Mairie",
+    acces: "libre",
+    description: "Tragédie suivi de La nostalgie des blattes",
     site: ""
   },
   {
