@@ -18,17 +18,17 @@
 
 const EVENEMENTS = [
   {
-    nom: "Marché des saveurs insulaires",
-    emoji: "🧺",
-    association: "Comité des fêtes IAM",
-    date_debut: "2026-06-13",
-    date_fin:   "2026-06-13",
-    heure: "9h00 – 13h00",
-    lat: 47.5960,
-    lng: -2.8462,
-    lieu: "Place de l'Église — centre bourg",
-    acces: "Bac depuis Port-Blanc (Baden) ou La Trinité-sur-Mer. Entrée libre.",
-    description: "Producteurs locaux, huîtres du Golfe, légumes de l'île, confitures artisanales, pains bio.",
+    nom: "Soirée exceptionnelle Passeurs de Films",
+    emoji: "",
+    association: "Passeurs de Films", "Fête de la mer"
+    date_debut: "2026-05-30",
+    date_fin:   "2026-05-30",
+    heure: "19h30 – 24h00",
+    lat: 47.597743,
+    lng: -2.844763,
+    lieu: "Place du Marché",
+    acces: "Entrée libre.Inscription obligatoire pour le dîner 18 € ",
+    description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie",
     site: ""
   },
   {
