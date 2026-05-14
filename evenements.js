@@ -20,7 +20,7 @@
 const EVENEMENTS = [
   {
     nom: "Soirée exceptionnelle Passeurs de Films",
-    emoji: "",
+    emoji: "🎬",
     association: "Passeurs de Films, Fête de la mer",
     date_debut: "2026-05-30",
     date_fin:   "2026-05-30",
@@ -34,18 +34,19 @@ const EVENEMENTS = [
     site: "https://www.passeursdefilms.fr/"
   },
   {
-    nom: "Fête de la Musique — Concert au port",
+    nom: "chorale Harmonie de Plescop",
     emoji: "🎵",
-    association: "Mairie de l'Île-aux-Moines",
-    date_debut: "2026-05-21",
-    date_fin:   "2026-05-21",
-    heure: "18h00 – 23h00",
-    lat: 47.5961,
-    lng: -2.8469,
-    lieu: "Embarcadère — port de l'Île",
+    association: "LALVI",
+    date_debut: "2026-06-06",
+    date_fin:   "2026-06-06",
+    heure: "15h00 – 16h30",
+    lat: 47.35552,
+    lng: -2.50328,
+    lieu: "Eglise Saint Michel",
     acces: "Dernier bac retour vers 23h30. Entrée libre.",
-    description: "Jazz manouche, folk breton et scène ouverte pour tous les musiciens de l'île.",
-    site: "https://www.izenah-croisieres.com"
+    description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
+    image : "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
+    site: "https://https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
   },
   {
     nom: "Sortie découverte de l'estran",
