@@ -46,7 +46,7 @@ const EVENEMENTS = [
     acces: "Entrée libre.",
     description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
     image : "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
-    site: "https://https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
+    site: "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
   },
   {
     nom: "Sortie découverte de l'estran",
