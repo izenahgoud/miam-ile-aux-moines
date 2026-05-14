@@ -43,7 +43,7 @@ const EVENEMENTS = [
     lat: 47.35552,
     lng: -2.50328,
     lieu: "Eglise Saint Michel",
-    acces: "Dernier bac retour vers 23h30. Entrée libre.",
+    acces: "Entrée libre.",
     description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
     image : "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
     site: "https://https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
