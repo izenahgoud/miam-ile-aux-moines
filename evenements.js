@@ -14,13 +14,14 @@
 //   heure        : ex. "10h00 – 13h00"
 //   association  : nom de l'organisateur
 //   description  : texte libre
+//   image: "https://exemple.fr/photo-regates.jpg",
 //   site         : URL (bouton "Site de l'événement")
 
 const EVENEMENTS = [
   {
     nom: "Soirée exceptionnelle Passeurs de Films",
     emoji: "",
-    association: "Passeurs de Films", "Fête de la mer"
+    association: "Passeurs de Films, Fête de la mer",
     date_debut: "2026-05-30",
     date_fin:   "2026-05-30",
     heure: "19h30 – 24h00",
