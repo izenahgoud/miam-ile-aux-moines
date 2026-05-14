@@ -29,7 +29,7 @@ const EVENEMENTS = [
     lieu: "Place du Marché",
     acces: "Entrée libre.Inscription obligatoire pour le dîner 18 € ",
     description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie",
-    site: ""
+    site: "https://www.passeursdefilms.fr/"
   },
   {
     nom: "Fête de la Musique — Concert au port",
