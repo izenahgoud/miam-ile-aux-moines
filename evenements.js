@@ -10,8 +10,8 @@ const EVENEMENTS = [
     heure:      "19h30 – 00h00",
     lieu:       "Place du Marché",
     acces:      "Dîner + séance : 18 €. Réservation obligatoire.",
-    lat:  47.5985,
-    lng:  -2.8472,
+    lat:  47.596771,
+    lng:  -2.845915,
     site: null,
     emoji: "🎬"
   },
