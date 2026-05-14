@@ -30,6 +30,7 @@ const EVENEMENTS = [
     lieu: "Place du Marché",
     acces: "Entrée libre.Inscription obligatoire pour le dîner 18 € ",
     description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Soir%C3%A9e_Passeurs_de_Films.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260514095334",
     site: "https://www.passeursdefilms.fr/"
   },
   {
