@@ -63,19 +63,19 @@ const EVENEMENTS = [
     site: ""
   },
   {
-    nom: "Régates de l'Île-aux-Moines",
-    emoji: "⛵",
-    association: "Club nautique IAM",
-    date_debut: "2026-07-18",
-    date_fin:   "2026-07-19",
-    heure: "10h00 – 17h00",
+    nom: "A l'origine de nos maisons",
+    emoji: "🏠",
+    association: "",
+    date_debut: "2026-06-14",
+    date_fin:   "2026-06-14",
+    heure: "17h00 – 18h30",
     lat: 47.5975,
     lng: -2.8395,
-    lieu: "Anse de Brouel — côte est",
-    acces: "Accès à pied depuis le port (15 min) ou vélo. Entrée libre. Buvette sur place.",
+    lieu: "Salle du Rinville",
+    acces: "Entrée libre. Places limitées",
     description: "Course de voiliers classiques dans le Golfe du Morbihan. Spectacle depuis le rivage.",
-    image: "https://exemple.fr/photo-regates.jpg",  // ← URL d'une image
-  site:  "https://clubnautique-iam.fr",            // ← bouton "Voir le site"
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653",  // ← URL d'une image
+    site:  "",            // ← bouton "Voir le site"
   },
   {
     nom: "Exposition — Stéphane Dugied",
