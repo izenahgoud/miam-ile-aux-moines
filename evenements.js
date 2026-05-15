@@ -89,8 +89,8 @@ const EVENEMENTS = [
     lieu: "la Petite Galerie",
     acces: "Entrée libre. Œuvres en vente.",
     description: "Sculptures. Au fil de l'air et du fer",
-    image: "https://exemple.fr/photo-regates.jpg",
-    site: "https://upload.wikimedia.org/wikipedia/commons/5/54/Dugied.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653"
+    image: "https://upload.wikimedia.org/wikipedia/commons/5/54/Dugied.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653",
+    site: ""
   },
     {
     nom: "Initiation à la manipulation d'un défibrillateur",
