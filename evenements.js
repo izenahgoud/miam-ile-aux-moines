@@ -106,7 +106,7 @@ const EVENEMENTS = [
     description: "Projection d'un film. Echanges avec des cardiologues",
     image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Malo_Coeur.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653",
     site: ""
-  }
+  },
   {
     nom: "Concours de pêche — Jeunes pêcheurs",
     emoji: "🎣",
