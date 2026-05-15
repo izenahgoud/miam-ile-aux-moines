@@ -119,7 +119,7 @@ const EVENEMENTS = [
     lieu: "Cales du port",
     acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
     description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
-    image: ""
+    image: "",
     site: ""
   }
 ];
