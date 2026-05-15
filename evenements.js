@@ -78,18 +78,19 @@ const EVENEMENTS = [
   site:  "https://clubnautique-iam.fr",            // ← bouton "Voir le site"
   },
   {
-    nom: "Exposition — Peintres de l'île",
+    nom: "Exposition — Stéphane Dugied",
     emoji: "🎨",
-    association: "Association des artistes IAM",
-    date_debut: "2026-07-25",
-    date_fin:   "2026-08-09",
-    heure: "10h00 – 19h00",
-    lat: 47.5958,
-    lng: -2.8471,
-    lieu: "Salle des fêtes — route de Penhap",
+    association: "",
+    date_debut: "2026-05-15",
+    date_fin:   "2026-05-19",
+    heure: "10h00 – 13h00 & 15h00 - 19h00",
+    lat: 47.5998,
+    lng: -2.8510,
+    lieu: "la Petite Galerie",
     acces: "Entrée libre. Œuvres en vente.",
-    description: "Vernissage et exposition collective de 12 artistes résidents. Peintures, aquarelles et photographies.",
-    site: ""
+    description: "Sulptures. Au fil de l'air et du fer",
+    image: "https://exemple.fr/photo-regates.jpg",
+    site: "https://upload.wikimedia.org/wikipedia/commons/5/54/Dugied.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653"
   },
   {
     nom: "Concours de pêche — Jeunes pêcheurs",
