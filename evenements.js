@@ -88,7 +88,7 @@ const EVENEMENTS = [
     lng: -2.8510,
     lieu: "la Petite Galerie",
     acces: "Entrée libre. Œuvres en vente.",
-    description: "Sulptures. Au fil de l'air et du fer",
+    description: "Sculptures. Au fil de l'air et du fer",
     image: "https://exemple.fr/photo-regates.jpg",
     site: "https://upload.wikimedia.org/wikipedia/commons/5/54/Dugied.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653"
   },
