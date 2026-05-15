@@ -98,7 +98,7 @@ const EVENEMENTS = [
     association: "Malocoeur & Pompiers de l'Ile-aux-Moines",
     date_debut: "2026-05-23",
     date_fin:   "2026-05-24",
-    heure: "15h00 – 17h00",
+    heure: "15h00 – 17h00 & 10h00 - 12h00",
     lat: 47.596902,
     lng: -2.845671,
     lieu: "Place de la Mairie",
