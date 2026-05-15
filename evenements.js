@@ -73,7 +73,7 @@ const EVENEMENTS = [
     lng: -2.8502,
     lieu: "Salle du Rinville",
     acces: "Entrée libre. Places limitées",
-    description: "Course de voiliers classiques dans le Golfe du Morbihan. Spectacle depuis le rivage.",
+    description: "",
     image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653",  // ← URL d'une image
     site:  "",            // ← bouton "Voir le site"
   },
