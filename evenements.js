@@ -92,6 +92,20 @@ const EVENEMENTS = [
     image: "https://exemple.fr/photo-regates.jpg",
     site: "https://upload.wikimedia.org/wikipedia/commons/5/54/Dugied.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653"
   },
+    {
+    nom: "Initiation à la manipulation d'un défibrillateur",
+    emoji: "❤️",
+    association: "Malocoeur & Pompiers de l'Ile-aux-Moines",
+    date_debut: "2026-05-23",
+    date_fin:   "2026-05-24",
+    heure: "15h00 – 17h00 & 10h00 - 12h00",
+    lat: 47.596902,
+    lng: -2.845671,
+    lieu: "Place de la Mairie",
+    acces: "Ouvert à tous. Adultes et Enfants.",
+    description: "Projection d'un film. Echanges avec des cardiologues",
+    site: ""
+  }
   {
     nom: "Concours de pêche — Jeunes pêcheurs",
     emoji: "🎣",
