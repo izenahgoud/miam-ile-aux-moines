@@ -108,7 +108,7 @@ const POIS = [
   {"name":"Poubelles","lat":47.596954,"lon":-2.84327,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.596639,"lon":-2.844456,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.596006,"lon":-2.845185,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
-  {"name":"Poubelles","lat":47.59584,"lon":-2.843007,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.595706,"lon":-2.842794,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.595094,"lon":-2.841951,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.594277,"lon":-2.842895,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.593365,"lon":-2.84577,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
