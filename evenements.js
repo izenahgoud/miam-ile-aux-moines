@@ -1,4 +1,4 @@
-// evenements.js — Événements de l'Île-aux-Moines
+eurs // evenements.js — Événements de l'Île-aux-Moines
 // Format attendu par index.html (BLOC 3 — initEvenements)
 //
 // Champs obligatoires :
@@ -78,18 +78,18 @@ const EVENEMENTS = [
     site:  "",            // ← bouton "Voir le site"
   },
   {
-    nom: "Exposition — Stéphane Dugied",
+    nom: "Exposition — Vecteurs marins",
     emoji: "🎨",
     association: "",
-    date_debut: "2026-05-15",
-    date_fin:   "2026-05-19",
+    date_debut: "2026-05-21",
+    date_fin:   "2026-05-26",
     heure: "10h00 – 13h00 & 15h00 - 19h00",
     lat: 47.5998,
     lng: -2.8510,
     lieu: "la Petite Galerie",
-    acces: "Entrée libre. Œuvres en vente.",
-    description: "Sculptures. Au fil de l'air et du fer",
-    image: "https://upload.wikimedia.org/wikipedia/commons/5/54/Dugied.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653",
+    acces: "Entrée libre. Tout public.",
+    description: "Cartes marines des fonds marins bretons, aux couleurs et hauteurs variant selon les profondeurs représentées.",
+    image: "https://photos.infolocale.fr/infoLocale/annonce/2026/0513/8885925/_1_cover_604-400_.png",
     site: ""
   },
     {
