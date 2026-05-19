@@ -60,7 +60,7 @@ const EVENEMENTS = [
     lieu: "Salle annexe de la Mairie",
     acces: "libre",
     description: "Tragédie suivi de La nostalgie des blattes",
-    site: ""
+    site: "",
   },
   {
     nom: "A l'origine de nos maisons",
@@ -90,7 +90,7 @@ const EVENEMENTS = [
     acces: "Entrée libre. Tout public.",
     description: "Cartes marines des fonds marins bretons, aux couleurs et hauteurs variant selon les profondeurs représentées.",
     image: "https://photos.infolocale.fr/infoLocale/annonce/2026/0513/8885925/_1_cover_604-400_.png",
-    site: ""
+    site: "",
   },
     {
     nom: "Initiation à la manipulation d'un défibrillateur",
