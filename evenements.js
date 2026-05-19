@@ -77,7 +77,7 @@ const EVENEMENTS = [
     image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515091653",  // ← URL d'une image
     site:  "",            // ← bouton "Voir le site"
   },
-  {
+ // {
     nom: "Exposition — Vecteurs marins",
     emoji: "🎨",
     association: "",
