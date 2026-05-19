@@ -104,11 +104,11 @@ const EVENEMENTS = [
     lat: 47.59136,
     lng: -2.82487,
     lieu: "Pointe de Brouël",
-    acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
-    description: "Buvette et gateaux sur place.Barbecue en libre service.",
+    acces: "",
+    description: "Buvette et gateaux sur place. Barbecue en libre service.",
     image: "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/02/pique-nique-iles.jpg.webp",
     site: ""
-  }
+  },
   {
     nom: "Concours de pêche — Jeunes pêcheurs",
     emoji: "🎣",
@@ -123,5 +123,5 @@ const EVENEMENTS = [
     description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
     image: "",
     site: ""
-  }
+  },
 ];
