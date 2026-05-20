@@ -115,7 +115,7 @@ const EVENEMENTS = [
     association: "Mairie de l'Île-aux-Moines",
     date_debut: "2026-05-25",
     date_fin:   "2026-05-25",
-    heure: "1030",
+    heure: "10h30",
     lat: 47.5970,
     lng: -2.845631,
     lieu: "Salle annexe de la Mairie",
