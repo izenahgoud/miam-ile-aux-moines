@@ -109,6 +109,21 @@ const EVENEMENTS = [
     image: "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/02/pique-nique-iles.jpg.webp",
     site: ""
   },
+   {
+    nom: "Réunion publique",
+    emoji: "🤝",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut: "2026-05-25",
+    date_fin:   "2026-05-25",
+    heure: "1030",
+    lat: 47.5970,
+    lng: -2.845631,
+    lieu: "Salle annexe de la Mairie",
+    acces: "Venez nombreux",
+    description: "Nous souhaitons recueillir vos avis avant de soumettre ce dossier au conseil municipal.",
+    image: "https://upload.wikimedia.org/wikipedia/commons/7/78/R%C3%A9union_publique_20250525.jpg?_=20260520090543",
+    site: ""
+  },
   {
     nom: "Concours de pêche — Jeunes pêcheurs",
     emoji: "🎣",
