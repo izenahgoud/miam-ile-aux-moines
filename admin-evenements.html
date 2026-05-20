@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M'IAM — Agenda des événements</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:     #1a3a2a;
+  --forest-mid: #2d5e3f;
+  --forest-light:#4a8c5f;
+  --sand:       #e8d5a3;
+  --sand-light: #f5edd8;
+  --cream:      #faf6ed;
+  --text:       #1c2b22;
+  --text-muted: #5a7060;
+  --border:     rgba(26,58,42,0.15);
+  --red:        #c0392b;
+  --red-light:  #fdf0ee;
+  --green:      #27ae60;
+  --green-light:#eaf6f0;
+  --purple:     #9b59b6;
+  --purple-light:#f3edf8;
+  --orange:     #e67e22;
+  --radius:     14px;
+  --shadow:     0 4px 24px rgba(26,58,42,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ───────────────────────────────────── */
+header {
+  background: var(--forest);
+  padding: 18px 24px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.header-left h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  color: var(--sand-light);
+  font-weight: 600;
+  line-height: 1.1;
+}
+.header-left p {
+  font-size: 11px;
+  color: rgba(232,213,163,0.6);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.header-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ── BUTTONS ──────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all .18s;
+  white-space: nowrap;
+}
+.btn-primary   { background: var(--forest-light); color: #fff; }
+.btn-primary:hover { background: #5fa070; }
+.btn-secondary { background: rgba(232,213,163,0.18); color: var(--sand-light); border: 1px solid rgba(232,213,163,0.3); }
+.btn-secondary:hover { background: rgba(232,213,163,0.3); }
+.btn-export    { background: var(--sand); color: var(--forest); font-weight: 600; }
+.btn-export:hover { background: var(--sand-light); }
+.btn-danger    { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #a93226; }
+.btn-ghost     { background: none; border: 1px solid var(--border); color: var(--text-muted); }
+.btn-ghost:hover { background: var(--sand-light); color: var(--text); }
+.btn-sm        { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+.btn-icon      { padding: 6px 10px; }
+
+/* ── MAIN LAYOUT ──────────────────────────────── */
+main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+
+/* ── BARRE D'OUTILS ───────────────────────────── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.count-badge {
+  background: var(--forest);
+  color: var(--sand-light);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.window-badge {
+  background: var(--purple-light);
+  color: var(--purple);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── LISTE ÉVÉNEMENTS ─────────────────────────── */
+#evt-list { display: flex; flex-direction: column; gap: 10px; }
+
+.evt-row {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  transition: box-shadow .15s;
+}
+.evt-row:hover { box-shadow: var(--shadow); }
+
+.evt-row.past { opacity: .5; }
+.evt-row.soon { border-left: 3px solid var(--green); }
+.evt-row.today { border-left: 3px solid var(--orange); background: #fffdf7; }
+
+.evt-date-col {
+  text-align: center;
+  background: var(--forest);
+  border-radius: 10px;
+  padding: 8px 6px;
+  color: var(--sand-light);
+  flex-shrink: 0;
+}
+.evt-date-col .day  { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 600; line-height: 1; }
+.evt-date-col .month{ font-size: 10px; text-transform: uppercase; letter-spacing: .08em; opacity: .7; margin-top: 1px; }
+
+.evt-info {}
+.evt-nom {
+  font-family: "Playfair Display", serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.evt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+.tag-lieu  { background: var(--green-light); color: #1a6b3a; }
+.tag-heure { background: #eef4fb; color: #1a4a8a; }
+.tag-asso  { background: var(--purple-light); color: var(--purple); }
+.tag-fin   { background: var(--sand-light); color: var(--text-muted); font-size: 10px; }
+.tag-past  { background: #f0f0f0; color: #888; }
+.tag-soon  { background: var(--green-light); color: var(--green); }
+.tag-img   { background: #fff3e0; color: #b35a00; }
+.tag-site  { background: #e3f2fd; color: #1565c0; }
+
+.evt-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ── EMPTY STATE ──────────────────────────────── */
+#empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-muted);
+  display: none;
+}
+#empty-state .big { font-size: 48px; margin-bottom: 12px; }
+#empty-state p { font-size: 14px; }
+
+/* ── MODAL ────────────────────────────────────── */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,25,15,0.55);
+  z-index: 200;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 12px 40px;
+  overflow-y: auto;
+}
+.modal-bg.open { display: flex; }
+
+.modal {
+  background: var(--cream);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  overflow: hidden;
+  margin: auto;
+}
+.modal-header {
+  background: var(--forest);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-header h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  color: var(--sand-light);
+  font-weight: 600;
+}
+.modal-close {
+  background: rgba(232,213,163,0.15);
+  border: none;
+  color: var(--sand-light);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-close:hover { background: rgba(232,213,163,0.3); }
+
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.modal-footer {
+  padding: 14px 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+  background: #fff;
+}
+
+/* ── FORMULAIRE ───────────────────────────────── */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.field label span { color: var(--red); margin-left: 2px; }
+.field input, .field textarea, .field select {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+  width: 100%;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none;
+  border-color: var(--forest-mid);
+  box-shadow: 0 0 0 3px rgba(45,94,63,0.1);
+}
+.field textarea { resize: vertical; min-height: 72px; }
+.field .hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.field .hint a { color: var(--forest-mid); }
+
+.emoji-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.emoji-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: var(--sand-light);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .12s;
+}
+.emoji-btn:hover { background: var(--sand); transform: scale(1.15); }
+.emoji-btn.selected { border-color: var(--forest); background: var(--sand); }
+
+/* ── IMAGE PREVIEW ────────────────────────────── */
+.img-preview {
+  width: 100%;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  display: none;
+  margin-top: 6px;
+}
+.img-preview.visible { display: block; }
+
+/* ── MAP MINI ─────────────────────────────────── */
+.coords-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.coords-hint {
+  grid-column: span 2;
+  background: var(--green-light);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #1a5a2a;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+/* ── EXPORT PANEL ─────────────────────────────── */
+.export-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,25,15,0.6);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.export-panel.open { display: flex; }
+.export-box {
+  background: var(--cream);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 640px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+.export-header {
+  background: var(--forest);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.export-header h2 { font-family: "Playfair Display", serif; font-size: 18px; color: var(--sand-light); }
+.export-body { padding: 20px; }
+.export-body pre {
+  background: #1a2a1e;
+  color: #a8d5b5;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-family: "Courier New", monospace;
+  overflow-x: auto;
+  max-height: 340px;
+  overflow-y: auto;
+  white-space: pre;
+}
+.export-footer {
+  padding: 14px 20px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}
+.copy-success {
+  display: none;
+  color: var(--green);
+  font-size: 13px;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+.copy-success.show { display: flex; }
+
+/* ── DELETE CONFIRM ───────────────────────────── */
+.delete-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,25,15,0.6);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.delete-panel.open { display: flex; }
+.delete-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+.delete-box .icon { font-size: 40px; margin-bottom: 12px; }
+.delete-box h3 { font-family: "Playfair Display", serif; font-size: 18px; margin-bottom: 8px; color: var(--text); }
+.delete-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5; }
+.delete-box .btns { display: flex; gap: 10px; justify-content: center; }
+
+/* ── TOAST ────────────────────────────────────── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--forest);
+  color: var(--sand-light);
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 500;
+  transition: transform .3s cubic-bezier(.34,1.2,.64,1);
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media (max-width: 600px) {
+  .evt-row { grid-template-columns: 48px 1fr; }
+  .evt-actions { grid-column: span 2; justify-content: flex-end; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-row.three { grid-template-columns: 1fr; }
+  .coords-row { grid-template-columns: 1fr; }
+  .coords-hint { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>🗓 M'IAM — Agenda</h1>
+    <p>Île-aux-Moines · Gestion des événements</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="openExport()">📋 Exporter evenements.js</button>
+    <button class="btn btn-primary" onclick="openAdd()">＋ Ajouter un événement</button>
+  </div>
+</header>
+
+<main>
+  <div class="toolbar">
+    <span class="count-badge" id="count-badge">0 événement</span>
+    <span class="window-badge">📅 Fenêtre d'affichage : 8 jours</span>
+  </div>
+
+  <div id="evt-list"></div>
+  <div id="empty-state">
+    <div class="big">🌿</div>
+    <p>Aucun événement pour l'instant.<br>Cliquez sur <strong>＋ Ajouter un événement</strong> pour commencer.</p>
+  </div>
+</main>
+
+<!-- ══ MODAL AJOUT / MODIFICATION ══════════════════════ -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Ajouter un événement</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Emoji -->
+      <div class="field">
+        <label>Icône de l'événement</label>
+        <div class="emoji-grid" id="emoji-grid"></div>
+        <input type="hidden" id="f-emoji" value="📅">
+      </div>
+
+      <!-- Nom -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Titre de l'événement <span>*</span></label>
+          <input type="text" id="f-nom" placeholder="Ex : Fête de la Musique au port" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Association -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Organisateur / Association</label>
+          <input type="text" id="f-asso" placeholder="Ex : Mairie de l'Île-aux-Moines">
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="form-row three">
+        <div class="field">
+          <label>Date début <span>*</span></label>
+          <input type="date" id="f-date-debut">
+        </div>
+        <div class="field">
+          <label>Date fin</label>
+          <input type="date" id="f-date-fin">
+          <span class="hint">Laisser vide si 1 seul jour</span>
+        </div>
+        <div class="field">
+          <label>Horaire</label>
+          <input type="text" id="f-heure" placeholder="Ex : 10h00 – 13h00">
+        </div>
+      </div>
+
+      <!-- Lieu -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Lieu <span>*</span></label>
+          <input type="text" id="f-lieu" placeholder="Ex : Place de l'Église — centre bourg">
+        </div>
+      </div>
+
+      <!-- Coordonnées GPS -->
+      <div class="field">
+        <label>Coordonnées GPS <span>*</span></label>
+        <div class="coords-row">
+          <input type="number" id="f-lat" placeholder="Latitude  ex : 47.5961" step="0.0001">
+          <input type="number" id="f-lng" placeholder="Longitude  ex : -2.8469" step="0.0001">
+          <div class="coords-hint">
+            <span>📍</span>
+            <span>Ouvrez <a href="https://maps.google.com" target="_blank">Google Maps</a>, faites un <strong>clic droit</strong> sur l'endroit exact → les coordonnées apparaissent → copiez latitude puis longitude.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accès -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Accès &amp; modalités <span>*</span></label>
+          <input type="text" id="f-acces" placeholder="Ex : Entrée libre. Bac depuis Port-Blanc.">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Description</label>
+          <textarea id="f-desc" placeholder="Détails sur l'événement…"></textarea>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="form-row full">
+        <div class="field">
+          <label>URL de l'image</label>
+          <input type="url" id="f-image" placeholder="https://…" oninput="previewImage(this.value)">
+          <span class="hint">💡 Hébergez sur <a href="https://commons.wikimedia.org" target="_blank">Wikimedia Commons</a> ou <a href="https://imgbb.com" target="_blank">imgbb.com</a></span>
+          <img id="img-preview" class="img-preview" alt="Aperçu">
+        </div>
+      </div>
+
+      <!-- Site web -->
+      <div class="form-row full">
+        <div class="field">
+          <label>Site web (bouton "Voir le site")</label>
+          <input type="url" id="f-site" placeholder="https://…">
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveEvent()">✓ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EXPORT ══════════════════════════════════════════ -->
+<div class="export-panel" id="export-panel">
+  <div class="export-box">
+    <div class="export-header">
+      <h2>📋 Exporter evenements.js</h2>
+      <button class="modal-close" onclick="closeExport()">✕</button>
+    </div>
+    <div class="export-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;line-height:1.5">
+        Copiez ce code, ouvrez le fichier <strong>evenements.js</strong> sur GitHub, collez et validez.
+      </p>
+      <pre id="export-code"></pre>
+    </div>
+    <div class="export-footer">
+      <span class="copy-success" id="copy-success">✓ Copié !</span>
+      <button class="btn btn-ghost" onclick="closeExport()">Fermer</button>
+      <button class="btn btn-export" onclick="copyExport()">📋 Tout copier</button>
+      <a id="download-link" class="btn btn-primary" download="evenements.js">⬇ Télécharger</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUPPRESSION ══════════════════════════════════════ -->
+<div class="delete-panel" id="delete-panel">
+  <div class="delete-box">
+    <div class="icon">🗑️</div>
+    <h3 id="delete-name">Supprimer l'événement ?</h3>
+    <p>Cette suppression sera effective après export et remplacement du fichier <strong>evenements.js</strong> sur GitHub.</p>
+    <div class="btns">
+      <button class="btn btn-ghost" onclick="closeDelete()">Annuler</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ════════════════════════════════════════════ -->
+<div id="toast"></div>
+
+<script>
+// ── Données initiales (copiées depuis evenements.js) ──────────
+let EVENEMENTS = [
+  {
+    nom: "Exposition — Vecteurs marins",
+    emoji: "🎨",
+    association: "",
+    date_debut: "2026-05-21",
+    date_fin:   "2026-05-26",
+    heure: "10h00 – 13h00 & 15h00 – 19h00",
+    lat: 47.5998,
+    lng: -2.8510,
+    lieu: "La Petite Galerie",
+    acces: "Entrée libre. Tout public.",
+    description: "Cartes marines des fonds marins bretons, aux couleurs et hauteurs variant selon les profondeurs représentées.",
+    image: "https://photos.infolocale.fr/infoLocale/annonce/2026/0513/8885925/_1_cover_604-400_.png",
+    site: ""
+  },
+  {
+    nom: "Initiation à la manipulation d'un défibrillateur",
+    emoji: "❤️",
+    association: "Malocoeur & Pompiers de l'Île-aux-Moines",
+    date_debut: "2026-05-23",
+    date_fin:   "2026-05-24",
+    heure: "15h00 – 17h00 & 10h00 – 12h00",
+    lat: 47.596902,
+    lng: -2.845671,
+    lieu: "Place de la Mairie",
+    acces: "Ouvert à tous. Adultes et enfants.",
+    description: "Projection d'un film. Échanges avec des cardiologues.",
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Malo_Coeur.jpg",
+    site: ""
+  },
+  {
+    nom: "Soirée exceptionnelle Passeurs de Films",
+    emoji: "🎬",
+    association: "Passeurs de Films, Fête de la mer",
+    date_debut: "2026-05-30",
+    date_fin:   "2026-05-30",
+    heure: "19h30 – 24h00",
+    lat: 47.596758,
+    lng: -2.845953,
+    lieu: "Place du Marché",
+    acces: "Entrée libre. Inscription obligatoire pour le dîner : 18 €",
+    description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie.",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Soir%C3%A9e_Passeurs_de_Films.jpg",
+    site: "https://www.passeursdefilms.fr/"
+  },
+  {
+    nom: "Chorale Harmonie de Plescop",
+    emoji: "🎵",
+    association: "LALVI",
+    date_debut: "2026-06-06",
+    date_fin:   "2026-06-06",
+    heure: "15h00 – 16h30",
+    lat: 47.59890,
+    lng: -2.84264,
+    lieu: "Église Saint Michel",
+    acces: "Entrée libre.",
+    description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
+    image: "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
+    site: "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
+  },
+  {
+    nom: "Soirée Théâtre",
+    emoji: "🎭",
+    association: "Compagnie du Caillou",
+    date_debut: "2026-06-06",
+    date_fin:   "2026-06-06",
+    heure: "15h00 & 18h00",
+    lat: 47.597088,
+    lng: -2.845835,
+    lieu: "Salle annexe de la Mairie",
+    acces: "Libre",
+    description: "Tragédie suivi de La nostalgie des blattes.",
+    image: "",
+    site: ""
+  },
+  {
+    nom: "À l'origine de nos maisons",
+    emoji: "🏠",
+    association: "",
+    date_debut: "2026-06-14",
+    date_fin:   "2026-06-14",
+    heure: "17h00 – 18h30",
+    lat: 47.5943,
+    lng: -2.8502,
+    lieu: "Salle du Rinville",
+    acces: "Entrée libre. Places limitées.",
+    description: "",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
+    site: ""
+  },
+  {
+    nom: "Concours de pêche — Jeunes pêcheurs",
+    emoji: "🎣",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut: "2026-08-01",
+    date_fin:   "2026-08-01",
+    heure: "8h00 – 12h00",
+    lat: 47.5962,
+    lng: -2.8471,
+    lieu: "Cales du port",
+    acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
+    description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
+    image: "",
+    site: ""
+  }
+];
+
+const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
+
+const EMOJIS_LABEL = {
+  "📅":"Calendrier","🎵":"Musique","🎬":"Cinéma","🎭":"Théâtre","🎨":"Art",
+  "🧺":"Marché","⛵":"Voile","🦀":"Nature","🎣":"Pêche","🏠":"Patrimoine",
+  "❤️":"Santé","🌿":"Nature","🍽️":"Gastronomie","🥂":"Soirée","🏖️":"Plage",
+  "🏛️":"Culture","🗿":"Mégalithe","🌊":"Mer","🎪":"Fête","🎉":"Événement",
+  "🎊":"Célébration","🎸":"Concert","🥁":"Concert","🎺":"Concert","🎻":"Concert",
+  "📸":"Photo","🖼️":"Expo","🌸":"Printemps","🌻":"Été","🍀":"Nature"
+};
+
+let editIndex = -1;
+let deleteIndex = -1;
+const today = new Date(); today.setHours(0,0,0,0);
+
+// ── Init ───────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildEmojiGrid();
+  renderList();
+});
+
+// ── Rendu de la liste ──────────────────────────────────────
+function renderList() {
+  const list = document.getElementById('evt-list');
+  const empty = document.getElementById('empty-state');
+  const sorted = [...EVENEMENTS].map((e,i) => ({...e, _idx:i}))
+    .sort((a,b) => a.date_debut.localeCompare(b.date_debut));
+
+  document.getElementById('count-badge').textContent =
+    EVENEMENTS.length + ' événement' + (EVENEMENTS.length > 1 ? 's' : '');
+
+  if(sorted.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  list.innerHTML = sorted.map(evt => {
+    const dDebut = new Date(evt.date_debut + 'T00:00:00');
+    const dFin   = evt.date_fin ? new Date(evt.date_fin + 'T00:00:00') : dDebut;
+    const isPast = dFin < today;
+    const isToday = dDebut.getTime() === today.getTime();
+    const window8 = new Date(today); window8.setDate(window8.getDate()+8);
+    const isSoon = !isPast && dDebut <= window8;
+
+    const j = dDebut.getDate();
+    const m = dDebut.toLocaleDateString('fr-FR',{month:'short'}).replace('.','');
+
+    let rowClass = 'evt-row';
+    if(isPast)    rowClass += ' past';
+    else if(isToday) rowClass += ' today';
+    else if(isSoon)  rowClass += ' soon';
+
+    const statusTag = isPast
+      ? `<span class="tag tag-past">Passé</span>`
+      : isSoon
+        ? `<span class="tag tag-soon">✦ Dans la fenêtre 8j</span>`
+        : '';
+
+    const imgTag  = evt.image ? `<span class="tag tag-img">🖼 Image</span>` : '';
+    const siteTag = evt.site  ? `<span class="tag tag-site">🌐 Site</span>` : '';
+    const finTag  = evt.date_fin && evt.date_fin !== evt.date_debut
+      ? `<span class="tag tag-fin">→ ${fmtDateShort(evt.date_fin)}</span>` : '';
+
+    return `<div class="${rowClass}">
+      <div class="evt-date-col">
+        <div class="day">${j}</div>
+        <div class="month">${m}</div>
+      </div>
+      <div class="evt-info">
+        <div class="evt-nom">${evt.emoji||'📅'} ${evt.nom}</div>
+        <div class="evt-meta">
+          ${evt.lieu ? `<span class="tag tag-lieu">📍 ${evt.lieu}</span>` : ''}
+          ${evt.heure ? `<span class="tag tag-heure">🕐 ${evt.heure}</span>` : ''}
+          ${evt.association ? `<span class="tag tag-asso">${evt.association}</span>` : ''}
+          ${finTag}${statusTag}${imgTag}${siteTag}
+        </div>
+      </div>
+      <div class="evt-actions">
+        <button class="btn btn-ghost btn-sm btn-icon" title="Modifier" onclick="openEdit(${evt._idx})">✏️</button>
+        <button class="btn btn-sm btn-icon" style="background:var(--red-light);color:var(--red);border:1px solid rgba(192,57,43,0.2)" title="Supprimer" onclick="openDelete(${evt._idx})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function fmtDateShort(s) {
+  const d = new Date(s+'T00:00:00');
+  return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+
+// ── Grille emoji ───────────────────────────────────────────
+function buildEmojiGrid() {
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = EMOJIS.map(e =>
+    `<button type="button" class="emoji-btn" title="${EMOJIS_LABEL[e]||e}" onclick="selectEmoji('${e}')">${e}</button>`
+  ).join('');
+}
+
+function selectEmoji(e) {
+  document.getElementById('f-emoji').value = e;
+  document.querySelectorAll('.emoji-btn').forEach(b => {
+    b.classList.toggle('selected', b.textContent === e);
+  });
+}
+
+// ── Preview image ──────────────────────────────────────────
+function previewImage(url) {
+  const img = document.getElementById('img-preview');
+  if(url && url.startsWith('http')) {
+    img.src = url;
+    img.classList.add('visible');
+    img.onerror = () => img.classList.remove('visible');
+  } else {
+    img.classList.remove('visible');
+  }
+}
+
+// ── Ouvrir modal AJOUT ─────────────────────────────────────
+function openAdd() {
+  editIndex = -1;
+  document.getElementById('modal-title').textContent = '＋ Ajouter un événement';
+  clearForm();
+  // Date par défaut = aujourd'hui
+  document.getElementById('f-date-debut').value = today.toISOString().slice(0,10);
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+// ── Ouvrir modal MODIFICATION ──────────────────────────────
+function openEdit(idx) {
+  editIndex = idx;
+  const e = EVENEMENTS[idx];
+  document.getElementById('modal-title').textContent = '✏️ Modifier l\'événement';
+  document.getElementById('f-nom').value        = e.nom || '';
+  document.getElementById('f-asso').value       = e.association || '';
+  document.getElementById('f-date-debut').value = e.date_debut || '';
+  document.getElementById('f-date-fin').value   = e.date_fin || '';
+  document.getElementById('f-heure').value      = e.heure || '';
+  document.getElementById('f-lieu').value       = e.lieu || '';
+  document.getElementById('f-lat').value        = e.lat || '';
+  document.getElementById('f-lng').value        = e.lng || '';
+  document.getElementById('f-acces').value      = e.acces || '';
+  document.getElementById('f-desc').value       = e.description || '';
+  document.getElementById('f-image').value      = e.image || '';
+  document.getElementById('f-site').value       = e.site || '';
+  selectEmoji(e.emoji || '📅');
+  previewImage(e.image || '');
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function clearForm() {
+  ['f-nom','f-asso','f-date-debut','f-date-fin','f-heure',
+   'f-lieu','f-lat','f-lng','f-acces','f-desc','f-image','f-site']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-emoji').value = '📅';
+  selectEmoji('📅');
+  document.getElementById('img-preview').classList.remove('visible');
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+}
+
+// ── Enregistrer (ajout ou modif) ───────────────────────────
+function saveEvent() {
+  const nom      = document.getElementById('f-nom').value.trim();
+  const dateDebut= document.getElementById('f-date-debut').value;
+  const lieu     = document.getElementById('f-lieu').value.trim();
+  const lat      = parseFloat(document.getElementById('f-lat').value);
+  const lng      = parseFloat(document.getElementById('f-lng').value);
+  const acces    = document.getElementById('f-acces').value.trim();
+
+  if(!nom)       { shake('f-nom');       showToast('⚠️ Le titre est obligatoire'); return; }
+  if(!dateDebut) { shake('f-date-debut');showToast('⚠️ La date de début est obligatoire'); return; }
+  if(!lieu)      { shake('f-lieu');      showToast('⚠️ Le lieu est obligatoire'); return; }
+  if(isNaN(lat)||isNaN(lng)) { shake('f-lat'); showToast('⚠️ Coordonnées GPS manquantes'); return; }
+  if(!acces)     { shake('f-acces');     showToast('⚠️ Les modalités d\'accès sont obligatoires'); return; }
+
+  const dateFin = document.getElementById('f-date-fin').value || dateDebut;
+
+  const obj = {
+    nom,
+    emoji:       document.getElementById('f-emoji').value || '📅',
+    association: document.getElementById('f-asso').value.trim(),
+    date_debut:  dateDebut,
+    date_fin:    dateFin,
+    heure:       document.getElementById('f-heure').value.trim(),
+    lat, lng, lieu, acces,
+    description: document.getElementById('f-desc').value.trim(),
+    image:       document.getElementById('f-image').value.trim(),
+    site:        document.getElementById('f-site').value.trim()
+  };
+
+  if(editIndex >= 0) {
+    EVENEMENTS[editIndex] = obj;
+    showToast('✓ Événement modifié');
+  } else {
+    EVENEMENTS.push(obj);
+    showToast('✓ Événement ajouté');
+  }
+
+  closeModal();
+  renderList();
+}
+
+function shake(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = 'var(--red)';
+  el.style.boxShadow = '0 0 0 3px rgba(192,57,43,0.15)';
+  setTimeout(() => { el.style.borderColor=''; el.style.boxShadow=''; }, 1800);
+}
+
+// ── Suppression ────────────────────────────────────────────
+function openDelete(idx) {
+  deleteIndex = idx;
+  document.getElementById('delete-name').textContent =
+    '« ' + EVENEMENTS[idx].nom + ' »';
+  document.getElementById('delete-panel').classList.add('open');
+}
+function closeDelete() {
+  document.getElementById('delete-panel').classList.remove('open');
+}
+function confirmDelete() {
+  EVENEMENTS.splice(deleteIndex, 1);
+  closeDelete();
+  renderList();
+  showToast('🗑 Événement supprimé');
+}
+
+// ── Export ─────────────────────────────────────────────────
+function buildJS() {
+  const lines = [
+    '// evenements.js — Événements de l\'Île-aux-Moines',
+    '// Généré par l\'interface d\'administration M\'IAM',
+    '//',
+    '// Champs obligatoires : nom, date_debut, date_fin, lat, lng, lieu, acces',
+    '// Champs optionnels  : emoji, heure, association, description, image, site',
+    '',
+    'const EVENEMENTS = ['
+  ];
+  EVENEMENTS.forEach((e, i) => {
+    lines.push('  {');
+    lines.push(`    nom:         ${JSON.stringify(e.nom)},`);
+    lines.push(`    emoji:       ${JSON.stringify(e.emoji||'📅')},`);
+    lines.push(`    association: ${JSON.stringify(e.association||'')},`);
+    lines.push(`    date_debut:  ${JSON.stringify(e.date_debut)},`);
+    lines.push(`    date_fin:    ${JSON.stringify(e.date_fin||e.date_debut)},`);
+    lines.push(`    heure:       ${JSON.stringify(e.heure||'')},`);
+    lines.push(`    lat:         ${e.lat},`);
+    lines.push(`    lng:         ${e.lng},`);
+    lines.push(`    lieu:        ${JSON.stringify(e.lieu)},`);
+    lines.push(`    acces:       ${JSON.stringify(e.acces)},`);
+    lines.push(`    description: ${JSON.stringify(e.description||'')},`);
+    lines.push(`    image:       ${JSON.stringify(e.image||'')},`);
+    lines.push(`    site:        ${JSON.stringify(e.site||'')}`);
+    lines.push('  }' + (i < EVENEMENTS.length-1 ? ',' : ''));
+  });
+  lines.push('];');
+  return lines.join('\n');
+}
+
+function openExport() {
+  const code = buildJS();
+  document.getElementById('export-code').textContent = code;
+  // Lien de téléchargement
+  const blob = new Blob([code], {type:'text/javascript'});
+  document.getElementById('download-link').href = URL.createObjectURL(blob);
+  document.getElementById('copy-success').classList.remove('show');
+  document.getElementById('export-panel').classList.add('open');
+}
+function closeExport() {
+  document.getElementById('export-panel').classList.remove('open');
+}
+function copyExport() {
+  const code = document.getElementById('export-code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    document.getElementById('copy-success').classList.add('show');
+    showToast('📋 Code copié dans le presse-papier');
+    setTimeout(() => document.getElementById('copy-success').classList.remove('show'), 3000);
+  });
+}
+
+// ── Toast ──────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── Fermer modals sur Échap ────────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') { closeModal(); closeExport(); closeDelete(); }
+});
+document.getElementById('modal-bg').addEventListener('click', function(e) {
+  if(e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
