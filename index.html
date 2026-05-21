@@ -420,7 +420,14 @@ function startGPS(){
   document.getElementById("gps-dot").classList.add("active");
   document.getElementById("gps-label").textContent="GPS on";
 }
-function stopGPS(){if(watchId)navigator.geolocation.clearWatch(watchId);gpsActive=false;document.getElementById("gps-dot").classList.remove("active");document.getElementById("gps-label").textContent="GPS off";}
+function stopGPS(){
+  if(watchId){ navigator.geolocation.clearWatch(watchId); watchId=null; }
+  gpsActive=false;
+  userLat=null; userLon=null;
+  if(userMarker){ map.removeLayer(userMarker); userMarker=null; }
+  document.getElementById("gps-dot").classList.remove("active");
+  document.getElementById("gps-label").textContent="GPS off";
+}
 function onPosition(pos){
   userLat=pos.coords.latitude;userLon=pos.coords.longitude;
   const icon=L.divIcon({className:"",html:`<div class="user-dot"></div>`,iconSize:[16,16],iconAnchor:[8,8]});
