@@ -91,10 +91,10 @@ const EVENEMENTS = [
     lng:         -2.845647,
     lieu:        "Salle du uConseil Municipal",
     acces:       "libre",
-    description: "Présentation de la 13 ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\n                             En présence des organisateurs du festival",
+    description: "Présentation de la 13 ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\n En présence des organisateurs du festival",
     image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ile_d%27Yeu_insulaires.jpg/960px-Ile_d%27Yeu_insulaires.jpg?_=20260528100143",
     site:        "https://lesinsulaires.com/"
-  }
+  },
 ];
 Fermer
 📋 Tout copier
