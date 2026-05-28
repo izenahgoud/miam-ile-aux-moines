@@ -45,7 +45,7 @@ const EVENEMENTS = [
     lat:         47.597088,
     lng:         -2.845835,
     lieu:        "Salle annexe de la Mairie",
-    acces:       "Libre, participation au chapeau",
+    acces:       "Libre",
     description: "Tragédie suivi de La nostalgie des blattes.",
     image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Compagnie_du_Caillou.jpg/960px-Compagnie_du_Caillou.jpg?_=20260528100143",
     site:        ""
@@ -81,19 +81,20 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "Réunion publique Festival des Insulaires",
+    nom:         "Réunion publique",
     emoji:       "🎊",
-    association: "Festival LES INSULAIRES",
+    association: "Festival Les INSULAIRES",
     date_debut:  "2026-06-04",
     date_fin:    "2026-06-04",
     heure:       "18h00 - 20h00",
-    lat:         47.597055,
-    lng:         -2.845647,
-    lieu:        "Salle du uConseil Municipal",
-    acces:       "libre",
-    description: "Présentation de la 13 ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\n En présence des organisateurs du festival",
+    lat:         47.597059,
+    lng:         -2.845658,
+    lieu:        "Salle du Conseil Municipal",
+    acces:       "Libre. Venz nombreux.",
+    description: "Présentation de la 13ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\nEn présence des organisateurs du festival.",
     image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ile_d%27Yeu_insulaires.jpg/960px-Ile_d%27Yeu_insulaires.jpg?_=20260528100143",
     site:        "https://lesinsulaires.com/"
-  },
+  }
 ];
-
+Fermer
+📋 Tout copier
