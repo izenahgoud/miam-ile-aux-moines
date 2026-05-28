@@ -1,4 +1,4 @@
-/ evenements.js — Événements de l'Île-aux-Moines
+// evenements.js — Événements de l'Île-aux-Moines
 // Généré par l'interface d'administration M'IAM
 //
 // Champs obligatoires : nom, date_debut, date_fin, lat, lng, lieu, acces
@@ -96,7 +96,4 @@ const EVENEMENTS = [
     site:        "https://lesinsulaires.com/"
   },
 ];
-Fermer
-📋 Tout copier
-⬇ Télécharger
-✓ Événement ajouté
+
