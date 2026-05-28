@@ -96,5 +96,3 @@ const EVENEMENTS = [
     site:        "https://lesinsulaires.com/"
   }
 ];
-Fermer
-📋 Tout copier
