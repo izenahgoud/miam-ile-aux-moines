@@ -94,5 +94,20 @@ const EVENEMENTS = [
     description: "Présentation de la 13ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\nEn présence des organisateurs du festival.",
     image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ile_d%27Yeu_insulaires.jpg/960px-Ile_d%27Yeu_insulaires.jpg?_=20260528100143",
     site:        "https://lesinsulaires.com/"
-  }
+  },
+   {
+    nom:         "Un après-midi à l'Herbier de Kerscot",
+    emoji:       "🎣",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut:  "2026-05-30",
+    date_fin:    "2026-05-30",
+    heure:       "16h00 – 19h30",
+    lat:         47.592851,
+    lng:         -2.851132,
+    lieu:        "Herbier de Kerscott",
+    acces:       "Entrée libre",
+    description: "Surprise musicale. Crac'hophonies. Choeur de l'Ile-aux-Moines",
+    image:       "https://upload.wikimedia.org/wikipedia/commons/a/af/Kerscot.jpg?_=20260529074757",
+    site:        ""
+  },
 ];
