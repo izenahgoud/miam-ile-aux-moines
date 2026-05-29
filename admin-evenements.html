@@ -623,7 +623,7 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
       <span class="copy-success" id="copy-success">✓ Copié !</span>
       <button class="btn btn-ghost" onclick="closeExport()">Fermer</button>
       <button class="btn btn-export" onclick="copyExport()">📋 Tout copier</button>
-      <a id="download-link" class="btn btn-primary" download="evenements.js">⬇ Télécharger</a>
+      <button class="btn btn-primary" onclick="downloadExport()">⬇ Télécharger</button>
     </div>
   </div>
 </div>
@@ -644,115 +644,13 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 <!-- ══ TOAST ════════════════════════════════════════════ -->
 <div id="toast"></div>
 
+
+<script src="evenements.js"></script>
+
 <script>
-// ── Données initiales (copiées depuis evenements.js) ──────────
-let EVENEMENTS = [
-  {
-    nom: "Exposition — Vecteurs marins",
-    emoji: "🎨",
-    association: "",
-    date_debut: "2026-05-21",
-    date_fin:   "2026-05-26",
-    heure: "10h00 – 13h00 & 15h00 – 19h00",
-    lat: 47.5998,
-    lng: -2.8510,
-    lieu: "La Petite Galerie",
-    acces: "Entrée libre. Tout public.",
-    description: "Cartes marines des fonds marins bretons, aux couleurs et hauteurs variant selon les profondeurs représentées.",
-    image: "https://photos.infolocale.fr/infoLocale/annonce/2026/0513/8885925/_1_cover_604-400_.png",
-    site: ""
-  },
-  {
-    nom: "Initiation à la manipulation d'un défibrillateur",
-    emoji: "❤️",
-    association: "Malocoeur & Pompiers de l'Île-aux-Moines",
-    date_debut: "2026-05-23",
-    date_fin:   "2026-05-24",
-    heure: "15h00 – 17h00 & 10h00 – 12h00",
-    lat: 47.596902,
-    lng: -2.845671,
-    lieu: "Place de la Mairie",
-    acces: "Ouvert à tous. Adultes et enfants.",
-    description: "Projection d'un film. Échanges avec des cardiologues.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Malo_Coeur.jpg",
-    site: ""
-  },
-  {
-    nom: "Soirée exceptionnelle Passeurs de Films",
-    emoji: "🎬",
-    association: "Passeurs de Films, Fête de la mer",
-    date_debut: "2026-05-30",
-    date_fin:   "2026-05-30",
-    heure: "19h30 – 24h00",
-    lat: 47.596758,
-    lng: -2.845953,
-    lieu: "Place du Marché",
-    acces: "Entrée libre. Inscription obligatoire pour le dîner : 18 €",
-    description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Soir%C3%A9e_Passeurs_de_Films.jpg",
-    site: "https://www.passeursdefilms.fr/"
-  },
-  {
-    nom: "Chorale Harmonie de Plescop",
-    emoji: "🎵",
-    association: "LALVI",
-    date_debut: "2026-06-06",
-    date_fin:   "2026-06-06",
-    heure: "15h00 – 16h30",
-    lat: 47.59890,
-    lng: -2.84264,
-    lieu: "Église Saint Michel",
-    acces: "Entrée libre.",
-    description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
-    image: "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
-    site: "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
-  },
-  {
-    nom: "Soirée Théâtre",
-    emoji: "🎭",
-    association: "Compagnie du Caillou",
-    date_debut: "2026-06-06",
-    date_fin:   "2026-06-06",
-    heure: "15h00 & 18h00",
-    lat: 47.597088,
-    lng: -2.845835,
-    lieu: "Salle annexe de la Mairie",
-    acces: "Libre",
-    description: "Tragédie suivi de La nostalgie des blattes.",
-    image: "",
-    site: ""
-  },
-  {
-    nom: "À l'origine de nos maisons",
-    emoji: "🏠",
-    association: "",
-    date_debut: "2026-06-14",
-    date_fin:   "2026-06-14",
-    heure: "17h00 – 18h30",
-    lat: 47.5943,
-    lng: -2.8502,
-    lieu: "Salle du Rinville",
-    acces: "Entrée libre. Places limitées.",
-    description: "",
-    image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
-    site: ""
-  },
-  {
-    nom: "Concours de pêche — Jeunes pêcheurs",
-    emoji: "🎣",
-    association: "Mairie de l'Île-aux-Moines",
-    date_debut: "2026-08-01",
-    date_fin:   "2026-08-01",
-    heure: "8h00 – 12h00",
-    lat: 47.5962,
-    lng: -2.8471,
-    lieu: "Cales du port",
-    acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
-    description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
-    image: "",
-    site: ""
-  }
-];
+// ── Les événements sont chargés depuis evenements.js ────────
+// Si evenements.js est absent (premier lancement), on démarre vide.
+if (typeof EVENEMENTS === 'undefined') { var EVENEMENTS = []; }
 
 const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
 
@@ -1019,11 +917,21 @@ function buildJS() {
 function openExport() {
   const code = buildJS();
   document.getElementById('export-code').textContent = code;
-  // Lien de téléchargement
-  const blob = new Blob([code], {type:'text/javascript'});
-  document.getElementById('download-link').href = URL.createObjectURL(blob);
   document.getElementById('copy-success').classList.remove('show');
   document.getElementById('export-panel').classList.add('open');
+}
+
+function downloadExport() {
+  const code = buildJS();
+  const blob = new Blob([code], { type: 'text/javascript' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'evenements.js';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast('⬇ Téléchargement en cours…');
 }
 function closeExport() {
   document.getElementById('export-panel').classList.remove('open');
