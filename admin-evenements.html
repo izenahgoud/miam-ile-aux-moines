@@ -6,7 +6,6 @@
 <title>M'IAM — Agenda des événements</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="evenements.js"></script>
 <style>
 :root {
   --forest:     #1a3a2a;
@@ -647,9 +646,8 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 
 
 <script>
-// ── Les événements sont chargés depuis evenements.js ────────
-// Fallback si evenements.js absent
-var EVENEMENTS = (typeof EVENEMENTS !== 'undefined') ? Array.from(EVENEMENTS) : [];
+// ── Données chargées depuis evenements.js via fetch ──────────
+var EVENEMENTS = [];
 
 const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
 
@@ -671,6 +669,29 @@ document.addEventListener('DOMContentLoaded', () => {
   buildEmojiGrid();
   renderList();
 });
+
+// ── Import du fichier evenements.js depuis le PC ───────────
+function importerFichier(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const fn = new Function(e.target.result + '; return typeof EVENEMENTS !== "undefined" ? EVENEMENTS : [];');
+      const data = fn();
+      if (Array.isArray(data) && data.length > 0) {
+        EVENEMENTS = data;
+        renderList();
+        showToast('✅ ' + data.length + ' événement(s) importé(s) depuis evenements.js');
+      } else {
+        showToast('⚠️ Fichier lu mais aucun événement trouvé');
+      }
+    } catch(e) {
+      showToast('⚠️ Erreur de lecture : ' + e.message);
+    }
+  };
+  reader.readAsText(file);
+}
 
 // ── Rendu de la liste ──────────────────────────────────────
 function renderList() {
