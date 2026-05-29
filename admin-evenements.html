@@ -6,6 +6,7 @@
 <title>M'IAM — Agenda des événements</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="evenements.js"></script>
 <style>
 :root {
   --forest:     #1a3a2a;
@@ -645,12 +646,10 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 <div id="toast"></div>
 
 
-<script src="evenements.js"></script>
-
 <script>
 // ── Les événements sont chargés depuis evenements.js ────────
-// Si evenements.js est absent (premier lancement), on démarre vide.
-if (typeof EVENEMENTS === 'undefined') { var EVENEMENTS = []; }
+// Fallback si evenements.js absent
+var EVENEMENTS = (typeof EVENEMENTS !== 'undefined') ? Array.from(EVENEMENTS) : [];
 
 const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
 
