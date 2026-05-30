@@ -485,10 +485,7 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
   <div class="toolbar">
     <span class="count-badge" id="count-badge">0 événement</span>
     <span class="window-badge">📅 Fenêtre d'affichage : 8 jours</span>
-    <label class="btn btn-secondary" style="cursor:pointer;font-size:13px;padding:6px 14px" title="Charger evenements.js depuis votre PC">
-      📂 Charger evenements.js
-      <input type="file" accept=".js" style="display:none" onchange="importerFichier(this)">
-    </label>
+    <button id="btn-save" class="btn btn-primary" style="font-size:13px;background:#27ae60" onclick="sauvegarderVersSheets()">☁️ Sauvegarder</button>
   </div>
 
   <div id="evt-list"></div>
@@ -650,52 +647,57 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 
 
 <script>
-// ── Données chargées depuis evenements.js via fetch ──────────
+// ── Configuration Google Sheets ─────────────────────────────
+const GAS_URL = 'https://script.google.com/macros/s/AKfycby-81u58s_wn0wP0TzWhttuiS9x0U17YWCjiVNyHzUPkYUEaO6WgEcFUnDCtEdrzxY/exec';
 var EVENEMENTS = [];
+var _saving = false;
 
-const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
-
-const EMOJIS_LABEL = {
-  "📅":"Calendrier","🎵":"Musique","🎬":"Cinéma","🎭":"Théâtre","🎨":"Art",
-  "🧺":"Marché","⛵":"Voile","🦀":"Nature","🎣":"Pêche","🏠":"Patrimoine",
-  "❤️":"Santé","🌿":"Nature","🍽️":"Gastronomie","🥂":"Soirée","🏖️":"Plage",
-  "🏛️":"Culture","🗿":"Mégalithe","🌊":"Mer","🎪":"Fête","🎉":"Événement",
-  "🎊":"Célébration","🎸":"Concert","🥁":"Concert","🎺":"Concert","🎻":"Concert",
-  "📸":"Photo","🖼️":"Expo","🌸":"Printemps","🌻":"Été","🍀":"Nature"
-};
-
-let editIndex = -1;
-let deleteIndex = -1;
-const today = new Date(); today.setHours(0,0,0,0);
-
-// ── Init ───────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  buildEmojiGrid();
-  renderList();
-});
-
-// ── Import du fichier evenements.js depuis le PC ───────────
-function importerFichier(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const fn = new Function(e.target.result + '; return typeof EVENEMENTS !== "undefined" ? EVENEMENTS : [];');
-      const data = fn();
-      if (Array.isArray(data) && data.length > 0) {
-        EVENEMENTS = data;
+// ── Chargement depuis Google Sheets ──────────────────────────
+function chargerDepuisSheets() {
+  const badge = document.getElementById('count-badge');
+  badge.textContent = '⏳ Chargement…';
+  fetch(GAS_URL + '?action=read')
+    .then(r => r.json())
+    .then(data => {
+      if (data.evenements && Array.isArray(data.evenements)) {
+        EVENEMENTS = data.evenements;
         renderList();
-        showToast('✅ ' + data.length + ' événement(s) importé(s) depuis evenements.js');
+        if (EVENEMENTS.length > 0) showToast('✅ ' + EVENEMENTS.length + ' événement(s) chargé(s)');
       } else {
-        showToast('⚠️ Fichier lu mais aucun événement trouvé');
+        showToast('⚠️ Impossible de lire Google Sheets');
+        renderList();
       }
-    } catch(e) {
-      showToast('⚠️ Erreur de lecture : ' + e.message);
-    }
-  };
-  reader.readAsText(file);
+    })
+    .catch(() => {
+      showToast('⚠️ Connexion impossible — vérifiez internet');
+      renderList();
+    });
 }
+
+// ── Sauvegarde vers Google Sheets ────────────────────────────
+function sauvegarderVersSheets() {
+  if (_saving) return;
+  _saving = true;
+  const btn = document.getElementById('btn-save');
+  if (btn) { btn.textContent = '⏳ Sauvegarde…'; btn.disabled = true; }
+  fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'write', evenements: EVENEMENTS })
+  })
+    .then(() => {
+      _saving = false;
+      if (btn) { btn.textContent = '☁️ Sauvegarder'; btn.disabled = false; }
+      showToast('✅ Sauvegardé dans Google Sheets !');
+    })
+    .catch(err => {
+      _saving = false;
+      if (btn) { btn.textContent = '☁️ Sauvegarder'; btn.disabled = false; }
+      showToast('⚠️ Erreur : ' + err.message);
+    });
+}
+
 
 // ── Rendu de la liste ──────────────────────────────────────
 function renderList() {
@@ -880,6 +882,7 @@ function saveEvent() {
 
   closeModal();
   renderList();
+  sauvegarderVersSheets();
 }
 
 function shake(id) {
@@ -904,6 +907,7 @@ function confirmDelete() {
   closeDelete();
   renderList();
   showToast('🗑 Événement supprimé');
+  sauvegarderVersSheets();
 }
 
 // ── Export ─────────────────────────────────────────────────
@@ -980,6 +984,12 @@ function showToast(msg) {
 }
 
 // ── Fermer modals sur Échap ────────────────────────────────
+// ── Init au chargement ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildEmojiGrid();
+  chargerDepuisSheets();
+});
+
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape') { closeModal(); closeExport(); closeDelete(); }
 });
