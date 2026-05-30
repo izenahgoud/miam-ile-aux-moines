@@ -81,7 +81,5 @@ const EVENEMENTS = [
     site:        ""
   }
 ];
-Fermer
-📋 Tout copier
 ⬇ Télécharger
 🗑 Événement supprimé
