@@ -460,27 +460,48 @@ function formatDate(dateStr) {
   return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
 }
 
+<script>
+// ── URL Google Sheets (même que dans admin-evenements.html) ──
+const GAS_URL_EVENTS = 'https://script.google.com/macros/s/AKfycby-81u58s_wn0wP0TzWhttuiS9x0U17YWCjiVNyHzUPkYUEaO6WgEcFUnDCtEdrzxY/exec';
+
 function initEvenements() {
-  if(typeof EVENEMENTS==='undefined') return;
-  const {debut,fin} = fenetreEvenements();
-  let count = 0;
-  EVENEMENTS.forEach(evt => {
-    const dateDebut = new Date(evt.date_debut+'T00:00:00');
-    const dateFin   = new Date((evt.date_fin||evt.date_debut)+'T00:00:00');
-    if(dateFin < debut || dateDebut > fin) return;
-    const emojiIcon = evt.emoji||'📅';
-    const icon = L.divIcon({
-      className:'',
-      html:`<div class="poi-marker evt-marker" style="background:#9b59b6"><span>${emojiIcon}</span></div>`,
-      iconSize:[28,28],iconAnchor:[14,28]
+  // Charger depuis Google Sheets
+  fetch(GAS_URL_EVENTS + '?action=read')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.evenements || !Array.isArray(data.evenements)) return;
+      
+      const {debut, fin} = fenetreEvenements();
+      let count = 0;
+
+      data.evenements.forEach(evt => {
+        const dateDebut = new Date(evt.date_debut + 'T00:00:00');
+        const dateFin   = new Date((evt.date_fin || evt.date_debut) + 'T00:00:00');
+        if (dateFin < debut || dateDebut > fin) return;
+
+        const emojiIcon = evt.emoji || '📅';
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="poi-marker evt-marker" style="background:#9b59b6"><span>${emojiIcon}</span></div>`,
+          iconSize: [28, 28], iconAnchor: [14, 28]
+        });
+        const m = L.marker([parseFloat(evt.lat), parseFloat(evt.lng)], {icon});
+        if (layerState['evenements']) m.addTo(map);
+        m.on('click', () => ouvrirPanneauEvenement(evt));
+        m._layerId = 'evenements';
+        evtMarkers.push(m);
+        count++;
+      });
+
+      const badge = document.getElementById('evt-count');
+      if (badge) badge.textContent = count > 0 ? `(${count})` : '';
+    })
+    .catch(() => {
+      // Silencieux si pas de connexion
     });
-    const m = L.marker([evt.lat,evt.lng],{icon});
-    if(layerState['evenements']) m.addTo(map);
-    m.on('click',()=>ouvrirPanneauEvenement(evt));
-    m._layerId='evenements';
-    evtMarkers.push(m);
-    count++;
-  });
+}
+</script>
+
   const badge = document.getElementById('evt-count');
   if(badge) badge.textContent = count>0?`(${count})`:'';
 }
