@@ -47,7 +47,7 @@ const EVENEMENTS = [
     lieu:        "Salle annexe de la Mairie",
     acces:       "Libre",
     description: "Tragédie suivi de La nostalgie des blattes.",
-    image:       "",
+    image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Compagnie_du_Caillou.jpg/960px-Compagnie_du_Caillou.jpg?_=20260528100143",
     site:        ""
   },
   {
@@ -79,7 +79,35 @@ const EVENEMENTS = [
     description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
     image:       "",
     site:        ""
-  }
+  },
+  {
+    nom:         "Réunion publique",
+    emoji:       "🎊",
+    association: "Festival Les INSULAIRES",
+    date_debut:  "2026-06-04",
+    date_fin:    "2026-06-04",
+    heure:       "18h00 - 20h00",
+    lat:         47.597059,
+    lng:         -2.845658,
+    lieu:        "Salle du Conseil Municipal",
+    acces:       "Libre. Venez nombreux.",
+    description: "Présentation de la 13ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\nEn présence des organisateurs du festival.",
+    image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ile_d%27Yeu_insulaires.jpg/960px-Ile_d%27Yeu_insulaires.jpg?_=20260528100143",
+    site:        "https://lesinsulaires.com/"
+  },
+   {
+    nom:         "Un après-midi à l'Herbier de Kerscot",
+    emoji:       "🎣",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut:  "2026-05-30",
+    date_fin:    "2026-05-30",
+    heure:       "16h00 – 19h30",
+    lat:         47.592851,
+    lng:         -2.851132,
+    lieu:        "Herbier de Kerscott",
+    acces:       "Entrée libre",
+    description: "Surprise musicale. Crac'hophonies. Choeur de l'Ile-aux-Moines",
+    image:       "https://upload.wikimedia.org/wikipedia/commons/a/af/Kerscot.jpg?_=20260529074757",
+    site:        ""
+  },
 ];
-⬇ Télécharger
-🗑 Événement supprimé
