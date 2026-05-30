@@ -485,7 +485,6 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
   <div class="toolbar">
     <span class="count-badge" id="count-badge">0 événement</span>
     <span class="window-badge">📅 Fenêtre d'affichage : 8 jours</span>
-    <button id="btn-save" class="btn btn-primary" style="font-size:13px;background:#27ae60" onclick="sauvegarderVersSheets()">☁️ Sauvegarder</button>
   </div>
 
   <div id="evt-list"></div>
@@ -645,59 +644,136 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 <!-- ══ TOAST ════════════════════════════════════════════ -->
 <div id="toast"></div>
 
-
 <script>
-// ── Configuration Google Sheets ─────────────────────────────
-const GAS_URL = 'https://script.google.com/macros/s/AKfycby-81u58s_wn0wP0TzWhttuiS9x0U17YWCjiVNyHzUPkYUEaO6WgEcFUnDCtEdrzxY/exec';
-var EVENEMENTS = [];
-var _saving = false;
+// ── Données initiales (copiées depuis evenements.js) ──────────
+let EVENEMENTS = [
+  {
+    nom: "Exposition — Vecteurs marins",
+    emoji: "🎨",
+    association: "",
+    date_debut: "2026-05-21",
+    date_fin:   "2026-05-26",
+    heure: "10h00 – 13h00 & 15h00 – 19h00",
+    lat: 47.5998,
+    lng: -2.8510,
+    lieu: "La Petite Galerie",
+    acces: "Entrée libre. Tout public.",
+    description: "Cartes marines des fonds marins bretons, aux couleurs et hauteurs variant selon les profondeurs représentées.",
+    image: "https://photos.infolocale.fr/infoLocale/annonce/2026/0513/8885925/_1_cover_604-400_.png",
+    site: ""
+  },
+  {
+    nom: "Initiation à la manipulation d'un défibrillateur",
+    emoji: "❤️",
+    association: "Malocoeur & Pompiers de l'Île-aux-Moines",
+    date_debut: "2026-05-23",
+    date_fin:   "2026-05-24",
+    heure: "15h00 – 17h00 & 10h00 – 12h00",
+    lat: 47.596902,
+    lng: -2.845671,
+    lieu: "Place de la Mairie",
+    acces: "Ouvert à tous. Adultes et enfants.",
+    description: "Projection d'un film. Échanges avec des cardiologues.",
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Malo_Coeur.jpg",
+    site: ""
+  },
+  {
+    nom: "Soirée exceptionnelle Passeurs de Films",
+    emoji: "🎬",
+    association: "Passeurs de Films, Fête de la mer",
+    date_debut: "2026-05-30",
+    date_fin:   "2026-05-30",
+    heure: "19h30 – 24h00",
+    lat: 47.596758,
+    lng: -2.845953,
+    lieu: "Place du Marché",
+    acces: "Entrée libre. Inscription obligatoire pour le dîner : 18 €",
+    description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie.",
+    image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Soir%C3%A9e_Passeurs_de_Films.jpg",
+    site: "https://www.passeursdefilms.fr/"
+  },
+  {
+    nom: "Chorale Harmonie de Plescop",
+    emoji: "🎵",
+    association: "LALVI",
+    date_debut: "2026-06-06",
+    date_fin:   "2026-06-06",
+    heure: "15h00 – 16h30",
+    lat: 47.59890,
+    lng: -2.84264,
+    lieu: "Église Saint Michel",
+    acces: "Entrée libre.",
+    description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
+    image: "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
+    site: "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
+  },
+  {
+    nom: "Soirée Théâtre",
+    emoji: "🎭",
+    association: "Compagnie du Caillou",
+    date_debut: "2026-06-06",
+    date_fin:   "2026-06-06",
+    heure: "15h00 & 18h00",
+    lat: 47.597088,
+    lng: -2.845835,
+    lieu: "Salle annexe de la Mairie",
+    acces: "Libre",
+    description: "Tragédie suivi de La nostalgie des blattes.",
+    image: "",
+    site: ""
+  },
+  {
+    nom: "À l'origine de nos maisons",
+    emoji: "🏠",
+    association: "",
+    date_debut: "2026-06-14",
+    date_fin:   "2026-06-14",
+    heure: "17h00 – 18h30",
+    lat: 47.5943,
+    lng: -2.8502,
+    lieu: "Salle du Rinville",
+    acces: "Entrée libre. Places limitées.",
+    description: "",
+    image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
+    site: ""
+  },
+  {
+    nom: "Concours de pêche — Jeunes pêcheurs",
+    emoji: "🎣",
+    association: "Mairie de l'Île-aux-Moines",
+    date_debut: "2026-08-01",
+    date_fin:   "2026-08-01",
+    heure: "8h00 – 12h00",
+    lat: 47.5962,
+    lng: -2.8471,
+    lieu: "Cales du port",
+    acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
+    description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
+    image: "",
+    site: ""
+  }
+];
 
-// ── Chargement depuis Google Sheets ──────────────────────────
-function chargerDepuisSheets() {
-  const badge = document.getElementById('count-badge');
-  badge.textContent = '⏳ Chargement…';
-  fetch(GAS_URL + '?action=read')
-    .then(r => r.json())
-    .then(data => {
-      if (data.evenements && Array.isArray(data.evenements)) {
-        EVENEMENTS = data.evenements;
-        renderList();
-        if (EVENEMENTS.length > 0) showToast('✅ ' + EVENEMENTS.length + ' événement(s) chargé(s)');
-      } else {
-        showToast('⚠️ Impossible de lire Google Sheets');
-        renderList();
-      }
-    })
-    .catch(() => {
-      showToast('⚠️ Connexion impossible — vérifiez internet');
-      renderList();
-    });
-}
+const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
 
-// ── Sauvegarde vers Google Sheets ────────────────────────────
-function sauvegarderVersSheets() {
-  if (_saving) return;
-  _saving = true;
-  const btn = document.getElementById('btn-save');
-  if (btn) { btn.textContent = '⏳ Sauvegarde…'; btn.disabled = true; }
-  fetch(GAS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'write', evenements: EVENEMENTS })
-  })
-    .then(() => {
-      _saving = false;
-      if (btn) { btn.textContent = '☁️ Sauvegarder'; btn.disabled = false; }
-      showToast('✅ Sauvegardé dans Google Sheets !');
-    })
-    .catch(err => {
-      _saving = false;
-      if (btn) { btn.textContent = '☁️ Sauvegarder'; btn.disabled = false; }
-      showToast('⚠️ Erreur : ' + err.message);
-    });
-}
+const EMOJIS_LABEL = {
+  "📅":"Calendrier","🎵":"Musique","🎬":"Cinéma","🎭":"Théâtre","🎨":"Art",
+  "🧺":"Marché","⛵":"Voile","🦀":"Nature","🎣":"Pêche","🏠":"Patrimoine",
+  "❤️":"Santé","🌿":"Nature","🍽️":"Gastronomie","🥂":"Soirée","🏖️":"Plage",
+  "🏛️":"Culture","🗿":"Mégalithe","🌊":"Mer","🎪":"Fête","🎉":"Événement",
+  "🎊":"Célébration","🎸":"Concert","🥁":"Concert","🎺":"Concert","🎻":"Concert",
+  "📸":"Photo","🖼️":"Expo","🌸":"Printemps","🌻":"Été","🍀":"Nature"
+};
 
+let editIndex = -1;
+let deleteIndex = -1;
+const today = new Date(); today.setHours(0,0,0,0);
+
+// ── Init ───────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildEmojiGrid();
+  renderList();
+});
 
 // ── Rendu de la liste ──────────────────────────────────────
 function renderList() {
@@ -882,7 +958,6 @@ function saveEvent() {
 
   closeModal();
   renderList();
-  sauvegarderVersSheets();
 }
 
 function shake(id) {
@@ -907,7 +982,6 @@ function confirmDelete() {
   closeDelete();
   renderList();
   showToast('🗑 Événement supprimé');
-  sauvegarderVersSheets();
 }
 
 // ── Export ─────────────────────────────────────────────────
@@ -984,12 +1058,6 @@ function showToast(msg) {
 }
 
 // ── Fermer modals sur Échap ────────────────────────────────
-// ── Init au chargement ────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  buildEmojiGrid();
-  chargerDepuisSheets();
-});
-
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape') { closeModal(); closeExport(); closeDelete(); }
 });
