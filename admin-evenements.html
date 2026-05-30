@@ -476,8 +476,9 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
     <p>Île-aux-Moines · Gestion des événements</p>
   </div>
   <div class="header-actions">
-    <button class="btn btn-secondary" onclick="openExport()">📋 Exporter evenements.js</button>
-    <button class="btn btn-primary" onclick="openAdd()">＋ Ajouter un événement</button>
+    <button class="btn btn-secondary" onclick="ouvrirConfig()" title="Configurer le token GitHub">🔑</button>
+    <button class="btn btn-secondary" onclick="openExport()">📋 Exporter</button>
+    <button class="btn btn-primary" onclick="openAdd()">＋ Ajouter</button>
   </div>
 </header>
 
@@ -485,6 +486,7 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
   <div class="toolbar">
     <span class="count-badge" id="count-badge">0 événement</span>
     <span class="window-badge">📅 Fenêtre d'affichage : 8 jours</span>
+    <button id="btn-save" class="btn btn-primary" style="font-size:13px;background:#27ae60" onclick="sauvegarderVersGitHub()">☁️ Sauvegarder</button>
   </div>
 
   <div id="evt-list"></div>
@@ -644,136 +646,151 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 <!-- ══ TOAST ════════════════════════════════════════════ -->
 <div id="toast"></div>
 
+<!-- ── Panneau configuration token ─────────────────────── -->
+<div id="token-panel" style="display:none;position:fixed;inset:0;background:rgba(10,25,15,0.85);z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#faf6ed;border-radius:20px;padding:28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4)">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;color:#1a3a2a;margin-bottom:8px">🔑 Configuration</div>
+    <p style="font-size:13px;color:#5a7060;margin-bottom:16px;line-height:1.6">
+      Saisissez votre token GitHub pour permettre la sauvegarde automatique.<br>
+      Il sera mémorisé sur cet appareil.
+    </p>
+    <input id="token-input" type="password"
+      placeholder="github_pat_..."
+      style="width:100%;padding:10px 12px;border:1px solid rgba(26,58,42,0.2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button onclick="fermerConfig()" style="padding:8px 16px;border-radius:10px;border:1px solid rgba(26,58,42,0.2);background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px">Annuler</button>
+      <button onclick="sauvegarderToken()" style="padding:8px 16px;border-radius:10px;border:none;background:#2d5e3f;color:#f5edd8;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600">✓ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
-// ── Données initiales (copiées depuis evenements.js) ──────────
-let EVENEMENTS = [
-  {
-    nom: "Exposition — Vecteurs marins",
-    emoji: "🎨",
-    association: "",
-    date_debut: "2026-05-21",
-    date_fin:   "2026-05-26",
-    heure: "10h00 – 13h00 & 15h00 – 19h00",
-    lat: 47.5998,
-    lng: -2.8510,
-    lieu: "La Petite Galerie",
-    acces: "Entrée libre. Tout public.",
-    description: "Cartes marines des fonds marins bretons, aux couleurs et hauteurs variant selon les profondeurs représentées.",
-    image: "https://photos.infolocale.fr/infoLocale/annonce/2026/0513/8885925/_1_cover_604-400_.png",
-    site: ""
-  },
-  {
-    nom: "Initiation à la manipulation d'un défibrillateur",
-    emoji: "❤️",
-    association: "Malocoeur & Pompiers de l'Île-aux-Moines",
-    date_debut: "2026-05-23",
-    date_fin:   "2026-05-24",
-    heure: "15h00 – 17h00 & 10h00 – 12h00",
-    lat: 47.596902,
-    lng: -2.845671,
-    lieu: "Place de la Mairie",
-    acces: "Ouvert à tous. Adultes et enfants.",
-    description: "Projection d'un film. Échanges avec des cardiologues.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Malo_Coeur.jpg",
-    site: ""
-  },
-  {
-    nom: "Soirée exceptionnelle Passeurs de Films",
-    emoji: "🎬",
-    association: "Passeurs de Films, Fête de la mer",
-    date_debut: "2026-05-30",
-    date_fin:   "2026-05-30",
-    heure: "19h30 – 24h00",
-    lat: 47.596758,
-    lng: -2.845953,
-    lieu: "Place du Marché",
-    acces: "Entrée libre. Inscription obligatoire pour le dîner : 18 €",
-    description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Soir%C3%A9e_Passeurs_de_Films.jpg",
-    site: "https://www.passeursdefilms.fr/"
-  },
-  {
-    nom: "Chorale Harmonie de Plescop",
-    emoji: "🎵",
-    association: "LALVI",
-    date_debut: "2026-06-06",
-    date_fin:   "2026-06-06",
-    heure: "15h00 – 16h30",
-    lat: 47.59890,
-    lng: -2.84264,
-    lieu: "Église Saint Michel",
-    acces: "Entrée libre.",
-    description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
-    image: "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
-    site: "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
-  },
-  {
-    nom: "Soirée Théâtre",
-    emoji: "🎭",
-    association: "Compagnie du Caillou",
-    date_debut: "2026-06-06",
-    date_fin:   "2026-06-06",
-    heure: "15h00 & 18h00",
-    lat: 47.597088,
-    lng: -2.845835,
-    lieu: "Salle annexe de la Mairie",
-    acces: "Libre",
-    description: "Tragédie suivi de La nostalgie des blattes.",
-    image: "",
-    site: ""
-  },
-  {
-    nom: "À l'origine de nos maisons",
-    emoji: "🏠",
-    association: "",
-    date_debut: "2026-06-14",
-    date_fin:   "2026-06-14",
-    heure: "17h00 – 18h30",
-    lat: 47.5943,
-    lng: -2.8502,
-    lieu: "Salle du Rinville",
-    acces: "Entrée libre. Places limitées.",
-    description: "",
-    image: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
-    site: ""
-  },
-  {
-    nom: "Concours de pêche — Jeunes pêcheurs",
-    emoji: "🎣",
-    association: "Mairie de l'Île-aux-Moines",
-    date_debut: "2026-08-01",
-    date_fin:   "2026-08-01",
-    heure: "8h00 – 12h00",
-    lat: 47.5962,
-    lng: -2.8471,
-    lieu: "Cales du port",
-    acces: "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
-    description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
-    image: "",
-    site: ""
-  }
-];
+// ── Configuration GitHub API ────────────────────────────────
+// ── Token GitHub stocké localement (jamais dans le code) ────
+let GITHUB_TOKEN = localStorage.getItem('miam_github_token') || '';
+const GITHUB_OWNER = 'izenahgoud';
+const GITHUB_REPO  = 'miam-ile-aux-moines';
+const GITHUB_FILE  = 'evenements.js';
+var EVENEMENTS = [];
+var _saving = false;
 
-const EMOJIS = ["📅","🎵","🎬","🎭","🎨","🧺","⛵","🦀","🎣","🏠","❤️","🌿","🍽️","🥂","🏖️","🏛️","🗿","🌊","🎪","🎉","🎊","🎸","🥁","🎺","🎻","📸","🖼️","🌸","🌻","🍀"];
+// ── Construction du fichier evenements.js ────────────────────
+function buildJS() {
+  const lines = [
+    "// evenements.js — Événements de l\'Île-aux-Moines",
+    "// Généré par l\'interface d\'administration M\'IAM",
+    "//",
+    "// Champs obligatoires : nom, date_debut, date_fin, lat, lng, lieu, acces",
+    "// Champs optionnels  : emoji, heure, association, description, image, site",
+    "",
+    "const EVENEMENTS = ["
+  ];
+  EVENEMENTS.forEach((e, i) => {
+    lines.push('  {');
+    lines.push(`    nom:         ${JSON.stringify(e.nom)},`);
+    lines.push(`    emoji:       ${JSON.stringify(e.emoji||'📅')},`);
+    lines.push(`    association: ${JSON.stringify(e.association||'')},`);
+    lines.push(`    date_debut:  ${JSON.stringify(e.date_debut)},`);
+    lines.push(`    date_fin:    ${JSON.stringify(e.date_fin||e.date_debut)},`);
+    lines.push(`    heure:       ${JSON.stringify(e.heure||'')},`);
+    lines.push(`    lat:         ${e.lat},`);
+    lines.push(`    lng:         ${e.lng},`);
+    lines.push(`    lieu:        ${JSON.stringify(e.lieu)},`);
+    lines.push(`    acces:       ${JSON.stringify(e.acces)},`);
+    lines.push(`    description: ${JSON.stringify(e.description||'')},`);
+    lines.push(`    image:       ${JSON.stringify(e.image||'')},`);
+    lines.push(`    site:        ${JSON.stringify(e.site||'')}`);
+    lines.push('  }' + (i < EVENEMENTS.length-1 ? ',' : ''));
+  });
+  lines.push('];');
+  return lines.join('\n');
+}
 
-const EMOJIS_LABEL = {
-  "📅":"Calendrier","🎵":"Musique","🎬":"Cinéma","🎭":"Théâtre","🎨":"Art",
-  "🧺":"Marché","⛵":"Voile","🦀":"Nature","🎣":"Pêche","🏠":"Patrimoine",
-  "❤️":"Santé","🌿":"Nature","🍽️":"Gastronomie","🥂":"Soirée","🏖️":"Plage",
-  "🏛️":"Culture","🗿":"Mégalithe","🌊":"Mer","🎪":"Fête","🎉":"Événement",
-  "🎊":"Célébration","🎸":"Concert","🥁":"Concert","🎺":"Concert","🎻":"Concert",
-  "📸":"Photo","🖼️":"Expo","🌸":"Printemps","🌻":"Été","🍀":"Nature"
-};
+// ── Chargement depuis GitHub ──────────────────────────────────
+function chargerDepuisGitHub() {
+  const badge = document.getElementById('count-badge');
+  badge.textContent = '⏳ Chargement…';
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+  fetch(url, {
+    headers: {
+      'Authorization': 'token ' + GITHUB_TOKEN,
+      'Accept': 'application/vnd.github.v3+json'
+    }
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.content) throw new Error('Fichier introuvable');
+      const code = atob(data.content.replace(/\n/g, ''));
+      const fn = new Function(code + '; return typeof EVENEMENTS !== "undefined" ? EVENEMENTS : [];');
+      const evts = fn();
+      if (Array.isArray(evts)) {
+        EVENEMENTS = evts;
+        renderList();
+        showToast('✅ ' + EVENEMENTS.length + ' événement(s) chargé(s)');
+      } else {
+        throw new Error('Format invalide');
+      }
+    })
+    .catch(err => {
+      badge.textContent = '⚠️ Erreur chargement';
+      showToast('⚠️ ' + err.message);
+      renderList();
+    });
+}
 
-let editIndex = -1;
-let deleteIndex = -1;
-const today = new Date(); today.setHours(0,0,0,0);
+// ── Sauvegarde vers GitHub ────────────────────────────────────
+function sauvegarderVersGitHub() {
+  if (_saving) return;
+  _saving = true;
+  const btn = document.getElementById('btn-save');
+  if (btn) { btn.textContent = '⏳ Sauvegarde…'; btn.disabled = true; }
 
-// ── Init ───────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  buildEmojiGrid();
-  renderList();
-});
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+
+  // 1. Récupérer le SHA du fichier actuel (obligatoire pour GitHub API)
+  fetch(url, {
+    headers: {
+      'Authorization': 'token ' + GITHUB_TOKEN,
+      'Accept': 'application/vnd.github.v3+json'
+    }
+  })
+    .then(r => r.json())
+    .then(data => {
+      const sha = data.sha;
+      const newContent = btoa(unescape(encodeURIComponent(buildJS())));
+      // 2. Pousser le nouveau contenu
+      return fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'token ' + GITHUB_TOKEN,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Mise à jour evenements.js via Admin M\'IAM',
+          content: newContent,
+          sha: sha
+        })
+      });
+    })
+    .then(r => r.json())
+    .then(result => {
+      _saving = false;
+      if (btn) { btn.textContent = '☁️ Sauvegarder'; btn.disabled = false; }
+      if (result.content) {
+        showToast('✅ evenements.js mis à jour sur GitHub !');
+      } else {
+        showToast('⚠️ Erreur : ' + (result.message || 'inconnue'));
+      }
+    })
+    .catch(err => {
+      _saving = false;
+      if (btn) { btn.textContent = '☁️ Sauvegarder'; btn.disabled = false; }
+      showToast('⚠️ Erreur : ' + err.message);
+    });
+}
+
 
 // ── Rendu de la liste ──────────────────────────────────────
 function renderList() {
@@ -958,6 +975,7 @@ function saveEvent() {
 
   closeModal();
   renderList();
+  sauvegarderVersGitHub();
 }
 
 function shake(id) {
@@ -982,6 +1000,7 @@ function confirmDelete() {
   closeDelete();
   renderList();
   showToast('🗑 Événement supprimé');
+  sauvegarderVersGitHub();
 }
 
 // ── Export ─────────────────────────────────────────────────
@@ -1058,6 +1077,35 @@ function showToast(msg) {
 }
 
 // ── Fermer modals sur Échap ────────────────────────────────
+// ── Init au chargement ────────────────────────────────────
+// ── Gestion du token ─────────────────────────────────────────
+function ouvrirConfig() {
+  document.getElementById('token-input').value = GITHUB_TOKEN || '';
+  document.getElementById('token-panel').style.display = 'flex';
+}
+function fermerConfig() {
+  document.getElementById('token-panel').style.display = 'none';
+}
+function sauvegarderToken() {
+  const val = document.getElementById('token-input').value.trim();
+  if (!val) { showToast('⚠️ Token vide'); return; }
+  GITHUB_TOKEN = val;
+  localStorage.setItem('miam_github_token', val);
+  fermerConfig();
+  showToast('✅ Token enregistré sur cet appareil');
+  chargerDepuisGitHub();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildEmojiGrid();
+  if (!GITHUB_TOKEN) {
+    ouvrirConfig();
+    renderList();
+  } else {
+    chargerDepuisGitHub();
+  }
+});
+
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape') { closeModal(); closeExport(); closeDelete(); }
 });
