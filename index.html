@@ -480,34 +480,18 @@ function initEvenements() {
 
 function ouvrirPanneauEvenement(evt) {
   if(activeMarkerEl) activeMarkerEl.classList.remove('active-marker');
-  document.getElementById('poi-image-wrap').classList.remove('visible');
-  const ph = document.getElementById('poi-image-placeholder');
-  ph.classList.remove('hidden');
-  document.getElementById('poi-placeholder-emoji').textContent = evt.emoji||'📅';
-  const catEl = document.getElementById('poi-cat');
-  catEl.style.background = '#9b59b6';
-  catEl.textContent = '🗓 '+(evt.association||'Événement');
-  document.getElementById('poi-name').textContent = evt.nom;
-  document.getElementById('poi-dist').style.display = 'none';
-  document.getElementById('walk-btn').classList.remove('visible');
-  document.getElementById('walk-result').textContent = '';
-  const dateDebutStr = formatDate(evt.date_debut);
-  const dateFinStr   = evt.date_fin&&evt.date_fin!==evt.date_debut?' → '+formatDate(evt.date_fin):'';
-  const heure = evt.heure?' · '+evt.heure:'';
-  let desc = `📅  ${dateDebutStr}${dateFinStr}${heure}\n`;
-  desc += `📍  ${evt.lieu}\n`;
-  desc += `🚶  ${evt.acces}\n`;
-  if(evt.description) desc += `\n${evt.description}`;
-  document.getElementById('poi-desc').textContent = desc;
-  const linksEl = document.getElementById('poi-links');
-  linksEl.innerHTML = '';
-  if(evt.site){
-    const a = document.createElement('a');
-    a.className='poi-link'; a.href=evt.site; a.target='_blank'; a.rel='noopener noreferrer';
-    a.innerHTML='🌐&nbsp; Site de l\'événement';
-    linksEl.appendChild(a);
-  }
-  window._currentPoi = {lat:evt.lat, lng:evt.lng};
+  const img = document.getElementById('poi-image');
+  const ph  = document.getElementById('poi-image-placeholder');
+  if(evt.image){
+    img.src = evt.image;
+    document.getElementById('poi-image-wrap').classList.add('visible');
+    ph.classList.add('hidden');
+  } else {
+    img.src = '';
+    document.getElementById('poi-image-wrap').classList.remove('visible');
+    ph.classList.remove('hidden');
+    document.getElementById('poi-placeholder-emoji').textContent = evt.emoji||'📅';
+  }  window._currentPoi = {lat:evt.lat, lng:evt.lng};
   document.getElementById('poi-panel').classList.add('open');
   closeLayersPanel();
   map.panTo([evt.lat,evt.lng],{animate:true,duration:0.4});
