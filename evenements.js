@@ -1,8 +1,4 @@
 // evenements.js — Événements de l'Île-aux-Moines
-// Généré par l'interface d'administration M'IAM
-//
-// Champs obligatoires : nom, date_debut, date_fin, lat, lng, lieu, acces
-// Champs optionnels  : emoji, heure, association, description, image, site
 
 const EVENEMENTS = [
   {
