@@ -1,29 +1,539 @@
-const CACHE = "miam-iam-v1.8";
-const ASSETS = [
-  "./", "./index.html", "./pois.js", "./evenements.js",
-  "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png"
-];
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="M'IAM Île-aux-Moines">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#1a3a2a">
+<title>M'IAM — Île-aux-Moines</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--sea:#2a6b8a;--sea-light:#4a9bb5;--forest:#1a3a2a;--forest-mid:#2d5e3f;--forest-light:#4a8c5f;--sand:#e8d5a3;--sand-light:#f5edd8;--cream:#faf6ed;--text:#1c2b22;--text-muted:#5a7060}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text);height:100dvh;overflow:hidden}
+#map{position:absolute;inset:0;z-index:1}
+.leaflet-tile-pane{filter:saturate(1.1) brightness(0.97)}
+#header{position:absolute;top:0;left:0;right:0;z-index:10;padding:10px 16px 10px;background:linear-gradient(to bottom,rgba(26,58,42,0.92) 70%,transparent);pointer-events:none;display:flex;align-items:center;gap:10px}#blason{height:48px;width:auto;flex-shrink:0;border-radius:3px;opacity:.92}
+#header h1{font-family:"Playfair Display",serif;font-size:22px;font-weight:600;color:var(--sand-light);letter-spacing:.02em;line-height:1.1}
+#header p{font-size:11px;color:rgba(232,213,163,0.7);margin-top:2px;letter-spacing:.08em;text-transform:uppercase}#header p small{font-size:9px;opacity:.7;text-transform:none;letter-spacing:.04em}
+#gps-badge{position:absolute;top:16px;right:60px;z-index:11;background:var(--forest-mid);color:var(--sand-light);border-radius:20px;padding:6px 12px;font-size:11px;font-weight:500;letter-spacing:.05em;display:flex;align-items:center;gap:6px;cursor:pointer;border:1px solid rgba(232,213,163,0.25);transition:background .2s}
+#gps-badge:hover{background:var(--forest-light)}
+#gps-dot{width:8px;height:8px;border-radius:50%;background:#aaa;transition:background .3s}
+#gps-dot.active{background:#4fc87a;box-shadow:0 0 6px #4fc87a;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+#layers-btn{position:absolute;top:16px;right:14px;z-index:11;width:36px;height:36px;border-radius:50%;background:var(--forest-mid);color:var(--sand-light);border:1px solid rgba(232,213,163,0.25);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:background .2s}
+#layers-btn:hover{background:var(--forest-light)}
+#layers-panel{position:absolute;top:0;right:0;bottom:0;width:250px;z-index:40;background:rgba(18,34,22,0.97);backdrop-filter:blur(12px);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+#layers-panel.open{transform:translateX(0)}
+#layers-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:39;background:rgba(0,0,0,0.3)}
+#layers-overlay.visible{display:block}
+#lp-header{padding:14px 14px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(232,213,163,0.1);flex-shrink:0}
+#lp-header h2{font-family:"Playfair Display",serif;font-size:16px;color:var(--sand-light);font-weight:600}
+#lp-close{background:none;border:none;color:var(--sand-light);font-size:22px;cursor:pointer;opacity:.7;line-height:1}
+#lp-scroll{overflow-y:auto;flex:1;padding:6px 0 20px}
+.lg{padding:8px 0 2px}
+.lg-title{font-size:9px;font-weight:600;color:rgba(232,213,163,0.4);letter-spacing:.12em;text-transform:uppercase;padding:4px 14px 5px}
+.lr{display:flex;align-items:center;gap:9px;padding:7px 14px;cursor:pointer;transition:background .15s}
+.lr:hover{background:rgba(255,255,255,0.05)}
+.ld{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ll{font-size:12px;color:rgba(245,237,216,0.82);flex:1;line-height:1.3}
+.lc{font-size:10px;color:rgba(232,213,163,0.3)}
+.tog{width:34px;height:19px;border-radius:10px;flex-shrink:0;position:relative;transition:background .2s}
+.tog.on{background:#4a8c5f}.tog.off{background:rgba(255,255,255,0.15)}
+.tog::after{content:"";position:absolute;top:2.5px;left:2.5px;width:14px;height:14px;border-radius:50%;background:white;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tog.on::after{transform:translateX(15px)}
+.sep{height:1px;background:rgba(232,213,163,0.08);margin:5px 14px}
+#locate-btn{position:absolute;bottom:20px;right:14px;z-index:10;width:44px;height:44px;border-radius:50%;background:var(--cream);color:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.3);font-size:18px;transition:transform .15s}
+#locate-btn:hover{transform:scale(1.08)}
+#alert-popup{position:absolute;top:70px;left:50%;transform:translateX(-50%);z-index:20;background:var(--sea);color:white;border-radius:24px;padding:10px 20px;font-size:13px;font-weight:500;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:slideDown .3s ease;max-width:85vw;display:none}
+@keyframes slideDown{from{opacity:0;top:50px}to{opacity:1;top:70px}}
+#poi-panel{position:absolute;bottom:0;left:0;right:0;z-index:30;transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.2,.64,1);max-height:88dvh;background:var(--cream);border-radius:24px 24px 0 0;overflow:hidden;box-shadow:0 -8px 40px rgba(0,0,0,.3)}
+#poi-panel.open{transform:translateY(0)}
+#panel-handle{width:36px;height:4px;background:rgba(26,58,42,.2);border-radius:2px;margin:12px auto 0}
+#panel-inner{overflow-y:auto;max-height:calc(88dvh - 20px);padding-bottom:env(safe-area-inset-bottom)}
+#panel-close{position:absolute;top:10px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(26,58,42,.1);border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--forest);z-index:2}
+#poi-image-wrap{display:none;background:var(--forest);width:100%}
+#poi-image-wrap.visible{display:block}
+#poi-panel #poi-image{display:block!important;max-width:100%!important;width:auto!important;height:auto!important;max-height:320px!important;margin:0 auto!important;position:static!important;left:auto!important;top:auto!important}
+#poi-image-placeholder{width:100%;height:100px;background:linear-gradient(135deg,var(--forest-mid),var(--sea));display:flex;align-items:center;justify-content:center;font-size:48px}
+#poi-image-placeholder.hidden{display:none}
+.poi-content{padding:16px 18px 20px}
+.poi-cat-badge{display:inline-flex;align-items:center;gap:5px;background:var(--forest);color:var(--sand-light);border-radius:12px;padding:4px 10px;font-size:11px;font-weight:500;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+#poi-name{font-family:"Playfair Display",serif;font-size:24px;font-weight:600;color:var(--forest);line-height:1.2;margin-bottom:10px}
+#poi-desc{font-size:14px;line-height:1.65;color:var(--text-muted);white-space:pre-line;margin-bottom:14px}
+.poi-links{display:flex;flex-direction:column;gap:8px}
+.poi-link{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:var(--forest);color:var(--sand-light);text-decoration:none;font-size:13px;font-weight:500;transition:background .2s}
+.poi-link:hover{background:var(--forest-light)}
+.poi-dist-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(74,140,95,.15);color:var(--forest-mid);border-radius:10px;padding:4px 10px;font-size:12px;margin-bottom:12px}
+#walk-btn{display:none;align-items:center;gap:6px;margin-left:8px;padding:4px 10px;border-radius:10px;background:rgba(41,128,185,.15);color:var(--sea);border:none;font-size:12px;cursor:pointer;font-family:inherit}#walk-btn.visible{display:inline-flex}#walk-result{font-size:12px;color:var(--sea);margin-left:4px}
+#update-banner{position:absolute;top:0;left:0;right:0;z-index:100;background:#2ecc71;color:#fff;text-align:center;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer;display:none;box-shadow:0 2px 8px rgba(0,0,0,.3);animation:slideDown .4s ease}
+#update-banner span{margin-left:12px;font-size:12px;opacity:.85;font-weight:400}
+.poi-marker{width:24px;height:24px;border-radius:50% 50% 50% 3px;transform:rotate(-45deg);border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .18s;position:relative}
+.poi-marker:hover{transform:rotate(-45deg) scale(1.25)!important}
+.poi-marker span{transform:rotate(45deg);font-size:10px;line-height:1}
+.poi-marker.active-marker{transform:rotate(-45deg) scale(1.3)!important;box-shadow:0 0 0 2.5px var(--sand),0 4px 12px rgba(0,0,0,.5)}
+.poi-marker.evt-marker{width:28px;height:28px}
+.poi-marker.evt-marker span{font-size:12px}
+.poi-marker.evt-marker:hover{transform:rotate(-45deg) scale(1.3)!important;box-shadow:0 0 0 2.5px #e8d5a3,0 4px 16px rgba(155,89,182,.6)!important}
+.user-dot{width:16px;height:16px;border-radius:50%;background:#4fc87a;border:3px solid white;box-shadow:0 0 8px rgba(79,200,122,.6)}
+.leaflet-control-zoom,.leaflet-popup{display:none}
+#version-badge{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(26,58,42,0.6);color:rgba(232,213,163,0.95);font-size:11px;font-weight:500;padding:4px 10px;border-radius:10px;pointer-events:none;font-family:"DM Sans",sans-serif;letter-spacing:.06em;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+#crealion{position:absolute;bottom:12px;left:12px;z-index:10;opacity:0.35;transition:opacity .3s;pointer-events:none}#crealion:hover{opacity:0.7}#crealion img{height:22px;width:auto;filter:brightness(1.8)}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3WE92BGBBL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-3WE92BGBBL');
+  window.addEventListener('appinstalled', () => {
+    gtag('event', 'pwa_installed', { event_category: 'PWA', event_label: 'Installation écran accueil' });
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    const gpsbtn = document.getElementById('gps-badge');
+    if(gpsbtn) gpsbtn.addEventListener('click', () => {
+      gtag('event', 'gps_activated', { event_category: 'Navigation', event_label: 'GPS activé' });
+    });
+  });
+</script>
+</head>
+<body>
+<div id="update-banner" onclick="applyUpdate()">🆕 Nouvelle version disponible !<span>Appuyez ici pour mettre à jour</span></div>
+<div id="map"></div>
+<div id="header"><img id="blason" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA4CAIAAAA0M+y9AAABJWlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGAycHRxcmUSYGDIzSspCnJ3UoiIjFJgP8/AxsDMAAaJycUFjgEBPiB2Xn5eKgMqYGRg+HYNRDIwXNYFmcVAGuBKLigqAdJ/gNgoJbU4GWikAZCdXV5SABRnnANkiyRlg9kbQOyikCBnIPsIkM2XDmFfAbGTIOwnIHYR0BNA9heQ+nQwm4kDbA6ELQNil6RWgOxlcM4vqCzKTM8oUTC0tLRUcEzJT0pVCK4sLknNLVbwzEvOLyrIL0osSU0BqoW4DwwEIQpBIaYB1GihSaK/CQJQPEBYnwPB4csodgYhhgDJpUVlUCYjkzFhPsKMORIMDP5LGRhY/iDETHoZGBboMDDwT0WIqRkyMAjoMzDsmwMAwrNP/kOlMAQAABXBSURBVHjazXl5kF3Veed3lru8pV+/9/r1vqu71dobox0hIQkwmJiAMJiYgJCQkMWOHYf8kTiJnaSJc3LOyUnixCFOiOM4jmOf5JCTk8TJcZI4SZykTpLGjR0bG2PAAoQQQkICIaGWltbSvb3+3nvv+f145vV7rarqVlV3V9Xt6q7q+t7vfr/v9773lFIAAACttYb/d4VSSiEIF9D/J4VXqbGxsXg8TimlWmtCCCFEa00pNQwjHA4XawCgQhucIYRAxEI9IaQ6Vs55dUh1wYQQ0zSFEFVVVMYqpaLRaF9f35VuFV6O4zz00EO33XYb55wxhohSSkqpEGJiYqK/v9/zPM55ZSYAME1zeHi4paXFNE0A4JwjolKqgmB0dHTp0qWe51V6SimVUpZlDQ8PNzY2+v1+ROScA4CUEhEHBwd/8YtfBAIBRAStNSJms9lHH30UERFx7969x48fr9Dbtm278cYb8Wp58cUXq/Tq1atfeumlCn3o0KH9+/dX6Ndff3158uVKqcrryy+/XB1y8803P//88xX61KlTe/bsqdBPP/10IpFARK01rcpTSul53nvvvffJJ5+88847+/btU0oNDw8HAoGTJ09KKZ977rlCofDTn/5UCHHs2LHGxsaLFy8qpXbt2rVz586dO3e+//77Sqlz5841NTUdOnRIKfX888/n8/lnn33W==" alt="Blason"><div><h1>M'IAM</h1><p>Île-aux-Moines · <small>map of ile-aux-moines</small></p></div></div>
+<div id="gps-badge" onclick="toggleGPS()"><div id="gps-dot"></div><span id="gps-label">GPS off</span></div>
+<button id="layers-btn" onclick="toggleLayersPanel()" title="Couches">☰</button>
+
+<div id="layers-overlay" onclick="closeLayersPanel()"></div>
+<div id="layers-panel">
+  <div id="lp-header"><h2>Catégories</h2><button id="lp-close" onclick="toggleLayersPanel()">✕</button></div>
+  <div id="lp-scroll">
+    <div class="lg">
+      <div class="lg-title">Commerces &amp; Sites</div>
+      <div class="lr" data-layer="poi-main" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#c0392b"></div><div class="ll">Restaurants, bars, commerces…</div></div>
+      <div class="lr" data-layer="poi-alim" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#8deb5e"></div><div class="ll">Alimentation, Commerces…</div></div>
+      <div class="lr" data-layer="poi-heritage" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#5d4037"></div><div class="ll">Patrimoine &amp; sites</div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
+      <div class="lg-title">Balades à pied</div>
+      <div class="lr" data-layer="balade-trech" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#f1c40f"></div><div class="ll">Balade du Trec'h</div></div>
+      <div class="lr" data-layer="balade-brouel" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#e74c3c"></div><div class="ll">Balade de Brouël</div></div>
+      <div class="lr" data-layer="balade-penhap" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#9b59b6"></div><div class="ll">Balade de Penhap</div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
+      <div class="lg-title">Circuits vélos</div>
+      <div class="lr" data-layer="velo-bleu" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#2980b9"></div><div class="ll">Circuit Bleu — Penhap</div></div>
+      <div class="lr" data-layer="velo-jaune" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#f1c40f"></div><div class="ll">Circuit Jaune — Trec'h</div></div>
+      <div class="lr" data-layer="velo-rouge" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#e74c3c"></div><div class="ll">Circuit Rouge — Brouël</div></div>
+      <div class="lr" data-layer="velo-vert" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#27ae60"></div><div class="ll">Circuit Vert — le Port</div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
+      <div class="lg-title">Sécurité &amp; Santé</div>
+      <div class="lr" data-layer="sante" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#e74c3c"></div><div class="ll">Santé (défibrillateurs, pharmacie…)</div></div>
+      <div class="lr" data-layer="secours" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#c0392b"></div><div class="ll">Plaques de secours <span class="lc">(44)</span></div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
+      <div class="lg-title">Pratique</div>
+      <div class="lr" data-layer="pique-nique" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#27ae60"></div><div class="ll">Aires de pique-nique</div></div>
+      <div class="lr" data-layer="toilettes" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#2980b9"></div><div class="ll">Toilettes publiques</div></div>
+      <div class="lr" data-layer="poubelles" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#7f8c8d"></div><div class="ll">Poubelles &amp; tri <span class="lc">(61)</span></div></div>
+      <div class="lr" data-layer="vtc" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#f39c12"></div><div class="ll">VTC Île-aux-Moines</div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
+      <div class="lg-title">Nature &amp; Loisirs</div>
+      <div class="lr" data-layer="loisirs" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#2d5e3f"></div><div class="ll">Loisirs &amp; jardins</div></div>
+      <div class="lr" data-layer="plages" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#2980b9"></div><div class="ll">Plages</div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
+      <div class="lg-title" style="color:rgba(200,160,230,0.7)">Agenda</div>
+      <div class="lr" data-layer="evenements" onclick="toggleLayer(this)">
+        <div class="tog off"></div>
+        <div class="ld" style="background:#9b59b6"></div>
+        <div class="ll">Événements des associations <span class="lc" id="evt-count"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="locate-btn" onclick="centerOnUser()" title="Me localiser">📍</button>
+<div id="alert-popup"></div>
+
+<div id="poi-panel">
+  <div id="panel-handle"></div>
+  <button id="panel-close" onclick="closePanel()">✕</button>
+  <div id="panel-inner">
+    <div id="poi-image-wrap">
+      <img id="poi-image" src="" alt="" onerror="document.getElementById('poi-image-wrap').classList.remove('visible');document.getElementById('poi-image-placeholder').classList.remove('hidden')">
+    </div>
+    <div id="poi-image-placeholder"><span id="poi-placeholder-emoji">📍</span></div>
+    <div class="poi-content">
+      <div class="poi-cat-badge" id="poi-cat"></div>
+      <div id="poi-name"></div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:12px"><div class="poi-dist-badge" id="poi-dist" style="display:none">📍 <span id="poi-dist-val"></span></div><button id="walk-btn" onclick="calcWalk()">🚶 Distance à pied</button><span id="walk-result"></span></div>
+      <div id="poi-desc"></div>
+      <div class="poi-links" id="poi-links"></div>
+    </div>
+  </div>
+</div>
+
+<script src="pois.js"></script>
+<script>
+// ── URL Google Sheets ────────────────────────────────────────
+const GAS_URL_EVENTS = 'https://script.google.com/macros/s/AKfycby-81u58s_wn0wP0TzWhttuiS9x0U17YWCjiVNyHzUPkYUEaO6WgEcFUnDCtEdrzxY/exec';
+
+const TRACES = [{"name":"Bleu : vers la pointe de Penhap","layer":"Circuits vélos","group":"velos","color":"#2980b9","weight":3,"dash":"8,4","coords":[[47.595836,-2.847074],[47.59568,-2.847508],[47.595518,-2.84812],[47.595474,-2.848463],[47.595445,-2.848806],[47.595514,-2.849305],[47.59555,-2.849643],[47.595445,-2.849702],[47.594429,-2.850078],[47.59385,-2.850325],[47.593007,-2.850512],[47.592649,-2.850673],[47.592526,-2.850539],[47.592443,-2.850303],[47.592215,-2.850185],[47.591933,-2.850105],[47.591737,-2.849997],[47.591488,-2.850024],[47.591274,-2.850105],[47.59084,-2.850341],[47.590355,-2.850984],[47.59021,-2.851392],[47.590084,-2.851676],[47.589812,-2.852025],[47.589624,-2.85217],[47.589498,-2.852363],[47.58927,-2.852604],[47.588807,-2.853066],[47.588452,-2.853291],[47.588199,-2.853312],[47.588083,-2.853259],[47.587417,-2.853173],[47.587251,-2.853157],[47.587171,-2.853248],[47.586896,-2.853248],[47.586296,-2.853119],[47.58571,-2.852916],[47.585605,-2.852905],[47.584573,-2.853152],[47.584168,-2.853334],[47.584009,-2.853414],[47.583886,-2.853463],[47.583701,-2.853527],[47.583502,-2.85372],[47.583119,-2.854047],[47.5828,-2.854074],[47.582435,-2.854015],[47.582193,-2.85408],[47.582098,-2.854203],[47.581892,-2.854273],[47.581603,-2.854396],[47.581241,-2.854782],[47.580629,-2.855528],[47.580257,-2.855828],[47.579891,-2.855941],[47.579562,-2.856081],[47.579428,-2.856107],[47.579008,-2.856241],[47.578603,-2.856402],[47.577923,-2.856671],[47.577474,-2.856724],[47.576953,-2.856531],[47.576439,-2.856349],[47.575715,-2.856311],[47.574991,-2.856424],[47.574771,-2.856408],[47.574579,-2.856252],[47.574571,-2.856252],[47.574246,-2.856],[47.573949,-2.855909],[47.573551,-2.856005],[47.573023,-2.855909],[47.572733,-2.855753],[47.572501,-2.855533],[47.572168,-2.855389],[47.572006,-2.855297],[47.571582,-2.855442],[47.571445,-2.855437],[47.571285,-2.855378],[47.571097,-2.855351],[47.570822,-2.855399],[47.570735,-2.855372],[47.570384,-2.855018],[47.570163,-2.854927],[47.569968,-2.855018],[47.569769,-2.855136],[47.569505,-2.855271],[47.569465,-2.85578],[47.56944,-2.856193],[47.569559,-2.856397],[47.569787,-2.856638],[47.570058,-2.857116],[47.570131,-2.857255],[47.570225,-2.857384],[47.570435,-2.857878],[47.570428,-2.858199],[47.57016,-2.858602],[47.569885,-2.858929],[47.569696,-2.859052],[47.569519,-2.85909],[47.56924,-2.858999],[47.56907,-2.858972],[47.568636,-2.85917],[47.568375,-2.85924],[47.568158,-2.85931],[47.568061,-2.859503],[47.568035,-2.859766],[47.567992,-2.859862],[47.56763,-2.859793],[47.567373,-2.859959],[47.567347,-2.86012],[47.567304,-2.860265],[47.566975,-2.860367],[47.566826,-2.860329],[47.566718,-2.860351],[47.566377,-2.860216],[47.566102,-2.860029],[47.565849,-2.85975],[47.565617,-2.859664],[47.565016,-2.859755],[47.564484,-2.859873],[47.564198,-2.860115],[47.564043,-2.860109],[47.564061,-2.859948],[47.564108,-2.859707]]}];
+
+const CAT_COLORS = {
+  "Restaurant":"#c0392b","Restauration rapide":"#e67e22","Bar":"#8e44ad",
+  "Plage":"#2980b9","Location vélo":"#8B4513","Commerce":"#16a085",
+  "Hébergement":"#2c3e50","Transport":"#27ae60","Patrimoine religieux":"#2471a3",
+  "Mégalithe":"#6d4c41","Art & Artisanat":"#8d6e63","Camping":"#1a5e25",
+  "Service":"#1a6ba0","Loisirs":"#2d5e3f","Information":"#555",
+  "Curiosités":"#7b68ee","Patrimoine & curiosités":"#5d4037",
+  "Toilettes":"#2980b9","Santé":"#e74c3c","Pique-nique":"#27ae60",
+  "Poubelles":"#7f8c8d","Secours":"#c0392b"
+};
+
+const TRACE_LAYER = {
+  "Balade du TREC'H":"balade-trech",
+  "Balade de BROUËL":"balade-brouel",
+  "Balade de PENHAP":"balade-penhap",
+};
+function getTraceLayer(t) {
+  if(t.layer==="Circuits vélos") {
+    if(t.color==="#2980b9") return "velo-bleu";
+    if(t.color==="#f1c40f") return "velo-jaune";
+    if(t.color==="#e74c3c") return "velo-rouge";
+    if(t.color==="#27ae60") return "velo-vert";
+    return "velo-bleu";
+  }
+  return TRACE_LAYER[t.layer]||"balade-trech";
+}
+
+const layerState = {
+  "poi-main":false,"poi-alim":false,"poi-heritage":false,
+  "balade-trech":false,"balade-brouel":false,"balade-penhap":false,
+  "velo-bleu":false,"velo-jaune":false,"velo-rouge":false,"velo-vert":false,
+  "sante":false,"secours":false,
+  "pique-nique":false,"toilettes":false,"poubelles":false,"vtc":false,"loisirs":false,"plages":false,
+  "evenements":false
+};
+
+let map,userMarker,userLat,userLon,gpsActive=false,watchId=null;
+document.addEventListener('DOMContentLoaded',function(){
+  const p=document.getElementById('layers-panel');
+  const o=document.getElementById('layers-overlay');
+  if(p){p.classList.remove('open');}
+  if(o){o.classList.remove('visible');}
 });
-self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
+const ORS_KEY="eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjdkNmU4OGJjOWNhNTQzNzA5ZDUxMzc4NTIyNDdlZGVhIiwiaCI6Im11cm11cjY0In0=";
+
+let _waitingWorker = null;
+function applyUpdate(){
+  const banner = document.getElementById('update-banner');
+  banner.textContent = '⏳ Mise à jour en cours...';
+  if(_waitingWorker){
+    _waitingWorker.postMessage({type:'SKIP_WAITING'});
+  } else {
+    window.location.reload(true);
+  }
+}
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+  navigator.serviceWorker.register('./sw.js').then(reg => {
+    if(reg.waiting){
+      _waitingWorker = reg.waiting;
+      document.getElementById('update-banner').style.display = 'block';
+    }
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if(newWorker.state === 'installed'){
+          if(navigator.serviceWorker.controller){
+            _waitingWorker = newWorker;
+            document.getElementById('update-banner').style.display = 'block';
+          }
+        }
+      });
+    });
+    reg.update();
+  });
+}
+
+async function getWalkingDistance(lat1,lon1,lat2,lon2){
+  try{
+    const r=await fetch("https://api.openrouteservice.org/v2/directions/foot-walking",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":ORS_KEY},
+      body:JSON.stringify({coordinates:[[lon1,lat1],[lon2,lat2]]})
+    });
+    const d=await r.json();
+    const s=d.routes[0].summary;
+    const dist=s.distance<1000?Math.round(s.distance)+" m":(s.distance/1000).toFixed(1)+" km";
+    const mins=Math.round(s.duration/60);
+    return dist+" · "+mins+" min à pied";
+  }catch(e){return null;}
+}
+let markers=[],polylines=[],evtMarkers=[],alertedPois=new Set(),activeMarkerEl=null;
+
+map=L.map("map",{zoomControl:false,attributionControl:false}).setView([47.5985,-2.848],15).setMinZoom(12).setMaxZoom(19);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(map);
+map.setView([47.5985,-2.848],15);
+L.control.attribution({prefix:false,position:"bottomleft"}).addTo(map);
+
+function createMarker(poi) {
+  const color=CAT_COLORS[poi.cat]||"#2d5e3f";
+  const icon=L.divIcon({className:"",html:`<div class="poi-marker" style="background:${color}"><span>${poi.emoji||"📍"}</span></div>`,iconSize:[24,24],iconAnchor:[12,24]});
+  const m=L.marker([poi.lat,poi.lon],{icon});
+  if(layerState[poi.layer||"poi-main"]) m.addTo(map);
+  m.on("click",()=>openPOI(poi,m));
+  m._poi=poi;
+  return m;
+}
+markers=POIS.map(createMarker);
+
+function createPolyline(t) {
+  const layerId=getTraceLayer(t);
+  const opts={color:t.color,weight:t.weight||3,opacity:0.85};
+  if(t.dash) opts.dashArray=t.dash;
+  const poly=L.polyline(t.coords,opts);
+  if(layerState[layerId]) poly.addTo(map);
+  poly._layerId=layerId;
+  poly.on("click",()=>showAlert("🥾 "+t.name));
+  return poly;
+}
+polylines=TRACES.map(createPolyline);
+
+function toggleLayer(row) {
+  const layerId=row.dataset.layer;
+  const tog=row.querySelector(".tog");
+  const isOn=tog.classList.contains("on");
+  tog.classList.toggle("on",!isOn);
+  tog.classList.toggle("off",isOn);
+  layerState[layerId]=!isOn;
+  markers.forEach(m=>{
+    const mLayer=m._poi.layer||"poi-main";
+    if(mLayer!==layerId) return;
+    layerState[mLayer]?m.addTo(map):map.removeLayer(m);
+  });
+  polylines.forEach(p=>{
+    if(p._layerId!==layerId) return;
+    layerState[layerId]?p.addTo(map):map.removeLayer(p);
+  });
+  if(layerId==="evenements"){
+    evtMarkers.forEach(m=>{
+      layerState["evenements"]?m.addTo(map):map.removeLayer(m);
+    });
+  }
+}
+
+function toggleLayersPanel(){
+  const panel = document.getElementById("layers-panel");
+  const overlay = document.getElementById("layers-overlay");
+  const isOpen = panel.classList.contains("open");
+  if(isOpen){
+    panel.classList.remove("open");
+    overlay.classList.remove("visible");
+  } else {
+    panel.classList.add("open");
+    overlay.classList.add("visible");
+  }
+}
+function closeLayersPanel(){
+  document.getElementById("layers-panel").classList.remove("open");
+  document.getElementById("layers-overlay").classList.remove("visible");
+}
+
+function calcWalk(){
+  if(!userLat||!userLon||!window._currentPoi) return;
+  const btn=document.getElementById('walk-btn');
+  const res=document.getElementById('walk-result');
+  btn.textContent='⏳ Calcul...';btn.disabled=true;
+  getWalkingDistance(userLat,userLon,window._currentPoi.lat,window._currentPoi.lon||window._currentPoi.lng).then(r=>{
+    btn.textContent='🚶 Distance à pied';
+    btn.disabled=false;
+    res.textContent=r?'→ '+r:'Itinéraire indisponible';
+  });
+}
+
+function openPOI(poi,marker) {
+  if(activeMarkerEl) activeMarkerEl.classList.remove("active-marker");
+  const el=marker?.getElement()?.querySelector(".poi-marker");
+  if(el){el.classList.add("active-marker");activeMarkerEl=el;}
+  const img=document.getElementById("poi-image"),ph=document.getElementById("poi-image-placeholder");
+  document.getElementById("poi-name").textContent=poi.name;
+  const catEl=document.getElementById("poi-cat");
+  catEl.textContent=(poi.emoji||"")+" "+poi.cat;
+  catEl.style.background="";
+  document.getElementById("poi-desc").textContent=poi.description||"";
+  if(poi.image){img.src=poi.image;document.getElementById("poi-image-wrap").classList.add("visible");ph.classList.add("hidden");}
+  else{img.src="";document.getElementById("poi-image-wrap").classList.remove("visible");ph.classList.remove("hidden");document.getElementById("poi-placeholder-emoji").textContent=poi.emoji||"📍";}
+  window._currentPoi = poi;
+  document.getElementById('walk-result').textContent='';
+  const wb=document.getElementById('walk-btn');
+  wb.textContent='🚶 Distance à pied';wb.disabled=false;
+  const distEl=document.getElementById("poi-dist");
+  if(userLat&&userLon){
+    const d=haversine(userLat,userLon,poi.lat,poi.lon);
+    document.getElementById("poi-dist-val").textContent=d<1000?Math.round(d)+" m":(d/1000).toFixed(1)+" km";
+    distEl.style.display="inline-flex";
+    wb.classList.add('visible');
+  } else {
+    distEl.style.display="none";
+    wb.classList.remove('visible');
+  }
+  const linksEl=document.getElementById("poi-links");
+  linksEl.innerHTML="";
+  (poi.links||[]).forEach(([url,label])=>{const a=document.createElement("a");a.href=url;a.target="_blank";a.className="poi-link";a.innerHTML="🔗 "+label;linksEl.appendChild(a);});
+  document.getElementById("poi-panel").classList.add("open");
+  map.panTo([poi.lat,poi.lon],{animate:true,duration:0.4});
+}
+
+function closePanel(){document.getElementById("poi-panel").classList.remove("open");if(activeMarkerEl){activeMarkerEl.classList.remove("active-marker");activeMarkerEl=null;}}
+map.on("click",()=>{closePanel();closeLayersPanel();});
+
+function toggleGPS(){gpsActive?stopGPS():startGPS();}
+function startGPS(){
+  if(!navigator.geolocation){showAlert("GPS non disponible");return;}
+  watchId=navigator.geolocation.watchPosition(onPosition,()=>showAlert("Impossible d'obtenir la position GPS"),{enableHighAccuracy:true,maximumAge:3000,timeout:10000});
+  gpsActive=true;
+  document.getElementById("gps-dot").classList.add("active");
+  document.getElementById("gps-label").textContent="GPS on";
+}
+function stopGPS(){
+  if(watchId){ navigator.geolocation.clearWatch(watchId); watchId=null; }
+  gpsActive=false;
+  userLat=null; userLon=null;
+  if(userMarker){ map.removeLayer(userMarker); userMarker=null; }
+  document.getElementById("gps-dot").classList.remove("active");
+  document.getElementById("gps-label").textContent="GPS off";
+}
+function onPosition(pos){
+  userLat=pos.coords.latitude;userLon=pos.coords.longitude;
+  const icon=L.divIcon({className:"",html:`<div class="user-dot"></div>`,iconSize:[16,16],iconAnchor:[8,8]});
+  userMarker?userMarker.setLatLng([userLat,userLon]):(userMarker=L.marker([userLat,userLon],{icon,zIndexOffset:1000}).addTo(map));
+  checkProximity();
+}
+function centerOnUser(){userLat&&userLon?map.flyTo([userLat,userLon],17,{duration:1.2}):(startGPS(),showAlert("Activation du GPS…"));}
+function checkProximity(){
+  if(!userLat||!userLon) return;
+  POIS.filter(p=>p.layer==="poi-heritage").forEach(poi=>{
+    const d=haversine(userLat,userLon,poi.lat,poi.lon);
+    if(d<=50&&!alertedPois.has(poi.name)){alertedPois.add(poi.name);showAlert(`${poi.emoji||"📍"} À ${Math.round(d)} m : ${poi.name}`);if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+    if(d>100) alertedPois.delete(poi.name);
+  });
+}
+let alertTimeout;
+function showAlert(msg){const el=document.getElementById("alert-popup");el.textContent=msg;el.style.display="block";clearTimeout(alertTimeout);alertTimeout=setTimeout(()=>el.style.display="none",4000);}
+function haversine(a,b,c,d){const R=6371000,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180,e=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(e),Math.sqrt(1-e));}
+
+// ── Événements ────────────────────────────────────────────────
+function fenetreEvenements() {
+  const debut = new Date(); debut.setHours(0,0,0,0);
+  const fin = new Date(debut); fin.setDate(fin.getDate()+8);
+  return {debut,fin};
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr+'T00:00:00');
+  return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+}
+
+function initEvenements() {
+  fetch(GAS_URL_EVENTS + '?action=read')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.evenements || !Array.isArray(data.evenements)) return;
+      const {debut,fin} = fenetreEvenements();
+      let count = 0;
+      data.evenements.forEach(evt => {
+        const dateDebut = new Date(evt.date_debut+'T00:00:00');
+        const dateFin   = new Date((evt.date_fin||evt.date_debut)+'T00:00:00');
+        if(dateFin < debut || dateDebut > fin) return;
+        const emojiIcon = evt.emoji||'📅';
+        const icon = L.divIcon({
+          className:'',
+          html:`<div class="poi-marker evt-marker" style="background:#9b59b6"><span>${emojiIcon}</span></div>`,
+          iconSize:[28,28],iconAnchor:[14,28]
+        });
+        const m = L.marker([parseFloat(evt.lat),parseFloat(evt.lng)],{icon});
+        if(layerState['evenements']) m.addTo(map);
+        m.on('click',()=>ouvrirPanneauEvenement(evt));
+        m._layerId='evenements';
+        evtMarkers.push(m);
+        count++;
+      });
+      const badge = document.getElementById('evt-count');
+      if(badge) badge.textContent = count>0?`(${count})`:'';
+    })
+    .catch(()=>{});
+}
+
+function ouvrirPanneauEvenement(evt) {
+  if(activeMarkerEl) activeMarkerEl.classList.remove('active-marker');
+  const img=document.getElementById('poi-image');
+  const ph=document.getElementById('poi-image-placeholder');
+  if(evt.image){
+    img.src=evt.image;
+    document.getElementById('poi-image-wrap').classList.add('visible');
+    ph.classList.add('hidden');
+  } else {
+    img.src='';
+    document.getElementById('poi-image-wrap').classList.remove('visible');
+    ph.classList.remove('hidden');
+    document.getElementById('poi-placeholder-emoji').textContent=evt.emoji||'📅';
+  }
+  const catEl=document.getElementById('poi-cat');
+  catEl.style.background='#9b59b6';
+  catEl.textContent='🗓 '+(evt.association||'Événement');
+  document.getElementById('poi-name').textContent=evt.nom;
+  document.getElementById('poi-dist').style.display='none';
+  document.getElementById('walk-btn').classList.remove('visible');
+  document.getElementById('walk-result').textContent='';
+  const dateDebutStr=formatDate(evt.date_debut);
+  const dateFinStr=evt.date_fin&&evt.date_fin!==evt.date_debut?' → '+formatDate(evt.date_fin):'';
+  const heure=evt.heure?' · '+evt.heure:'';
+  let desc=`📅  ${dateDebutStr}${dateFinStr}${heure}\n`;
+  desc+=`📍  ${evt.lieu}\n`;
+  desc+=`🚢  ${evt.acces}\n`;
+  if(evt.description) desc+=`\n${evt.description}`;
+  document.getElementById('poi-desc').textContent=desc;
+  const linksEl=document.getElementById('poi-links');
+  linksEl.innerHTML='';
+  if(evt.site){
+    const a=document.createElement('a');
+    a.className='poi-link';a.href=evt.site;a.target='_blank';a.rel='noopener noreferrer';
+    a.innerHTML='🌐&nbsp; Voir le site';
+    linksEl.appendChild(a);
+  }
+  window._currentPoi={lat:parseFloat(evt.lat),lng:parseFloat(evt.lng)};
+  document.getElementById('poi-panel').classList.add('open');
+  closeLayersPanel();
+  map.panTo([parseFloat(evt.lat),parseFloat(evt.lng)],{animate:true,duration:0.4});
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>{ initEvenements(); }, 150);
 });
-self.addEventListener("fetch", e => {
-  if (!e.request.url.startsWith("http")) return;
-  e.respondWith(
-    fetch(e.request).then(r => {
-      const clone = r.clone();
-      caches.open(CACHE).then(c => c.put(e.request, clone));
-      return r;
-    }).catch(() => caches.match(e.request))
-  );
-});
-self.addEventListener("message", e => {
-  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
-});
+</script>
+<div id="crealion"><img src="" alt="créalion"></div>
+<div id="version-badge">v1.8</div>
+</body>
+</html>
