@@ -2,42 +2,12 @@
 
 const EVENEMENTS = [
   {
-    nom:         "Soirée exceptionnelle Passeurs de Films",
-    emoji:       "🎬",
-    association: "Passeurs de Films, Fête de la mer",
-    date_debut:  "2026-05-30",
-    date_fin:    "2026-05-30",
-    heure:       "19h30 – 24h00",
-    lat:         47.596758,
-    lng:         -2.845953,
-    lieu:        "Place du Marché",
-    acces:       "Entrée libre. Inscription obligatoire pour le dîner : 18 €",
-    description: "Inscriptions : Relais des Mousquetaires, Mary Boat Trip, Boulangerie.",
-    image:       "https://upload.wikimedia.org/wikipedia/commons/8/89/Soir%C3%A9e_Passeurs_de_Films.jpg",
-    site:        "https://www.passeursdefilms.fr/"
-  },
-  {
-    nom:         "Un après-midi à l'Herbier de Kerscot",
-    emoji:       "🌿",
-    association: "Mairie de l'Île-aux-Moines",
-    date_debut:  "2026-05-30",
-    date_fin:    "2026-05-30",
-    heure:       "16h00 – 19h30",
-    lat:         47.592851,
-    lng:         -2.851132,
-    lieu:        "Herbier de Kerscott",
-    acces:       "Entrée libre",
-    description: "Surprise musicale. Crac'hophonies. Choeur de l'Ile-aux-Moines",
-    image:       "https://upload.wikimedia.org/wikipedia/commons/a/af/Kerscot.jpg?_=20260529074757",
-    site:        ""
-  },
-  {
-    nom:         "Réunion publique Festival Les INSULAIRES",
+    nom:         "Réunion publique",
     emoji:       "🎊",
     association: "Festival Les INSULAIRES",
     date_debut:  "2026-06-04",
     date_fin:    "2026-06-04",
-    heure:       "18h00 – 20h00",
+    heure:       "18h00 - 20h00",
     lat:         47.597059,
     lng:         -2.845658,
     lieu:        "Salle du Conseil Municipal",
@@ -77,6 +47,21 @@ const EVENEMENTS = [
     site:        ""
   },
   {
+    nom:         "Pique-nique inter îles",
+    emoji:       "🎊",
+    association: "Comité des fêtes",
+    date_debut:  "2026-06-07",
+    date_fin:    "2026-06-07",
+    heure:       "12h00 - 20h00",
+    lat:         47.591,
+    lng:         -2.82481,
+    lieu:        "Pointe de Brouël",
+    acces:       "Nous avons hâte de vous retrouver pour ce moment insulaire, quelques semaines avant le festival Les Insulaires! à l’île d’Yeu en septembre prochain",
+    description: "Buvette et Gateaux sur place. Barbecues en libre service.\nStands de produits artisanaux des 2 îles.\nActivités extérieures : Palet. Jeux pour les enfants.",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/02/pique-nique-iles.jpg.webp",
+    site:        ""
+  },
+  {
     nom:         "À l'origine de nos maisons",
     emoji:       "🏠",
     association: "",
@@ -89,21 +74,6 @@ const EVENEMENTS = [
     acces:       "Entrée libre. Places limitées.",
     description: "",
     image:       "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
-    site:        ""
-  },
-  {
-    nom:         "Concours de pêche — Jeunes pêcheurs",
-    emoji:       "🎣",
-    association: "Mairie de l'Île-aux-Moines",
-    date_debut:  "2026-08-01",
-    date_fin:    "2026-08-01",
-    heure:       "8h00 – 12h00",
-    lat:         47.5962,
-    lng:         -2.8471,
-    lieu:        "Cales du port",
-    acces:       "Inscription gratuite auprès du gardien du port avant 7h45. Ouvert aux 6-16 ans.",
-    description: "Matériel prêté sur place. Remise des prix à 12h avec collation offerte par la mairie.",
-    image:       "",
     site:        ""
   }
 ];
