@@ -75,5 +75,35 @@ const EVENEMENTS = [
     description: "",
     image:       "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
     site:        ""
+  },
+  {
+    nom:         "Tannage des voiles du sinagot Crialeis",
+    emoji:       "⛵",
+    association: "Association",
+    date_debut:  "2026-07-13",
+    date_fin:    "2026-07-13",
+    heure:       "11hOO",
+    lat:         47.59906,
+    lng:         -2.850298,
+    lieu:        "Petit Pont (Port de l'Ile-aux-Moines)",
+    acces:       "Venez nombreux.",
+    description: "Buvette\nRestauration sur place\nAnimation Godille",
+    image:       "",
+    site:        "https://www.sinago-crialeis.bzh/"
+  },
+  {
+    nom:         "Tannage des voiles su sinago Crialeis",
+    emoji:       "⛵",
+    association: "Association pour un sinago ilois",
+    date_debut:  "2026-07-13",
+    date_fin:    "2026-07-13",
+    heure:       "11h00",
+    lat:         47.599056,
+    lng:         -2.850298,
+    lieu:        "Petit Pont - Port de l'Ile-aux-Moines",
+    acces:       "Venez nombreux.",
+    description: "Buvette\nRestauration sur place\nAnimation Godille",
+    image:       "https://ibb.co/TBrg8gQW",
+    site:        "https://www.sinago-crialeis.bzh/"
   }
 ];
