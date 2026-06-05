@@ -43,7 +43,7 @@ const EVENEMENTS = [
     lieu:        "Salle annexe de la Mairie",
     acces:       "Libre",
     description: "Tragédie suivi de La nostalgie des blattes.",
-    image:       "https://ibb.co/zhfTFSRC",
+    image:       "https://i.ibb.co/SXv4cKnH/Caillou.jpg",
     site:        ""
   },
   {
