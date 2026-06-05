@@ -43,7 +43,7 @@ const EVENEMENTS = [
     lieu:        "Salle annexe de la Mairie",
     acces:       "Libre",
     description: "Tragédie suivi de La nostalgie des blattes.",
-    image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Compagnie_du_Caillou.jpg/960px-Compagnie_du_Caillou.jpg?_=20260528100143",
+    image:       "https://ibb.co/zhfTFSRC",
     site:        ""
   },
   {
