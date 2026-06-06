@@ -88,7 +88,7 @@ const EVENEMENTS = [
     lieu:        "Petit Pont - Port de l'Ile-aux-Moines",
     acces:       "Venez nombreux.",
     description: "Buvette\nRestauration sur place\nAnimation Godille",
-    image:       "https://ibb.co/TBrg8gQW",
+    image:       "https://i.ibb.co/jvHrMrCJ/Tannagevoiles.jpg",
     site:        "https://www.sinago-crialeis.bzh/"
   }
 ];
