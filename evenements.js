@@ -80,7 +80,7 @@ const EVENEMENTS = [
     nom:         "Tannage des voiles su sinago Crialeis",
     emoji:       "⛵",
     association: "Association pour un sinago ilois",
-    date_debut:  "2026-07-13",
+    date_debut:  "2026-06-13",
     date_fin:    "2026-06-13",
     heure:       "11h00",
     lat:         47.599056,
