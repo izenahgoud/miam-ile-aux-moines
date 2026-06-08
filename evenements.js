@@ -1,66 +1,7 @@
 // evenements.js — Événements de l'Île-aux-Moines
 
 const EVENEMENTS = [
-  {
-    nom:         "Réunion publique",
-    emoji:       "🎊",
-    association: "Festival Les INSULAIRES",
-    date_debut:  "2026-06-04",
-    date_fin:    "2026-06-04",
-    heure:       "18h00 - 20h00",
-    lat:         47.597059,
-    lng:         -2.845658,
-    lieu:        "Salle du Conseil Municipal",
-    acces:       "Libre. Venez nombreux.",
-    description: "Présentation de la 13ème édition du festival prévu à YEU les 18, 19, 20 septembre 2026.\nEn présence des organisateurs du festival.",
-    image:       "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ile_d%27Yeu_insulaires.jpg/960px-Ile_d%27Yeu_insulaires.jpg?_=20260528100143",
-    site:        "https://lesinsulaires.com/"
-  },
-  {
-    nom:         "Chorale Harmonie de Plescop",
-    emoji:       "🎵",
-    association: "LALVI",
-    date_debut:  "2026-06-06",
-    date_fin:    "2026-06-06",
-    heure:       "15h00 – 16h30",
-    lat:         47.5989,
-    lng:         -2.84264,
-    lieu:        "Église Saint Michel",
-    acces:       "Entrée libre.",
-    description: "Programme varié composé de chants sacrés et profanes, classiques et plus contemporains, de France et d'ailleurs.",
-    image:       "https://www.lacordevocale.org/_bibli/agenda//17379/images/affiche-concert-ile-aux-moines-060626.png",
-    site:        "https://www.lacordevocale.org/agenda/chorale-harmonie-de-plescop-17379.html"
-  },
-  {
-    nom:         "Soirée Théâtre",
-    emoji:       "🎭",
-    association: "Compagnie du Caillou",
-    date_debut:  "2026-06-06",
-    date_fin:    "2026-06-06",
-    heure:       "15h00 & 18h00",
-    lat:         47.597088,
-    lng:         -2.845835,
-    lieu:        "Salle annexe de la Mairie",
-    acces:       "Libre",
-    description: "Tragédie suivi de La nostalgie des blattes.",
-    image:       "https://i.ibb.co/SXv4cKnH/Caillou.jpg",
-    site:        ""
-  },
-  {
-    nom:         "Pique-nique inter îles",
-    emoji:       "🎊",
-    association: "Comité des fêtes",
-    date_debut:  "2026-06-07",
-    date_fin:    "2026-06-07",
-    heure:       "12h00 - 20h00",
-    lat:         47.591,
-    lng:         -2.82481,
-    lieu:        "Pointe de Brouël",
-    acces:       "Nous avons hâte de vous retrouver pour ce moment insulaire, quelques semaines avant le festival Les Insulaires! à l’île d’Yeu en septembre prochain",
-    description: "Buvette et Gateaux sur place. Barbecues en libre service.\nStands de produits artisanaux des 2 îles.\nActivités extérieures : Palet. Jeux pour les enfants.",
-    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/02/pique-nique-iles.jpg.webp",
-    site:        ""
-  },
+  
   {
     nom:         "À l'origine de nos maisons",
     emoji:       "🏠",
@@ -73,7 +14,7 @@ const EVENEMENTS = [
     lieu:        "Salle du Rinville",
     acces:       "Entrée libre. Places limitées.",
     description: "",
-    image:       "https://upload.wikimedia.org/wikipedia/commons/6/6c/Anne_robinet.jpg",
+    image:       "https://i.ibb.co/nqsCqthc/originemaisons.jpg",
     site:        ""
   },
   {
