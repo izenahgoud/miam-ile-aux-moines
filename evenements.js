@@ -16,7 +16,7 @@ const EVENEMENTS = [
     description: "",
     image:       "https://i.ibb.co/nqsCqthc/originemaisons.jpg",
     site:        ""
-  },
+  }
    {
     nom:         "Tannage des voiles du sinago Craleis",
     emoji:       "",
