@@ -32,19 +32,4 @@ const EVENEMENTS = [
     image:       "https://i.ibb.co/jvHrMrCJ/Tannagevoiles.jpg",
     site:        "https://www.sinago-crialeis.bzh/",
   },
-  {
-    nom:         "",
-    emoji:       "",
-    association: "",
-    date_debut:  "",
-    date_fin:    "",
-    heure:       "",
-    lat:         ,
-    lng:         ,
-    lieu:        "",
-    acces:       "",
-    description: "",
-    image:       "",
-    site:        ""
-  },
 ];
