@@ -15,7 +15,7 @@ const EVENEMENTS = [
     acces:       "Entrée libre. Places limitées.",
     description: "",
     image:       "https://i.ibb.co/nqsCqthc/originemaisons.jpg",
-    site:        ""
+    site:        "",
   }
    {
     nom:         "Tannage des voiles du sinago Craleis",
@@ -23,9 +23,9 @@ const EVENEMENTS = [
     association: "Pour un sinago ilois",
     date_debut:  "2026-06-13",
     date_fin:    "2026-06-13",
-    heure:       "11h00 ",
-    lat:         47.599041,
-    lng:         -2.850325,
+    heure:       "11h00",
+    lat:         47.5990,
+    lng:         -2.8503,
     lieu:        "le grand pont - Port du Lerio",
     acces:       "libre.",
     description: "Buvette. Restauration sur place. Animation Godille",
