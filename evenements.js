@@ -31,5 +31,5 @@ const EVENEMENTS = [
     description: "Buvette. Restauration sur place. Animation Godille",
     image:       "https://i.ibb.co/jvHrMrCJ/Tannagevoiles.jpg",
     site:        "https://www.sinago-crialeis.bzh/",
-  },
+  }
 ];
