@@ -162,51 +162,28 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
 }
 
 .window-badge {
-
   background: var(--purple-light);
-
   color: var(--purple);
-
   border-radius: 20px;
-
   padding: 4px 12px;
-
   font-size: 12px;
-
   font-weight: 500;
-
 }
-
-
 
 /* ── LISTE ÉVÉNEMENTS ─────────────────────────── */
 
 #evt-list { display: flex; flex-direction: column; gap: 10px; }
-
-
-
 .evt-row {
-
   background: #fff;
-
   border: 1px solid var(--border);
-
   border-radius: var(--radius);
-
   padding: 14px 16px;
-
   display: grid;
-
   grid-template-columns: 56px 1fr auto;
-
   gap: 14px;
-
   align-items: center;
-
   transition: box-shadow .15s;
-
 }
-
 .evt-row:hover { box-shadow: var(--shadow); }
 .evt-row.past { opacity: .5; }
 .evt-row.soon { border-left: 3px solid var(--green); }
@@ -218,83 +195,47 @@ main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
   padding: 8px 6px;
   color: var(--sand-light);
   flex-shrink: 0;
-
 }
 
 .evt-date-col .day  { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 600; line-height: 1; }
-
 .evt-date-col .month{ font-size: 10px; text-transform: uppercase; letter-spacing: .08em; opacity: .7; margin-top: 1px; }
-
-
-
 .evt-info {}
-
 .evt-nom {
-
   font-family: "Playfair Display", serif;
-
   font-size: 16px;
-
   font-weight: 600;
-
   color: var(--text);
-
   margin-bottom: 4px;
-
   line-height: 1.3;
-
 }
 
 .evt-meta {
-
   display: flex;
-
   flex-wrap: wrap;
-
   gap: 6px;
-
   align-items: center;
-
 }
-
 .tag {
-
   display: inline-flex;
-
   align-items: center;
-
   gap: 3px;
-
   font-size: 11px;
-
   padding: 2px 8px;
-
   border-radius: 99px;
-
   font-weight: 500;
-
 }
 
 .tag-lieu  { background: var(--green-light); color: #1a6b3a; }
-
 .tag-heure { background: #eef4fb; color: #1a4a8a; }
-
 .tag-asso  { background: var(--purple-light); color: var(--purple); }
-
 .tag-fin   { background: var(--sand-light); color: var(--text-muted); font-size: 10px; }
-
 .tag-past  { background: #f0f0f0; color: #888; }
-
 .tag-soon  { background: var(--green-light); color: var(--green); }
-
 .tag-img   { background: #fff3e0; color: #b35a00; }
-
 .tag-site  { background: #e3f2fd; color: #1565c0; }
 
 
-
 .evt-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
 
 
 /* ── EMPTY STATE ──────────────────────────────── */
@@ -5233,7 +5174,4 @@ function startGPS(){
   if(!navigator.geolocation){showAlert("GPS non disponible");return;}
   watchId=navigator.geolocation.watchPosition(onPosition,()=>showAlert("Impossible d'obtenir la
 
-
-
-Gemini est une IA et peut se tromper, y compris sur des personnes. Votre confidentialité et GeminiS'ouvre dans une nouvelle fenêtre
 
