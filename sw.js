@@ -1,6 +1,7 @@
-const CACHE = "miam-iam-v1.9.1";
+const CACHE = "miam-iam-v" + Date.now();
+
 const ASSETS = [
-  "./", "./index.html", "./pois.js", "./evenements.js",
+  "./", "./index.html", "./pois.js", "./evenements.js", "./traces.js",
   "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png"
 ];
 self.addEventListener("install", e => {
