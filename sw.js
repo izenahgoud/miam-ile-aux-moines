@@ -27,9 +27,10 @@ self.addEventListener("activate", e => {
 });
 
 self.addEventListener("fetch", e => {
-  // Ignorer les requêtes POST (sinon crash)
+  // 1) Ignorer toutes les requêtes qui ne sont pas en GET (POST, PUT, etc.)
   if (e.request.method !== "GET") return;
 
+  // 2) Ignorer ce qui n'est pas une requête HTTP (chrome-extension, file:, etc.)
   if (!e.request.url.startsWith("http")) return;
 
   e.respondWith(
