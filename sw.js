@@ -27,6 +27,9 @@ self.addEventListener("activate", e => {
 });
 
 self.addEventListener("fetch", e => {
+  // Ignorer les requêtes POST (sinon crash)
+  if (e.request.method !== "GET") return;
+
   if (!e.request.url.startsWith("http")) return;
 
   e.respondWith(
