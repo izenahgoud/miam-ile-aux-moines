@@ -1,4 +1,3 @@
-const CACHE = "miam-iam-v1.8";
 const CACHE = "miam-iam-v1.9.1";
 const ASSETS = [
 "./", "./index.html", "./pois.js", "./evenements.js",
