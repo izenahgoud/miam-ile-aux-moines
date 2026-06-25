@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Généré automatiquement le 22/06/2026 09:05:31
-// Version : 2026.06.22
+// Généré automatiquement le 25/06/2026 16:04:55
+// Version : 2026.06.25
 
 const EVENEMENTS = [
   {
@@ -48,20 +48,20 @@ const EVENEMENTS = [
     "site": "",
     "description": "Oeuvres d'Anne-Elise Decré"
   },
-   {
+  {
     "nom": "Dîner de l'Ecole St Joseph",
     "emoji": "🎉",
-    "association": "apel",
+    "association": "APEL",
     "date_debut": "2026-07-04",
     "date_fin": "2026-07-04",
     "heure": "18h00 - 22h00",
     "lieu": "Salle du Rinville",
     "lat": "47.5943",
     "lng": "-2.8502",
-    "acces": "Sur réservation : Relais des mousquetaires & Boulangerie ",
+    "acces": "Sur réservation : Relais des mousquetaires & Boulangerie",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/11/diner-ecole-1-724x1024.jpg.webp",
     "site": "",
-    "description": "**Restauration et buvette sur place**\n**Adultes : 15 €** **Enfants: 7 €**\n\n"
+    "description": "**Restauration et buvette sur place**\\n**Adultes : 15 €** **Enfants: 7 €**"
   },
   {
     "nom": "3 amis 3 univers",
@@ -69,18 +69,18 @@ const EVENEMENTS = [
     "association": "",
     "date_debut": "2026-07-10",
     "date_fin": "2026-07-14",
-    "heure": "10h00 - 18h00",
+    "heure": "10H00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
     "lat": "47.5953",
     "lng": "-2.8479",
-    "acces": "Accès libre",
+    "acces": "accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/kllou.png.webp",
     "site": "",
     "description": "**Carol Peregrine** **Mick Abott** **Kilou**"
   },
-{
+  {
     "nom": "Chanson en chapelle",
-    "emoji": "",
+    "emoji": "🎵",
     "association": "",
     "date_debut": "2026-07-11",
     "date_fin": "2026-07-11",
@@ -92,6 +92,5 @@ const EVENEMENTS = [
     "image": "https://public-smartfactory.koredge.fr/sit/client_0000000010/agenda_1h_cIZ4BMEJK_xwFE7n1/original/11-juillet-ile-aux-moines-chanson-en-chapelle.jpg",
     "site": "https://www.olivierrech.com/",
     "description": "Olivier RECH Chante la Bretagne : sa mer, son terroir, sa spiritualité et ses légendes. Une voix, une guitare, un programme inédit et original composé de chansons personnelles et de certains standards des répertoires d’Alain Barrière, Hugues Aufray, Michel Tonnerre, François Budet ..."
-  },
-
+  }
 ];
