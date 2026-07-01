@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Mis à jour le 25/06/2026 16:04:55
-// Version : 2026.06.25
+// Mis à jour le 01/07/2026 15:40:00
+// Version : 2026.07.01
 
 const EVENEMENTS = [
   {
@@ -27,7 +27,7 @@ const EVENEMENTS = [
     "lieu": "Cromlech de Kergonan",
     "lat": 47.5907,
     "lng": -2.8517,
-    "acces": "Billèterie \nhttps://www.helloasso.com/associations/le-festival-du-conte",
+    "acces": "Billèterie",
     "image": "https://contesbaden.com/wp-content/uploads/2026/06/Affiche-ete-2026-1448x2048.png",
     "site": "https://contesbaden.com/festival-dete-2026/",
     "description": "Le Festival du conte de Baden est une association composée entièrement de bénévoles. Notre but est de promouvoir le conte et le spectacle vivant."
