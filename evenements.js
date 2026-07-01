@@ -4,6 +4,21 @@
 
 const EVENEMENTS = [
   {
+    "nom": "— MODÈLE À COPIER —",
+    "emoji": "📅",
+    "association": "",
+    "date_debut": "2026-01-01",
+    "date_fin": "2026-01-01",
+    "heure": "",
+    "lieu": "",
+    "lat": 0,
+    "lng": 0,
+    "acces": "",
+    "image": "",
+    "site": "",
+    "description": ""
+  },
+  {
     "nom": "",
     "emoji": "📅",
     "association": "",
