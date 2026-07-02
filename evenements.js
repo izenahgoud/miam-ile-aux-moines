@@ -92,7 +92,7 @@ const EVENEMENTS = [
     "image": "https://public-smartfactory.koredge.fr/sit/client_0000000010/agenda_1h_cIZ4BMEJK_xwFE7n1/original/11-juillet-ile-aux-moines-chanson-en-chapelle.jpg",
     "site": "https://www.olivierrech.com/",
     "description": "Olivier RECH Chante la Bretagne : sa mer, son terroir, sa spiritualité et ses légendes. Une voix, une guitare, un programme inédit et original composé de chansons personnelles et de certains standards des répertoires d’Alain Barrière, Hugues Aufray, Michel Tonnerre, François Budet ..."
-  }
+  },
   {
     "nom": "Bal des pompiers",
     "emoji": "🎪",
@@ -101,8 +101,8 @@ const EVENEMENTS = [
     "date_fin": "2026-07-13",
     "heure": "21h00 23h00",
     "lieu": "Place du Marché",
-    "lat": "47.5954",
-    "lng": "-2.8482",
+    "lat": 47.5954,
+    "lng": -2.8482,
     "acces": "Accès libre - Venez nombreux",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2024/07/BAL-POMPIER-13JUILLET_page-0001.jpg.webp",
     "site": "https://www.mairie-ileauxmoines.fr/agenda/feu-dartifice-et-bal-du-14-juillet/",
