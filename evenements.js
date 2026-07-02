@@ -19,20 +19,6 @@ const EVENEMENTS = [
     "description": ""
   },
   {
-    "nom": "",
-    "emoji": "📅",
-    "association": "",
-    "date_debut": "",
-    "date_fin": "",
-    "heure": "",
-    "lieu": "",
-    "lat": ,
-    "lng": ,
-    "acces": "",
-    "image": "",
-    "site": "",
-    "description": ""  },
-  {
     "nom": "29e Festival du Comte de Baden",
     "emoji": "🎭",
     "association": "",
