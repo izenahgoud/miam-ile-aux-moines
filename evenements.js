@@ -107,7 +107,7 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2024/07/BAL-POMPIER-13JUILLET_page-0001.jpg.webp",
     "site": "https://www.mairie-ileauxmoines.fr/agenda/feu-dartifice-et-bal-du-14-juillet/",
     "description": "20h00 : Vente des lampions, Place du marché\n21h00 : Bal des enfants\n23h00 : Feu d'artifice dans la baie du Lério\n23h30 : Bal populaire , Place du marché"
-  }
+  },
    {
     "nom": "COULEURS",
     "emoji": "🎨",
