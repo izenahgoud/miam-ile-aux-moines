@@ -86,7 +86,7 @@ const EVENEMENTS = [
     "date_fin": "2026-07-13",
     "heure": "21h00 23h00",
     "lieu": "Place du Marché",
-    "lat": 47.5967,
+    "lat": 47.5968,
     "lng": -2.8459,
     "acces": "Accès libre - Venez nombreux",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2024/07/BAL-POMPIER-13JUILLET_page-0001.jpg.webp",
