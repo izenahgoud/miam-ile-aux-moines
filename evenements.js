@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Mis à jour le 01/07/2026 15:40:00
-// Version : 2026.07.01
+// Mis à jour le 05/07/2026 15:30:00
+// Version : 2026.07.05
 
 const EVENEMENTS = [
   {
@@ -108,7 +108,7 @@ const EVENEMENTS = [
     "site": "https://www.mairie-ileauxmoines.fr/agenda/feu-dartifice-et-bal-du-14-juillet/",
     "description": "20h00 : Vente des lampions, Place du marché\n21h00 : Bal des enfants\n23h00 : Feu d'artifice dans la baie du Lério\n23h30 : Bal populaire , Place du marché"
   },
-   {
+  {
     "nom": "COULEURS",
     "emoji": "🎨",
     "association": "Etienne Dehau",
@@ -116,8 +116,8 @@ const EVENEMENTS = [
     "date_fin": "2026-07-18",
     "heure": "10h00 - 13h00 & 15h00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat": "47.5953",
-    "lng": "-2.8479",
+    "lat": 47.5953,
+    "lng": -2.8479,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/03/exposition-etiennedehau-scaled.jpg.webp",
     "site": "https://etiennedehau.com",
@@ -125,19 +125,18 @@ const EVENEMENTS = [
   },
   {
     "nom": "**TRIO SERENA**",
-    "emoji": "",
+    "emoji": "🎵",
     "association": "Escales musicales",
     "date_debut": "2026-07-17",
     "date_fin": "2026-07-17",
     "heure": "20h00 - 22h00",
     "lieu": "Eglise Saint Michel",
-    "lat": "47.59482",
-    "lng": "-2.84823",
+    "lat": 47.59482,
+    "lng": -2.84823,
     "acces": "billetterie place du marché, à l'entrée du concert et sur réservation",
     "image": "https://www.escalesmusicales.fr/wp-content/uploads/2026/06/Serena_2026.jpg",
     "site": "https://www.escalesmusicales.fr/concert-escales-musicales-17-juillet-2026/",
-    "description": "**Raphael CHRETIEN** violoncelle, **Christophe GIOVANETTI** violon et **PIerre-Henri XUEREB** alto \n Schubert :
-Trio n°1 en si bémol majeur, Beethoven : Trio sérénade n°2 op 8, Mozart : Divertimento K563"
+    "description": "**Raphael CHRETIEN** violoncelle, **Christophe GIOVANETTI** violon et **PIerre-Henri XUEREB** alto \n Schubert : Trio n°1 en si bémol majeur, Beethoven : Trio sérénade n°2 op 8, Mozart : Divertimento K563"
   },
   {
     "nom": "Exposition de créateurs ilois",
@@ -147,8 +146,8 @@ Trio n°1 en si bémol majeur, Beethoven : Trio sérénade n°2 op 8, Mozart : D
     "date_fin": "2026-07-21",
     "heure": "10h00 - 13h00  15H00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat": "47.5953",
-    "lng": "-2.8479",
+    "lat": 47.5953,
+    "lng": -2.8479,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/0202/04/Nouvelle-exposition-musee-art-peinture-artiste-activite-ete-visite-tourisme-affiche.png.webp",
     "site": "",
@@ -162,8 +161,8 @@ Trio n°1 en si bémol majeur, Beethoven : Trio sérénade n°2 op 8, Mozart : D
     "date_fin": "2026-07-26",
     "heure": "10h00 - 12h00 16h00 - 19h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat": "47.5953",
-    "lng": "-2.8479",
+    "lat": 47.5953,
+    "lng": -2.8479,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/04/SKM_C451i26032509170-scaled.jpg.webp",
     "site": "https://www.adelinemeilliez.com/",
@@ -177,11 +176,11 @@ Trio n°1 en si bémol majeur, Beethoven : Trio sérénade n°2 op 8, Mozart : D
     "date_fin": "2026-07-31",
     "heure": "10h00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat": "47.5953",
-    "lng": "-2.8479",
+    "lat": 47.5953,
+    "lng": -2.8479,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/vitrac.jpg.webp",
     "site": "",
     "description": "Fusains, Pastels secs, Crayons de couleurs, Sanguines"
-  },
+  }
 ];
