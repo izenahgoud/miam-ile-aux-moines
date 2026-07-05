@@ -184,5 +184,4 @@ Trio n°1 en si bémol majeur, Beethoven : Trio sérénade n°2 op 8, Mozart : D
     "site": "",
     "description": "Fusains, Pastels secs, Crayons de couleurs, Sanguines"
   },
-]
 ];
