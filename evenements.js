@@ -34,21 +34,6 @@ const EVENEMENTS = [
     "description": "Le Festival du conte de Baden est une association composée entièrement de bénévoles. Notre but est de promouvoir le conte et le spectacle vivant."
   },
   {
-    "nom": "Dîner de l'Ecole St Joseph",
-    "emoji": "🎉",
-    "association": "APEL",
-    "date_debut": "2026-07-04",
-    "date_fin": "2026-07-04",
-    "heure": "18h00 - 22h00",
-    "lieu": "Salle du Rinville",
-    "lat": 47.5943,
-    "lng": -2.8502,
-    "acces": "Sur réservation : Relais des mousquetaires & Boulangerie",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/11/diner-ecole-1-724x1024.jpg.webp",
-    "site": "",
-    "description": "**Restauration et buvette sur place**\n**Adultes : 15 €** **Enfants: 7 €**"
-  },
-  {
     "nom": "Exposition Anne-Elise Decré",
     "emoji": "🎨",
     "association": "",
