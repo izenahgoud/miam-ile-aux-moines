@@ -44,7 +44,7 @@ const EVENEMENTS = [
     "lat": 47.6000,
     "lng": -2.8510,
     "acces": "Accès libre",
-    "image": "https://i.ibb.co/LhpyZXBV/Anneelisedecre.jpg",
+    "image": "https://ibb.co/Xxx7dWJ9",
     "site": "",
     "description": "Oeuvres d'Anne-Elise Decré"
   },
