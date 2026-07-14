@@ -19,21 +19,6 @@ const EVENEMENTS = [
     "description": ""
   },
   {
-    "nom": "29e Festival du Comte de Baden",
-    "emoji": "🎭",
-    "association": "",
-    "date_debut": "2026-07-13",
-    "date_fin": "2026-07-13",
-    "heure": "17h00",
-    "lieu": "Cromlech de Kergonan",
-    "lat": 47.5907,
-    "lng": -2.8517,
-    "acces": "Billèterie",
-    "image": "https://contesbaden.com/wp-content/uploads/2026/06/Affiche-ete-2026-1448x2048.png",
-    "site": "https://contesbaden.com/festival-dete-2026/",
-    "description": "Le Festival du conte de Baden est une association composée entièrement de bénévoles. Notre but est de promouvoir le conte et le spectacle vivant."
-  },
-  {
     "nom": "3 amis 3 univers",
     "emoji": "🎨",
     "association": "",
@@ -131,8 +116,8 @@ const EVENEMENTS = [
     "date_fin": "2026-07-26",
     "heure": "10h00 - 12h00 16h00 - 19h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat": 47.5953,
-    "lng": -2.8479,
+    "lat": 47.597088,
+    "lng": -2.845835,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/04/SKM_C451i26032509170-scaled.jpg.webp",
     "site": "https://www.adelinemeilliez.com/",
