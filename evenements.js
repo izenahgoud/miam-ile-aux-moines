@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Mis à jour le 05/07/2026 15:30:00
-// Version : 2026.07.05
+// Généré automatiquement le 14/07/2026 07:29:09
+// Version : 2026.07.14
 
 const EVENEMENTS = [
   {
@@ -41,7 +41,7 @@ const EVENEMENTS = [
     "date_fin": "2026-07-14",
     "heure": "9H00 - 13h00 17H00 - 20h30",
     "lieu": "Salle annexe de la Mairie",
-    "lat":  47.597088,
+    "lat": 47.597088,
     "lng": -2.845835,
     "acces": "accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/kllou.png.webp",
@@ -101,7 +101,7 @@ const EVENEMENTS = [
     "date_fin": "2026-07-17",
     "heure": "20h00 - 22h00",
     "lieu": "Eglise Saint Michel",
-    "lat": 47.59880,
+    "lat": 47.5988,
     "lng": -2.84268,
     "acces": "billetterie place du marché, à l'entrée du concert et sur réservation",
     "image": "https://www.escalesmusicales.fr/wp-content/uploads/2026/06/Serena_2026.jpg",
@@ -116,8 +116,8 @@ const EVENEMENTS = [
     "date_fin": "2027-07-21",
     "heure": "10h00 - 13h00  15H00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat":  47.597088,
-    "lng":  -2.845835,
+    "lat": 47.597088,
+    "lng": -2.845835,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/0202/04/Nouvelle-exposition-musee-art-peinture-artiste-activite-ete-visite-tourisme-affiche.png.webp",
     "site": "",
@@ -152,5 +152,20 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/vitrac.jpg.webp",
     "site": "",
     "description": "Fusains, Pastels secs, Crayons de couleurs, Sanguines"
+  },
+  {
+    "nom": "Exposition NELLISA",
+    "emoji": "🎨",
+    "association": "",
+    "date_debut": "2026-07-13",
+    "date_fin": "2026-07-19",
+    "heure": "10h00 - 13h00 15h00 - 19h00",
+    "lieu": "La Petite Galerie",
+    "lat": "47.6000",
+    "lng": "-2.8510",
+    "acces": "Accès libre. Venez nombreux.",
+    "image": "https://panneau-pocket.s3.gra.perf.cloud.ovh.net/cache/sign_image/15779583886a47ceb2571ed8.19294384-1783090866.png/530f58160ca7c9a33016ca16a2e59486",
+    "site": "",
+    "description": "Démarche artistique :\nMon inspiration se nourrit de mes expériences et émotions, je tente d'exprimer ce qui me fascine et ressource. J'aime passer des heures à contempler la mer et la nature et la restituer mes souvenirs sur ma toile.\nToujours à la recherche de nouveaux effets de matières, de couleurs, de textures, je crée sur l'instant. \nMa toile prend vie au au fur et à mesure du trait, d'une couleur qui résonne avec une autre, ce qui devient le chemin pour trouver l'équilibre de ma composition. \nUne interprétation entre l'abstraction et la figuration. "
   }
 ];
