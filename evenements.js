@@ -34,21 +34,6 @@ const EVENEMENTS = [
     "description": "**Carol Peregrine** **Mick Abott** **Kilou**"
   },
   {
-    "nom": "Chanson en chapelle",
-    "emoji": "🎵",
-    "association": "",
-    "date_debut": "2026-07-11",
-    "date_fin": "2026-07-11",
-    "heure": "18h00",
-    "lieu": "Chapelle Notre-Dame d'Espérance",
-    "lat": 47.597743,
-    "lng": -2.844763,
-    "acces": "Libre participation",
-    "image": "https://public-smartfactory.koredge.fr/sit/client_0000000010/agenda_1h_cIZ4BMEJK_xwFE7n1/original/11-juillet-ile-aux-moines-chanson-en-chapelle.jpg",
-    "site": "https://www.olivierrech.com/",
-    "description": "Olivier RECH Chante la Bretagne : sa mer, son terroir, sa spiritualité et ses légendes. Une voix, une guitare, un programme inédit et original composé de chansons personnelles et de certains standards des répertoires d’Alain Barrière, Hugues Aufray, Michel Tonnerre, François Budet ..."
-  },
-  {
     "nom": "Bal des pompiers",
     "emoji": "🎪",
     "association": "L'Amicale des Sapeurs Pompiers de l'Ile-aux-Moines",
