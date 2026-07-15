@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Généré automatiquement le 14/07/2026 07:29:09
-// Version : 2026.07.14
+// Généré automatiquement le 15/07/2026 18:11:20
+// Version : 2026.07.15
 
 const EVENEMENTS = [
   {
@@ -19,6 +19,21 @@ const EVENEMENTS = [
     "description": ""
   },
   {
+    "nom": "29e Festival du Comte de Baden",
+    "emoji": "🎭",
+    "association": "",
+    "date_debut": "2026-07-13",
+    "date_fin": "2026-07-13",
+    "heure": "17h00",
+    "lieu": "Cromlech de Kergonan",
+    "lat": 47.5907,
+    "lng": -2.8517,
+    "acces": "Billèterie",
+    "image": "https://contesbaden.com/wp-content/uploads/2026/06/Affiche-ete-2026-1448x2048.png",
+    "site": "https://contesbaden.com/festival-dete-2026/",
+    "description": "Le Festival du conte de Baden est une association composée entièrement de bénévoles. Notre but est de promouvoir le conte et le spectacle vivant."
+  },
+  {
     "nom": "3 amis 3 univers",
     "emoji": "🎨",
     "association": "",
@@ -32,6 +47,21 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/kllou.png.webp",
     "site": "",
     "description": "**Carol Peregrine** **Mick Abott** **Kilou**"
+  },
+  {
+    "nom": "Chanson en chapelle",
+    "emoji": "🎵",
+    "association": "",
+    "date_debut": "2026-07-11",
+    "date_fin": "2026-07-11",
+    "heure": "18h00",
+    "lieu": "Chapelle Notre-Dame d'Espérance",
+    "lat": 47.597743,
+    "lng": -2.844763,
+    "acces": "Libre participation",
+    "image": "https://public-smartfactory.koredge.fr/sit/client_0000000010/agenda_1h_cIZ4BMEJK_xwFE7n1/original/11-juillet-ile-aux-moines-chanson-en-chapelle.jpg",
+    "site": "https://www.olivierrech.com/",
+    "description": "Olivier RECH Chante la Bretagne : sa mer, son terroir, sa spiritualité et ses légendes. Une voix, une guitare, un programme inédit et original composé de chansons personnelles et de certains standards des répertoires d’Alain Barrière, Hugues Aufray, Michel Tonnerre, François Budet ..."
   },
   {
     "nom": "Bal des pompiers",
@@ -101,8 +131,8 @@ const EVENEMENTS = [
     "date_fin": "2026-07-26",
     "heure": "10h00 - 12h00 16h00 - 19h00",
     "lieu": "Salle annexe de la Mairie",
-    "lat": 47.597088,
-    "lng": -2.845835,
+    "lat": 47.5953,
+    "lng": -2.8479,
     "acces": "Accès libre",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/04/SKM_C451i26032509170-scaled.jpg.webp",
     "site": "https://www.adelinemeilliez.com/",
@@ -137,5 +167,35 @@ const EVENEMENTS = [
     "image": "https://panneau-pocket.s3.gra.perf.cloud.ovh.net/cache/sign_image/15779583886a47ceb2571ed8.19294384-1783090866.png/530f58160ca7c9a33016ca16a2e59486",
     "site": "",
     "description": "Démarche artistique :\nMon inspiration se nourrit de mes expériences et émotions, je tente d'exprimer ce qui me fascine et ressource. J'aime passer des heures à contempler la mer et la nature et la restituer mes souvenirs sur ma toile.\nToujours à la recherche de nouveaux effets de matières, de couleurs, de textures, je crée sur l'instant. \nMa toile prend vie au au fur et à mesure du trait, d'une couleur qui résonne avec une autre, ce qui devient le chemin pour trouver l'équilibre de ma composition. \nUne interprétation entre l'abstraction et la figuration. "
+  },
+  {
+    "nom": "Exposition Respirer l'Instant",
+    "emoji": "🎨",
+    "association": "Barbara Sabaté Montoriol",
+    "date_debut": "2026-07-20",
+    "date_fin": "2026-07-26",
+    "heure": "10h00 - 13h00 15h00 - 19h00",
+    "lieu": "La Petite Galerie",
+    "lat": "47.6000",
+    "lng": "-2.8510",
+    "acces": "Accès libre. Venez nombreux.",
+    "image": "https://ibb.co/0wZ4JR5",
+    "site": "https://fragmentsdesens.com/a-propos-3/",
+    "description": "Vernissage le 20 juillet à 18h00\nDedans, dehors, des fleurs et des vues cueillies sur l'Île-aux-Moines entre hiver et printemps 2026."
+  },
+  {
+    "nom": "Portes ouvertes du Centre de Secours",
+    "emoji": "🎪",
+    "association": "Sapeurs pompiers de l'Ile-aux-Moines",
+    "date_debut": "2026-07-19",
+    "date_fin": "2026-07-19",
+    "heure": "17h00 - 19h00",
+    "lieu": "Caserne des pompiers",
+    "lat": "47.592254",
+    "lng": "-2.848388",
+    "acces": "Accès libre",
+    "image": "https://panneau-pocket.s3.gra.perf.cloud.ovh.net/cache/sign_pdf/409583126a57a86edd0722.81182534-1784129646.pdf/24b1a67720fa4bd8e48180947d8bae4c",
+    "site": "",
+    "description": "Visite du centre de secours\nAnimations pour les enfants\nInitiation aux gestes qui sauvent"
   }
 ];
