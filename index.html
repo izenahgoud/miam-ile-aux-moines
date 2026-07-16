@@ -504,7 +504,17 @@ function initEvenements() {
         });
         const m = L.marker([parseFloat(evt.lat),parseFloat(evt.lng)],{icon});
         if(layerState['evenements']) m.addTo(map);
-        m.on('click',()=>ouvrirPanneauEvenement(evt));
+        
+        // CORRECTION MOBILE : Bloque le clic fantôme et temporise l'affichage
+        m.on('click',(e)=>{
+          if(e.originalEvent) {
+            L.DomEvent.stopPropagation(e.originalEvent);
+          }
+          requestAnimationFrame(() => {
+            setTimeout(() => ouvrirPanneauEvenement(evt), 50);
+          });
+        });
+        
         m._layerId='evenements';
         evtMarkers.push(m);
         count++;
@@ -561,8 +571,8 @@ function ouvrirPanneauEvenement(evt) {
 document.addEventListener('DOMContentLoaded',()=>{
   setTimeout(()=>{ initEvenements(); }, 150);
 });
-
-// ── RECHERCHE ──────────────────────────────────────────────
+  
+  // ── RECHERCHE ──────────────────────────────────────────────
 function openSearch() {
   const panel = document.getElementById('search-panel');
   panel.classList.add('open');
