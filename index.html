@@ -22,9 +22,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 #map{position:absolute;inset:0;z-index:1}
 .leaflet-tile-pane{filter:saturate(1.1) brightness(0.97)}
 #header{position:absolute;top:0;left:0;right:0;z-index:10;padding:10px 16px 10px;background:linear-gradient(to bottom,rgba(26,58,42,0.92) 70%,transparent);pointer-events:none;display:flex;align-items:flex-start;gap:10px;justify-content:space-between}
-#header-title{flex:1;min-width:0;padding-right:145px;overflow:hidden}
-#header-actions{display:flex;align-items:center;gap:10px;pointer-events:auto;flex-shrink:0;position:absolute;top:10px;right:16px}
-#blason{height:48px;width:auto;flex-shrink:0;border-radius:3px;opacity:.92}
+#header-title{flex:1;min-width:0;padding-right:145px;overflow:hidden;margin-left:-4px}
+#header-actions{display:flex;align-items:center;gap:10px;pointer-events:auto;flex-shrink:0;position:absolute;top:6px;right:10px}
+#blason{height:48px;width:auto;flex-shrink:0;border-radius:3px;opacity:.92;margin-left:-6px}
 #header h1{font-family:"Playfair Display",serif;font-size:22px;font-weight:600;color:var(--sand-light);letter-spacing:.02em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #header p{font-size:11px;color:rgba(232,213,163,0.7);margin-top:2px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#header p small{font-size:9px;opacity:.7;text-transform:none;letter-spacing:.04em}
 @media (max-width:380px){#header p{font-size:10px}}
@@ -133,7 +133,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 <div id="update-banner" onclick="applyUpdate()">🆕 Nouvelle version disponible !<span>Appuyez ici pour mettre à jour</span></div>
 <div id="map"></div>
 <div id="header">
-  <img id="blason" src="icons/blason.webp" alt="Blason">
+  <img id="blason" src="icons/blason.webp" alt="Blason" onerror="this.style.display='none'">
   <div id="header-title"><h1>M'IAM</h1><p>Île-aux-Moines · <small>map of ile-aux-moines</small></p></div>
   <div id="header-actions">
     <button id="search-btn" onclick="openSearch()" title="Rechercher un lieu">🔍</button>
