@@ -21,12 +21,13 @@
 body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text);height:100dvh;overflow:hidden}
 #map{position:absolute;inset:0;z-index:1}
 .leaflet-tile-pane{filter:saturate(1.1) brightness(0.97)}
-#header{position:absolute;top:0;left:0;right:0;z-index:10;padding:10px 16px 10px;background:linear-gradient(to bottom,rgba(26,58,42,0.92) 70%,transparent);pointer-events:none;display:flex;align-items:center;gap:10px;justify-content:space-between}
-#header-title{flex:1;min-width:0}
-#header-actions{display:flex;align-items:center;gap:10px;pointer-events:auto;flex-shrink:0}
+#header{position:absolute;top:0;left:0;right:0;z-index:10;padding:10px 16px 10px;background:linear-gradient(to bottom,rgba(26,58,42,0.92) 70%,transparent);pointer-events:none;display:flex;align-items:flex-start;gap:10px;justify-content:space-between}
+#header-title{flex:1;min-width:0;padding-right:145px;overflow:hidden}
+#header-actions{display:flex;align-items:center;gap:10px;pointer-events:auto;flex-shrink:0;position:absolute;top:10px;right:16px}
 #blason{height:48px;width:auto;flex-shrink:0;border-radius:3px;opacity:.92}
-#header h1{font-family:"Playfair Display",serif;font-size:22px;font-weight:600;color:var(--sand-light);letter-spacing:.02em;line-height:1.1}
-#header p{font-size:11px;color:rgba(232,213,163,0.7);margin-top:2px;letter-spacing:.08em;text-transform:uppercase}#header p small{font-size:9px;opacity:.7;text-transform:none;letter-spacing:.04em}
+#header h1{font-family:"Playfair Display",serif;font-size:22px;font-weight:600;color:var(--sand-light);letter-spacing:.02em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#header p{font-size:11px;color:rgba(232,213,163,0.7);margin-top:2px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#header p small{font-size:9px;opacity:.7;text-transform:none;letter-spacing:.04em}
+@media (max-width:380px){#header p{font-size:10px}}
 #gps-badge{background:var(--forest-mid);color:var(--sand-light);border-radius:20px;padding:6px 12px;font-size:11px;font-weight:500;letter-spacing:.05em;display:flex;align-items:center;gap:6px;cursor:pointer;border:1px solid rgba(232,213,163,0.25);transition:background .2s}
 #gps-badge:hover{background:var(--forest-light)}
 #gps-dot{width:8px;height:8px;border-radius:50%;background:#aaa;transition:background .3s}
