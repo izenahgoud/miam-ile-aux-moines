@@ -48,7 +48,7 @@ const EVENEMENTS = [
     "site": "https://etiennedehau.com",
     "description": ""
   },
- // {
+  {
     "nom": "Exposition de créateurs ilois",
     "emoji": "🎨",
     "association": "",
@@ -63,7 +63,7 @@ const EVENEMENTS = [
     "site": "",
     "description": "**Michel Désiré** Artiste pointilliste\n**Kathia Ehanno** Couturière d'ameublement"
   },
-//  {
+  {
     "nom": "Coeur couleur",
     "emoji": "🎨",
     "association": "Adeline Meilliez",
@@ -78,7 +78,7 @@ const EVENEMENTS = [
     "site": "https://www.adelinemeilliez.com/",
     "description": "Visual artist"
   },
-//  {
+  {
     "nom": "MARTHE VITRAC",
     "emoji": "🎨",
     "association": "Marthe Vitrac",
@@ -108,7 +108,7 @@ const EVENEMENTS = [
     "site": "",
     "description": "Démarche artistique :\nMon inspiration se nourrit de mes expériences et émotions, je tente d'exprimer ce qui me fascine et ressource. J'aime passer des heures à contempler la mer et la nature et la restituer mes souvenirs sur ma toile.\nToujours à la recherche de nouveaux effets de matières, de couleurs, de textures, je crée sur l'instant. \nMa toile prend vie au au fur et à mesure du trait, d'une couleur qui résonne avec une autre, ce qui devient le chemin pour trouver l'équilibre de ma composition. \nUne interprétation entre l'abstraction et la figuration. "
   },
-//  {
+  {
     "nom": "Exposition Respirer l'Instant",
     "emoji": "🎨",
     "association": "Barbara Sabaté Montoriol",
