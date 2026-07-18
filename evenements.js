@@ -119,7 +119,7 @@ const EVENEMENTS = [
     "lat": "47.6000",
     "lng": "-2.8510",
     "acces": "Accès libre. Venez nombreux.",
-    "image": "https://ibb.co/0wZ4JR5",
+    "image": "https://i.ibb.co/nWfdkNp/expobarbara.jpg",
     "site": "https://fragmentsdesens.com/a-propos-3/",
     "description": "Vernissage le 20 juillet à 18h00\nDedans, dehors, des fleurs et des vues cueillies sur l'Île-aux-Moines entre hiver et printemps 2026."
   },
