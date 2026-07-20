@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Généré automatiquement le 15/07/2026 18:11:20
-// Version : 2026.07.15
+// Généré automatiquement le 20/07/2026 18:33:45
+// Version : 2026.07.20
 
 const EVENEMENTS = [
   {
@@ -107,5 +107,20 @@ const EVENEMENTS = [
     "image": "https://i.ibb.co/nWfdkNp/expobarbara.jpg",
     "site": "https://fragmentsdesens.com/a-propos-3/",
     "description": "Vernissage le 20 juillet à 18h00\nDedans, dehors, des fleurs et des vues cueillies sur l'Île-aux-Moines entre hiver et printemps 2026."
-  }  
+  },
+  {
+    "nom": "Bric à Brac de l'APEL",
+    "emoji": "🎉",
+    "association": "APEL",
+    "date_debut": "2026-07-26",
+    "date_fin": "2026-07-26",
+    "heure": "8h00 - 14h00",
+    "lieu": "Place du Marché",
+    "lat": "47.5954",
+    "lng": "-2.8482",
+    "acces": "Accès libre - Venz nombreux",
+    "image": "https://ibb.co/XfYbJHtr",
+    "site": "10 € la table. Réservation au 06 14 14 17 70",
+    "description": ""
+  }
 ];
