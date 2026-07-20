@@ -64,6 +64,21 @@ const EVENEMENTS = [
     "description": "Visual artist"
   },
   {
+    "nom": "ACCORDEON et VIOLONCELLE",
+    "emoji": "🎵",
+    "association": "Moge",
+    "date_debut": "2026-01-01",
+    "date_fin": "2026-01-01",
+    "heure": "17h00 - 18h30",
+    "lieu": "Eglise Saint Michel",
+    "lat": 47.598626,
+    "lng": -2.842659,
+    "acces": "Accès libre. Participation aux frais souhaitée",
+    "image": "https://ibb.co/Kzpy8hW9",
+    "site": "",
+    "description": "Eric Blin, accordéon et Yanis Chambrie, violoncelle\nOeuvres de Bach, Borodine, Caccini, Haendel, Vivaldi... "
+  },
+  {
     "nom": "MARTHE VITRAC",
     "emoji": "🎨",
     "association": "Marthe Vitrac",
