@@ -34,21 +34,6 @@ const EVENEMENTS = [
     "description": "20h00 : Vente des lampions, Place du marché\n21h00 : Bal des enfants\n23h00 : Feu d'artifice dans la baie du Lério\n23h30 : Bal populaire , Place du marché"
   },
   {
-    "nom": "COULEURS",
-    "emoji": "🎨",
-    "association": "Etienne Dehau",
-    "date_debut": "2026-07-15",
-    "date_fin": "2026-07-18",
-    "heure": "10h00 - 13h00 & 15h00 - 18h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": 47.597088,
-    "lng": -2.845835,
-    "acces": "Accès libre",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/03/exposition-etiennedehau-scaled.jpg.webp",
-    "site": "https://etiennedehau.com",
-    "description": ""
-  },
-  {
     "nom": "Exposition de créateurs ilois",
     "emoji": "🎨",
     "association": "",
@@ -67,8 +52,8 @@ const EVENEMENTS = [
     "nom": "Coeur couleur",
     "emoji": "🎨",
     "association": "Adeline Meilliez",
-    "date_debut": "2026-07-22",
-    "date_fin": "2026-07-26",
+    "date_debut": "2027-07-22",
+    "date_fin": "2027-07-26",
     "heure": "10h00 - 12h00 16h00 - 19h00",
     "lieu": "Salle annexe de la Mairie",
     "lat": 47.597088,
@@ -94,21 +79,6 @@ const EVENEMENTS = [
     "description": "Fusains, Pastels secs, Crayons de couleurs, Sanguines"
   },
   {
-    "nom": "Exposition NELLISA",
-    "emoji": "🎨",
-    "association": "",
-    "date_debut": "2026-07-13",
-    "date_fin": "2026-07-19",
-    "heure": "10h00 - 13h00 15h00 - 19h00",
-    "lieu": "La Petite Galerie",
-    "lat": "47.6000",
-    "lng": "-2.8510",
-    "acces": "Accès libre. Venez nombreux.",
-    "image": "https://panneau-pocket.s3.gra.perf.cloud.ovh.net/cache/sign_image/15779583886a47ceb2571ed8.19294384-1783090866.png/530f58160ca7c9a33016ca16a2e59486",
-    "site": "",
-    "description": "Démarche artistique :\nMon inspiration se nourrit de mes expériences et émotions, je tente d'exprimer ce qui me fascine et ressource. J'aime passer des heures à contempler la mer et la nature et la restituer mes souvenirs sur ma toile.\nToujours à la recherche de nouveaux effets de matières, de couleurs, de textures, je crée sur l'instant. \nMa toile prend vie au au fur et à mesure du trait, d'une couleur qui résonne avec une autre, ce qui devient le chemin pour trouver l'équilibre de ma composition. \nUne interprétation entre l'abstraction et la figuration. "
-  },
-  {
     "nom": "Exposition Respirer l'Instant",
     "emoji": "🎨",
     "association": "Barbara Sabaté Montoriol",
@@ -122,20 +92,5 @@ const EVENEMENTS = [
     "image": "https://i.ibb.co/nWfdkNp/expobarbara.jpg",
     "site": "https://fragmentsdesens.com/a-propos-3/",
     "description": "Vernissage le 20 juillet à 18h00\nDedans, dehors, des fleurs et des vues cueillies sur l'Île-aux-Moines entre hiver et printemps 2026."
-  },
-  {
-    "nom": "Portes ouvertes du Centre de Secours",
-    "emoji": "🎪",
-    "association": "Sapeurs pompiers de l'Ile-aux-Moines",
-    "date_debut": "2026-07-19",
-    "date_fin": "2026-07-19",
-    "heure": "17h00 - 19h00",
-    "lieu": "Caserne des pompiers",
-    "lat": "47.592254",
-    "lng": "-2.848388",
-    "acces": "Accès libre",
-    "image": "https://panneau-pocket.s3.gra.perf.cloud.ovh.net/cache/sign_pdf/409583126a57a86edd0722.81182534-1784129646.pdf/24b1a67720fa4bd8e48180947d8bae4c",
-    "site": "",
-    "description": "Visite du centre de secours\nAnimations pour les enfants\nInitiation aux gestes qui sauvent"
-  }
+  }  
 ];
