@@ -59,7 +59,7 @@ const EVENEMENTS = [
     "lat": 47.598626,
     "lng": -2.842659,
     "acces": "Accès libre. Participation aux frais souhaitée",
-    "image": "https://ibb.co/Kzpy8hW9",
+    "image": "https://i.ibb.co/fGz0TFHC/b390fbd893af698004eb399300847ea0.jpg",
     "site": "",
     "description": "Eric Blin, accordéon et Yanis Chambrie, violoncelle\nOeuvres de Bach, Borodine, Caccini, Haendel, Vivaldi... "
   },
