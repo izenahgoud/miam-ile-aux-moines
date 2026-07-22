@@ -105,7 +105,7 @@ const EVENEMENTS = [
     "lng": "-2.8459",
     "acces": "Accès libre - Venez nombreux",
     "image": "https://i.ibb.co/Q7Dfm0M3/bricabracapel.jpg",
-    "site": "10 € la table. Réservation au 06 14 14 17 70",
-    "description": ""
+    "site": "",
+    "description": "10 € la table. Réservation au 06 14 14 17 70"
   }
 ];
