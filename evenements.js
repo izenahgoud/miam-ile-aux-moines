@@ -104,7 +104,7 @@ const EVENEMENTS = [
     "lat": "47.5968",
     "lng": "-2.8459",
     "acces": "Accès libre - Venez nombreux",
-    "image": "https://ibb.co/XfYbJHtr",
+    "image": "https://i.ibb.co/Q7Dfm0M3/bricabracapel.jpg",
     "site": "10 € la table. Réservation au 06 14 14 17 70",
     "description": ""
   }
