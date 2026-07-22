@@ -34,26 +34,11 @@ const EVENEMENTS = [
     "description": "20h00 : Vente des lampions, Place du marché\n21h00 : Bal des enfants\n23h00 : Feu d'artifice dans la baie du Lério\n23h30 : Bal populaire , Place du marché"
   },
   {
-    "nom": "Exposition de créateurs ilois",
-    "emoji": "🎨",
-    "association": "",
-    "date_debut": "2026-07-19",
-    "date_fin": "2026-07-21",
-    "heure": "10h00 - 13h00  15H00 - 18h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": 47.597088,
-    "lng": -2.845835,
-    "acces": "Accès libre",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/0202/04/Nouvelle-exposition-musee-art-peinture-artiste-activite-ete-visite-tourisme-affiche.png.webp",
-    "site": "",
-    "description": "**Michel Désiré** Artiste pointilliste\n**Kathia Ehanno** Couturière d'ameublement"
-  },
-  {
     "nom": "Coeur couleur",
     "emoji": "🎨",
     "association": "Adeline Meilliez",
-    "date_debut": "2027-07-22",
-    "date_fin": "2027-07-26",
+    "date_debut": "2026-07-22",
+    "date_fin": "2026-07-26",
     "heure": "10h00 - 12h00 16h00 - 19h00",
     "lieu": "Salle annexe de la Mairie",
     "lat": 47.597088,
@@ -118,7 +103,7 @@ const EVENEMENTS = [
     "lieu": "Place du Marché",
     "lat": "47.5968",
     "lng": "-2.8459",
-    "acces": "Accès libre - Venz nombreux",
+    "acces": "Accès libre - Venez nombreux",
     "image": "https://ibb.co/XfYbJHtr",
     "site": "10 € la table. Réservation au 06 14 14 17 70",
     "description": ""
