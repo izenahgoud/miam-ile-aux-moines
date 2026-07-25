@@ -34,7 +34,7 @@ self.addEventListener("fetch", e => {
   if (!e.request.url.startsWith("http")) return;
 
   e.respondWith(
-    fetch(e.request)
+   fetch(e.request, {cache: "no-store"})
       .then(r => {
         const clone = r.clone();
         caches.open(CACHE).then(c => c.put(e.request, clone));
