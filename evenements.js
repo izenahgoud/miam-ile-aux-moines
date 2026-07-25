@@ -121,6 +121,6 @@ const EVENEMENTS = [
     "acces": "Accès libre. Venez nombreux",
     "image": "https://i.ibb.co/rfQxM6CQ/8829366916a608c81b93301-14864952-1784712321.jpg",
     "site": "",
-    "description": "Nathalie Jungerman : graveur, Ian Thomson : céramiste, Christophe Grossi: lecture du texte : Les arbres réfléchis, accompagnée de ses
-photographies projetées"}
-{
+    "description": "Nathalie Jungerman : graveur, Ian Thomson : céramiste, Christophe Grossi: lecture du texte : Les arbres réfléchis, accompagnée de ses\nphotographies projetées"
+  }
+];
