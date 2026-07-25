@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Généré automatiquement le 20/07/2026 18:33:45
-// Version : 2026.07.20
+// Généré automatiquement le 25/07/2026 10:50:40
+// Version : 2026.07.25
 
 const EVENEMENTS = [
   {
@@ -52,14 +52,14 @@ const EVENEMENTS = [
     "nom": "ACCORDEON et VIOLONCELLE",
     "emoji": "🎵",
     "association": "Moge",
-    "date_debut": "2026-07-27",
-    "date_fin": "2026-07-27",
+    "date_debut": "2026-01-01",
+    "date_fin": "2026-01-01",
     "heure": "17h00 - 18h30",
     "lieu": "Eglise Saint Michel",
     "lat": 47.598626,
     "lng": -2.842659,
     "acces": "Accès libre. Participation aux frais souhaitée",
-    "image": "https://i.ibb.co/fGz0TFHC/b390fbd893af698004eb399300847ea0.jpg",
+    "image": "https://ibb.co/Kzpy8hW9",
     "site": "",
     "description": "Eric Blin, accordéon et Yanis Chambrie, violoncelle\nOeuvres de Bach, Borodine, Caccini, Haendel, Vivaldi... "
   },
@@ -104,8 +104,21 @@ const EVENEMENTS = [
     "lat": "47.5968",
     "lng": "-2.8459",
     "acces": "Accès libre - Venez nombreux",
-    "image": "https://i.ibb.co/Q7Dfm0M3/bricabracapel.jpg",
+    "image": "https://ibb.co/XfYbJHtr",
+    "site": "10 € la table. Réservation au 06 14 14 17 70",
+    "description": ""
+  },
+  {
+    "nom": "Exposition Domaine du Guerric",
+    "emoji": "🎨",
+    "association": "Domaine du Guerric",
+    "date_debut": "2026-07-29",
+    "date_fin": "2026-08-05",
+    "heure": "10h00 - 12h00 15h00 - 18h00",
+    "lieu": "Chappelle du Domaine du Guerric",
+    "lat": "47.592482",
+    "lng": "-2.839070",
+    "acces": "Accès libre. Venez nombreux",
+    "image": "https://i.ibb.co/rfQxM6CQ/8829366916a608c81b93301-14864952-1784712321.jpg",
     "site": "",
-    "description": "10 € la table. Réservation au 06 14 14 17 70"
-  }
-];
+    "description": "Nathalie Jungerman, graveur\nIan Thomson, céramiste\nChristophe Grossi, lecture du texte : \" Les arbres réfléchis \" accompagné
