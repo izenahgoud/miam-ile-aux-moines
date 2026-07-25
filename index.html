@@ -582,7 +582,7 @@ function ouvrirPanneauEvenement(evt) {
   desc+=`📍  ${evt.lieu}\n`;
   desc+=`🚢  ${evt.acces}\n`;
   if(evt.description) desc+=`\n${evt.description}`;
-  document.getElementById('poi-desc').textContent=desc;
+  document.getElementById('poi-desc').innerHTML=desc;
   const linksEl=document.getElementById('poi-links');
   linksEl.innerHTML='';
   if(evt.site){
