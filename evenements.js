@@ -19,7 +19,7 @@ const EVENEMENTS = [
     "description": ""
   },
    {
-    "nom": "Exposition Etien Dehau",
+    "nom": "Exposition Etienne Dehau",
     "emoji": "🎨",
     "association": "",
     "date_debut": "2026-07-27",
@@ -44,7 +44,7 @@ const EVENEMENTS = [
     "lat": 47.598626,
     "lng": -2.842659,
     "acces": "Accès libre. Participation aux frais souhaitée",
-    "image": "https://ibb.co/Kzpy8hW9",
+    "image": "https://i.ibb.co/fGz0TFHC/b390fbd893af698004eb399300847ea0.jpg",
     "site": "",
     "description": "Eric Blin, accordéon et Yanis Chambrie, violoncelle\nOeuvres de Bach, Borodine, Caccini, Haendel, Vivaldi... "
   },
@@ -62,36 +62,6 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/vitrac.jpg.webp",
     "site": "",
     "description": "Fusains, Pastels secs, Crayons de couleurs, Sanguines"
-  },
-  {
-    "nom": "Exposition Respirer l'Instant",
-    "emoji": "🎨",
-    "association": "Barbara Sabaté Montoriol",
-    "date_debut": "2026-07-20",
-    "date_fin": "2026-07-26",
-    "heure": "10h00 - 13h00 15h00 - 19h00",
-    "lieu": "La Petite Galerie",
-    "lat": "47.6000",
-    "lng": "-2.8510",
-    "acces": "Accès libre. Venez nombreux.",
-    "image": "https://i.ibb.co/nWfdkNp/expobarbara.jpg",
-    "site": "https://fragmentsdesens.com/a-propos-3/",
-    "description": "Vernissage le 20 juillet à 18h00\nDedans, dehors, des fleurs et des vues cueillies sur l'Île-aux-Moines entre hiver et printemps 2026."
-  },
-  {
-    "nom": "Bric à Brac de l'APEL",
-    "emoji": "🎉",
-    "association": "APEL",
-    "date_debut": "2026-07-26",
-    "date_fin": "2026-07-26",
-    "heure": "8h00 - 14h00",
-    "lieu": "Place du Marché",
-    "lat": "47.5968",
-    "lng": "-2.8459",
-    "acces": "Accès libre - Venez nombreux",
-    "image": "https://ibb.co/XfYbJHtr",
-    "site": "10 € la table. Réservation au 06 14 14 17 70",
-    "description": ""
   },
   {
     "nom": "Exposition Domaine du Guerric",
