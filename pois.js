@@ -151,7 +151,7 @@ const POIS = [
   {"name":"Poubelles","lat":47.589653,"lon":-2.852519,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.59071,"lon":-2.85357,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
   {"name":"Poubelles","lat":47.590666,"lon":-2.850459,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
-  {"name":"Toilettes publiques","lat":47.580154,"lon":-2.856091,"cat":"Toilettes","color":"#2980b9","image":"","description":"Toilettes sèches Rudel","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.580154,"lon":-2.856091,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/f/f7/Toilettesdurudel.jpg?_=20260726065058","description":"Toilettes sèches Rudel","links":[],"emoji":"🚻","layer":"toilettes"},
   {"name":"Toilettes publiques","lat":47.570924,"lon":-2.857647,"cat":"Toilettes","color":"#2980b9","image":"","description":"Toilettes sèches Er Boglieux","links":[],"emoji":"🚻","layer":"toilettes"},
   {"name":"Toilettes publiques","lat":47.605888,"lon":-2.837262,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/9/90/Toilettesdutrechjpg.jpg?_=20260725121104","description":"Toilettes publiques Le Trec'h","links":[],"emoji":"🚻","layer":"toilettes"},
   {"name":"Toilettes publiques","lat":47.59877,"lon":-2.850759,"cat":"Toilettes","color":"#2980b9","image":"","description":"Toilettes publiques Grande Plage","links":[],"emoji":"🚻","layer":"toilettes"},
