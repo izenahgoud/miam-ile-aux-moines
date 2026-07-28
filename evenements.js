@@ -46,6 +46,21 @@ const EVENEMENTS = [
     image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/vitrac.jpg.webp",
     site:        ""
   },
+   {
+    nom:         "REFLEXIONS NOCTURNES",
+    emoji:       "🎨",
+    association: "Mathieu Malaud",
+    date_debut:  "2026-09-01",
+    date_fin:    "2026-09-05",
+    heure:       "10h00 - 13h00 16h00 - 19h00",
+    lat:         47.597088,
+    lng:         -2.845835,
+    lieu:        "Salle annexe de la Mairie",
+    acces:       "Accès libre",
+    description: "'ai choisi la photo, j'ai choisi la nuit, j'ai choisi le littoral breton. Peut-être aurais-je pu opter pour la solution de facilité...",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/Affiche-Expo-IAM-Matthieu-Malaud.jpg.webp",
+    site:        "https://matthieu-malaud.webnode.fr/"
+  },
   {
     nom:         "Exposition Domaine du Guerric",
     emoji:       "🎨",
