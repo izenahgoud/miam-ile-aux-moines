@@ -50,8 +50,8 @@ const EVENEMENTS = [
     nom:         "REFLEXIONS NOCTURNES",
     emoji:       "🎨",
     association: "Mathieu Malaud",
-    date_debut:  "2026-09-01",
-    date_fin:    "2026-09-05",
+    date_debut:  "2026-08-01",
+    date_fin:    "2026-08-05",
     heure:       "10h00 - 13h00 16h00 - 19h00",
     lat:         47.597088,
     lng:         -2.845835,
@@ -90,5 +90,20 @@ const EVENEMENTS = [
     description: "21h45 : Choeur de l'Ile-aux-Moines sous la direction de Lili Cros\n22h15 : Ouverture du festival Passeurs de Films\n22h30 :Avant première de Sarah Arnold.\\nSélection officielle Cannes 2026, Qinzaine des cinéastes.",
     image:       "https://static.wixstatic.com/media/657a55_3841c0acc66d4182832e310649de1fc3~mv2.jpg/v1/fill/w_804,h_1136,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/affiche%20%20passeurs%202026-%20A4%20.jpg",
     site:        "https://www.passeursdefilms.fr"
+  },
+  {
+    "nom": "TRO ENEZ",
+    "emoji": "⛵",
+    "association": "Comité des fêtes et des régates de l’ile-aux-Moines",
+    "date_debut": "2026-08-07",
+    "date_fin": "2026-08-07",
+    "heure": "",
+    "lieu": "Maison située sur la côte ouest, surplombant l’eau entre la Pierre Noire au nord et la pointe du Greignon au sud",
+    "lat": "47.595091",
+    "lng": "-2.851918",
+    "acces": "Ouvert à tous les voiliers. Venez nombreux",
+    "image": "https://ibb.co/fGdPPTVN",
+    "site": "",
+    "description": "Tour de l’île, ouvert à tous les types de bateaux : du dériveur au catamaran, sinagots, quillards, Berny, Guépards….\n(hors planche à voile)\nDépart au canon, pavillon disposé sur une maison située sur la côte ouest, \nsurplombant l’eau entre la Pierre Noire au nord et la pointe du Greignon au sud."
   }
 ];
