@@ -31,6 +31,21 @@ const EVENEMENTS = [
     image:       "https://photos.infolocale.fr/infoLocale/annonce/2026/0722/8942709/_2.jpg",
     site:        "https://etiennedehau.com/"
   },
+   {
+    nom:         "Retour des îles",
+    emoji:       "🎨",
+    association: "Patric Serc et Françoise Sylvestre",
+    date_debut:  "2026-09-03",
+    date_fin:    "2026-09-09",
+    heure:       "11h00 - 13h00 15h00 - 19h00",
+    lat:         47.6000,
+    lng:         -2.85100,
+    lieu:        "La Petite Galerie",
+    acces:       "Accès libre. Venez nombreux.",
+    description: "Entourées par la mer et ouvertes à tous les horizons, les îles offrent un milieu où le ciel, l’eau et la terre se mêlent à l’infini. Les lumières qui les mettent en valeur les façonnent, les transforment et les réinventent en permanence.",
+    image:       "https://photos.infolocale.fr/infoLocale/annonce/2026/0722/8942709/_2.jpg",
+    site:        "https://etiennedehau.com/"
+  },
   {
     nom:         "MARTHE VITRAC",
     emoji:       "🎨",
