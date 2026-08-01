@@ -77,17 +77,17 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "L'ESPÈCE EXPLOSIVE",
+    nom:         "",
     emoji:       "🎬",
     association: "Passeurs de Films",
-    date_debut:  "2026-07-31",
-    date_fin:    "2026-07-31",
+    date_debut:  "2026-08-1",
+    date_fin:    "2026-08-1",
     heure:       "21h45 - Oh30",
     lat:         47.592329,
     lng:         -2.839634,
     lieu:        "Parc du château du Guerric",
     acces:       "Entrée libre dans la limite des places disponibles",
-    description: "21h45 : Choeur de l'Ile-aux-Moines sous la direction de Lili Cros\n22h15 : Ouverture du festival Passeurs de Films\n22h30 :Avant première de Sarah Arnold.\\nSélection officielle Cannes 2026, Qinzaine des cinéastes.",
+    description: "",
     image:       "https://static.wixstatic.com/media/657a55_3841c0acc66d4182832e310649de1fc3~mv2.jpg/v1/fill/w_804,h_1136,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/affiche%20%20passeurs%202026-%20A4%20.jpg",
     site:        "https://www.passeursdefilms.fr"
   },
