@@ -77,7 +77,7 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "",
+    nom:         "FJORD",
     emoji:       "🎬",
     association: "Passeurs de Films",
     date_debut:  "2026-08-1",
@@ -87,7 +87,7 @@ const EVENEMENTS = [
     lng:         -2.839634,
     lieu:        "Parc du château du Guerric",
     acces:       "Entrée libre dans la limite des places disponibles",
-    description: "",
+    description: "Sélection officielle Cannes 2026, Palme d'Or",
     image:       "https://static.wixstatic.com/media/657a55_3841c0acc66d4182832e310649de1fc3~mv2.jpg/v1/fill/w_804,h_1136,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/affiche%20%20passeurs%202026-%20A4%20.jpg",
     site:        "https://www.passeursdefilms.fr"
   },
