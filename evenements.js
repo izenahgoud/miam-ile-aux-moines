@@ -47,21 +47,6 @@ const EVENEMENTS = [
     site:        "https://etiennedehau.com/"
   },
   {
-    nom:         "MARTHE VITRAC",
-    emoji:       "🎨",
-    association: "Marthe Vitrac",
-    date_debut:  "2026-07-27",
-    date_fin:    "2026-07-31",
-    heure:       "10h00 - 18h00",
-    lat:         47.597088,
-    lng:         -2.845835,
-    lieu:        "Salle annexe de la Mairie",
-    acces:       "Accès libre",
-    description: "Fusains, Pastels secs, Crayons de couleurs, Sanguines",
-    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/vitrac.jpg.webp",
-    site:        ""
-  },
-   {
     nom:         "REFLEXIONS NOCTURNES",
     emoji:       "🎨",
     association: "Mathieu Malaud",
@@ -92,17 +77,17 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "FJORD",
+    nom:         "IRISH TRAVELLERS",
     emoji:       "🎬",
     association: "Passeurs de Films",
-    date_debut:  "2026-08-01",
-    date_fin:    "2026-08-01",
+    date_debut:  "2026-08-02",
+    date_fin:    "2026-08-02",
     heure:       "21h45 - 24h15",
     lat:         47.592329,
     lng:         -2.839634,
     lieu:        "Parc du château du Guerric",
     acces:       "Entrée libre dans la limite des places disponibles",
-    description: "Sélection officielle Cannes 2026, Palme d'Or",
+    description: "21h45 : Concert Lili Cros et Thierry Chazelle",
     image:       "https://static.wixstatic.com/media/657a55_3841c0acc66d4182832e310649de1fc3~mv2.jpg/v1/fill/w_804,h_1136,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/affiche%20%20passeurs%202026-%20A4%20.jpg",
     site:        "https://www.passeursdefilms.fr"
   },
