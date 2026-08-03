@@ -17,24 +17,9 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "Exposition Etienne Dehau",
-    emoji:       "🎨",
-    association: "",
-    date_debut:  "2026-07-27",
-    date_fin:    "2026-08-02",
-    heure:       "19h00- 13h00 15h00 - 19h00",
-    lat:         47.6,
-    lng:         -2.851,
-    lieu:        "La Petite Galerie",
-    acces:       "Accès libre. Venez nombreux.",
-    description: "Entourées par la mer et ouvertes à tous les horizons, les îles offrent un milieu où le ciel, l’eau et la terre se mêlent à l’infini. Les lumières qui les mettent en valeur les façonnent, les transforment et les réinventent en permanence.",
-    image:       "https://photos.infolocale.fr/infoLocale/annonce/2026/0722/8942709/_2.jpg",
-    site:        "https://etiennedehau.com/"
-  },
-   {
     nom:         "Retour des îles",
     emoji:       "🎨",
-    association: "Patric Serc et Françoise Sylvestre",
+    association: "Patrick Serc et Françoise Sylvestre",
     date_debut:  "2026-09-03",
     date_fin:    "2026-09-09",
     heure:       "11h00 - 13h00 15h00 - 19h00",
@@ -42,9 +27,9 @@ const EVENEMENTS = [
     lng:         -2.85100,
     lieu:        "La Petite Galerie",
     acces:       "Accès libre. Venez nombreux.",
-    description: "Entourées par la mer et ouvertes à tous les horizons, les îles offrent un milieu où le ciel, l’eau et la terre se mêlent à l’infini. Les lumières qui les mettent en valeur les façonnent, les transforment et les réinventent en permanence.",
-    image:       "https://photos.infolocale.fr/infoLocale/annonce/2026/0722/8942709/_2.jpg",
-    site:        "https://etiennedehau.com/"
+    description: "Plasticien - Ecrivaine voyageuse",
+    image:       "",
+    site:        "https://patrick-serc.jimdosite.com/"
   },
   {
     nom:         "REFLEXIONS NOCTURNES",
@@ -77,17 +62,17 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "IRISH TRAVELLERS",
+    nom:         "LE MINOTORE",
     emoji:       "🎬",
     association: "Passeurs de Films",
-    date_debut:  "2026-08-02",
-    date_fin:    "2026-08-02",
-    heure:       "21h45 - 24h15",
+    date_debut:  "2026-08-03",
+    date_fin:    "2026-08-03",
+    heure:       "22h15 - 23h45",
     lat:         47.592329,
     lng:         -2.839634,
     lieu:        "Parc du château du Guerric",
     acces:       "Entrée libre dans la limite des places disponibles",
-    description: "21h45 : Concert Lili Cros et Thierry Chazelle",
+    description: "Sélection officielle festival de Cannes. Grand Prix",
     image:       "https://static.wixstatic.com/media/657a55_3841c0acc66d4182832e310649de1fc3~mv2.jpg/v1/fill/w_804,h_1136,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/affiche%20%20passeurs%202026-%20A4%20.jpg",
     site:        "https://www.passeursdefilms.fr"
   },
