@@ -62,19 +62,19 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "LE MINOTORE",
-    emoji:       "🎬",
-    association: "Passeurs de Films",
-    date_debut:  "2026-08-03",
-    date_fin:    "2026-08-03",
-    heure:       "22h15 - 23h45",
-    lat:         47.592329,
-    lng:         -2.839634,
-    lieu:        "Parc du château du Guerric",
-    acces:       "Entrée libre dans la limite des places disponibles",
-    description: "Sélection officielle festival de Cannes. Grand Prix",
-    image:       "https://static.wixstatic.com/media/657a55_3841c0acc66d4182832e310649de1fc3~mv2.jpg/v1/fill/w_804,h_1136,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/affiche%20%20passeurs%202026-%20A4%20.jpg",
-    site:        "https://www.passeursdefilms.fr"
+    nom:         "FÊTE DE LA MER 40e édition",
+    emoji:       "🎉",
+    association: "APEL",
+    date_debut:  "2026-08-09",
+    date_fin:    "2026-08-09",
+    heure:       "10h30 - 23h45",
+    lat:         47.606196,
+    lng:         -2.837322,
+    lieu:        "Pointe du Trec'h",
+    acces:       "Manifestation libre. Venez nombreux",
+    description: "10h30: Procession depuis l'église\n11h00 : Messe en plein air \nFête champêtre. BBQ. Plancha.Galettes et crêpes.\n17h30 : Groupe de danse Korollerien Izenah\n 20h00 : Dîner (sur réservation)\n 22h30 : Feu d'artifice.",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/06/Affiche-FDM-2026_page-0001.jpg.webp",
+    site:        ""
   },
   {
     "nom": "TRO ENEZ",
