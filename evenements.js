@@ -47,34 +47,19 @@ const EVENEMENTS = [
     site:        "https://patrick-serc.jimdosite.com/"
   },
   {
-    nom:         "REFLEXIONS NOCTURNES",
+    nom:         "",
     emoji:       "🎨",
-    association: "Mathieu Malaud",
-    date_debut:  "2026-08-01",
-    date_fin:    "2026-08-05",
+    association: "Adeline Weber Guibal",
+    date_debut:  "2026-08-06",
+    date_fin:    "2026-08-10",
     heure:       "10h00 - 13h00 16h00 - 19h00",
     lat:         47.597088,
     lng:         -2.845835,
     lieu:        "Salle annexe de la Mairie",
     acces:       "Accès libre",
-    description: "'ai choisi la photo, j'ai choisi la nuit, j'ai choisi le littoral breton. Peut-être aurais-je pu opter pour la solution de facilité...",
-    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/Affiche-Expo-IAM-Matthieu-Malaud.jpg.webp",
-    site:        "https://matthieu-malaud.webnode.fr/"
-  },
-  {
-    nom:         "Exposition Domaine du Guerric",
-    emoji:       "🎨",
-    association: "Domaine du Guerric",
-    date_debut:  "2026-07-29",
-    date_fin:    "2026-08-05",
-    heure:       "10h00 - 12h00 15h00 - 18h00",
-    lat:         47.592482,
-    lng:         -2.839070,
-    lieu:        "Chappelle du Domaine du Guerric",
-    acces:       "Accès libre. Venez nombreux",
-    description: "Nathalie Jungerman : graveur, Ian Thomson : céramiste, Christophe Grossi: lecture du texte : Les arbres réfléchis, accompagnée de ses\nphotographies projetées",
-    image:       "https://i.ibb.co/rfQxM6CQ/8829366916a608c81b93301-14864952-1784712321.jpg",
-    site:        ""
+    description: "'Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal.",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/expo-weber-scaled.jpg.webp",
+    site:        "https://adelineweberguibal.fr/"
   },
   {
     nom:         "FÊTE DE LA MER 40e édition",
