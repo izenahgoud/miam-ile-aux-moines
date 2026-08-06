@@ -16,6 +16,21 @@ const EVENEMENTS = [
     image:       "",
     site:        ""
   },
+   {
+    nom:         "CARNET DE VOYAGE",
+    emoji:       "🎵",
+    association: "Escales musicales",
+    date_debut:  "2026-01-07",
+    date_fin:    "2026-01-07",
+    heure:       "20h00 - 22h00",
+    lat:         47,598670
+    lng:         -2,842638
+    lieu:        "Eglise Saint Michel",
+    acces:       "Accès avec billet",
+    description: "Amanda Flavier, violon et Elodie Soulard, accordéon",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/10/concert7-aout.jpg.webp",
+    site:        "escalesmusicales.fr"
+  },
   {
     nom:         "Retour des îles",
     emoji:       "🎨",
