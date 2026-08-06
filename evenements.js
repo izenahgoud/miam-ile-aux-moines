@@ -87,7 +87,7 @@ const EVENEMENTS = [
     "lat": 47.595091,
     "lng": -2.851918,
     "acces": "Ouvert à tous les voiliers. Venez nombreux",
-    "image": "https://ibb.co/fGdPPTVN",
+    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/07/Tro.jpg.webp",
     "site": "",
     "description": "Tour de l’île, ouvert à tous les types de bateaux : du dériveur au catamaran, sinagots, quillards, Berny, Guépards….\n(hors planche à voile)\nDépart au canon, pavillon disposé sur une maison située sur la côte ouest, \nsurplombant l’eau entre la Pierre Noire au nord et la pointe du Greignon au sud."
   },
