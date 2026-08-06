@@ -29,7 +29,7 @@ const EVENEMENTS = [
     acces:       "Accès avec billet",
     description: "Amanda Flavier, violon et Elodie Soulard, accordéon",
     image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/10/concert7-aout.jpg.webp",
-    site:        "escalesmusicales.fr"
+    site:        "https://www.escalesmusicales.fr/concert-escales-musicales-7-aout-2026/"
   },
   {
     nom:         "Retour des îles",
