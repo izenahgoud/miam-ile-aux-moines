@@ -17,21 +17,6 @@ const EVENEMENTS = [
     site:        ""
   },
   {
-    nom:         "ANIMATION DECOUVERTE DE LA DISTILLATION",
-    emoji:       "🌿",
-    association: "L'HERBIER de KERSCOT",
-    date_debut:  "2026-08-05",
-    date_fin:    "2026-08-05",
-    heure:       "18h00 - 20h00",
-    lat:         47.5943,
-    lng:          -2.8502,
-    lieu:        "Jardin du Rinville",
-    acces:       "Accès libre. Venez nombreux.",
-    description: "à partir de 12 ans",
-    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/07/facebook_1785504328365_7488947946478826348.jpg.webp",
-    site:        "https://www.instagram.com/lherbierdekerscot/"
-  },
-  {
     nom:         "Retour des îles",
     emoji:       "🎨",
     association: "Patrick Serc et Françoise Sylvestre",
@@ -43,7 +28,7 @@ const EVENEMENTS = [
     lieu:        "La Petite Galerie",
     acces:       "Accès libre. Venez nombreux.",
     description: "Plasticien - Ecrivaine voyageuse",
-    image:       "",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/07/expo.jpg.webp",
     site:        "https://patrick-serc.jimdosite.com/"
   },
   {
