@@ -23,8 +23,8 @@ const EVENEMENTS = [
     date_debut:  "2026-08-07",
     date_fin:    "2026-08-07",
     heure:       "20h00 - 22h00",
-    lat:         47.598670
-    lng:         -2.842638
+    lat:         47.598670,
+    lng:         -2.842638,
     lieu:        "Eglise Saint Michel",
     acces:       "Accès avec billet",
     description: "Amanda Flavier, violon et Elodie Soulard, accordéon",
