@@ -1,5 +1,5 @@
 // M'IAM — Fichier des événements
-// Généré automatiquement le 06/08/2026 16:39:57
+// Généré automatiquement le 06/08/2026 16:50:49
 // Version : 2026.08.06
 
 const EVENEMENTS = [
@@ -94,21 +94,6 @@ const EVENEMENTS = [
     "description": "Plasticien - Ecrivaine voyageuse"
   },
   {
-    "nom": "Adeline Weber Guibal",
-    "emoji": "🎨",
-    "association": "Marthe Vitrac",
-    "date_debut": "2026-08-06",
-    "date_fin": "2026-08-10",
-    "heure": "10h00 - 13h00 16h00 - 19h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": "47.597088",
-    "lng": "-2.845835",
-    "acces": "Accès libre",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/expo-weber-scaled.jpg.webp",
-    "site": "https://adelineweberguibal.fr/",
-    "description": "Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal."
-  },
-  {
     "nom": "CARNET DE VOYAGE",
     "emoji": "🎵",
     "association": "Escales musicales",
@@ -122,5 +107,18 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/10/concert7-aout.jpg.webp",
     "site": "https://www.escalesmusicales.fr/",
     "description": "Amanda Flavier, violon et Elodie Soulard, accordéon"
-  }
-];
+  },
+  {
+    "nom": "Adeline Weber Guibal",
+    "emoji": "🎨",
+    "association": "Adeline Weber Guibal",
+    "date_debut": "2026-08-06",
+    "date_fin": "2026-08-10",
+    "heure": "10h00 - 13h00 16h00 - 19h00",
+    "lieu": "Salle annexe de la Mairie",
+    "lat": "47.597088",
+    "lng": "-2.845835",
+    "acces": "Accès libre",
+    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/expo-weber-scaled.jpg.webp",
+    "site": "https://adelineweberguibal.fr/",
+    "description": "Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal."
