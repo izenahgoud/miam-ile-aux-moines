@@ -20,8 +20,8 @@ const EVENEMENTS = [
     nom:         "CARNET DE VOYAGE",
     emoji:       "🎵",
     association: "Escales musicales",
-    date_debut:  "2026-01-07",
-    date_fin:    "2026-01-07",
+    date_debut:  "2026-08-07",
+    date_fin:    "2026-08-07",
     heure:       "20h00 - 22h00",
     lat:         47,598670
     lng:         -2,842638
