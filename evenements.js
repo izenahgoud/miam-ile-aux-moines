@@ -167,3 +167,5 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/expo-weber-scaled.jpg.webp",
     "site": "https://adelineweberguibal.fr/",
     "description": "Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal."
+  },
+  ]
