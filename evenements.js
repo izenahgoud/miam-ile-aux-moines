@@ -57,9 +57,24 @@ const EVENEMENTS = [
     lng:         -2.845835,
     lieu:        "Salle annexe de la Mairie",
     acces:       "Accès libre",
-    description: "'Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal.",
+    description: "Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal.",
     image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/expo-weber-scaled.jpg.webp",
     site:        "https://adelineweberguibal.fr/"
+  },
+   {
+    nom:         "",
+    emoji:       "🎨",
+    association: "Jean-Pierre Arcile",
+    date_debut:  "2026-09-11",
+    date_fin:    "2026-09-15",
+    heure:       "10h00 - 12h30 16h00 - 19h00",
+    lat:         47.597088,
+    lng:         -2.845835,
+    lieu:        "Salle annexe de la Mairie",
+    acces:       "Accès libre",
+    description: "",
+    image:       "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/arcile.jpg.webp",
+    site:        "www.arcile.fr"
   },
   {
     nom:         "FÊTE DE LA MER 40e édition",
