@@ -18,21 +18,6 @@ const EVENEMENTS = [
     "image": "",
     "site": ""
   },
-   {
-    "nom": "FÈTE DE LA MER",
-    "emoji": "",
-    "association": "",
-    "date_debut": "2026-01-01",
-    "date_fin": "2026-01-01",
-    "heure": "",
-    "lat": 0,
-    "lng": 0,
-    "lieu": "",
-    "acces": "",
-    "description": "",
-    "image": "",
-    "site": ""
-  },
   {
     "nom": "La nostalgie des blattes",
     "emoji": "🎭",
