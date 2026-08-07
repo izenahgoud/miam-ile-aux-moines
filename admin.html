@@ -1,572 +1,782 @@
-<!DOCTYPE html>
-<html lang="fr">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>M'IAM — Administration des POI</title>
+<title>M'IAM — Gestionnaire de l'Agenda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-:root{--forest:#1a3a2a;--forest-m:#2d5e3f;--sand:#e8d5a3;--cream:#faf6ed;--red:#c0392b;--blue:#185FA5;--blue-c:#e6f1fb;--green-c:#E1F5EE;--green-t:#0F6E56;--amber-c:#FAEEDA;--amber-t:#854F0B;--border:#ddd;--text:#222;--text-m:#666}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f0f2f0;color:var(--text);min-height:100vh}
-header{background:var(--forest);color:white;padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
-header h1{font-size:18px;font-weight:600;letter-spacing:.02em}
-header p{font-size:11px;color:var(--sand);margin-top:2px}
-.hbadge{font-size:11px;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:12px;margin-left:auto}
-.container{max-width:960px;margin:0 auto;padding:20px 16px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-.stat{background:white;border:0.5px solid var(--border);border-radius:10px;padding:12px 16px;text-align:center}
-.stat-n{font-size:28px;font-weight:600;color:var(--forest)}
-.stat-l{font-size:12px;color:var(--text-m);margin-top:2px}
-.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-.toolbar input[type=text]{flex:1;min-width:200px;padding:8px 12px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;background:white}
-.toolbar select{padding:8px 10px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:white}
-.btn{padding:8px 16px;border-radius:8px;border:0.5px solid;font-size:13px;cursor:pointer;font-weight:500;transition:all .15s}
-.btn-green{background:var(--forest);color:white;border-color:var(--forest)}
-.btn-green:hover{background:var(--forest-m)}
-.btn-blue{background:var(--blue-c);color:var(--blue);border-color:var(--blue)}
-.btn-blue:hover{background:#d0e8f8}
-.btn-red{background:#fff0f0;color:var(--red);border-color:#f5c1c1}
-.btn-red:hover{background:#ffe0e0}
-.btn-gray{background:white;color:var(--text);border-color:var(--border)}
-.btn-gray:hover{background:#f5f5f5}
-.table-wrap{background:white;border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead tr{background:var(--forest);color:white}
-th{padding:10px 12px;text-align:left;font-weight:500;font-size:12px;white-space:nowrap}
-td{padding:9px 12px;border-bottom:0.5px solid #f0f0f0;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#fafaf8}
-.poi-name{font-weight:500;color:var(--forest)}
-.poi-cat{font-size:11px;background:var(--green-c);color:var(--green-t);padding:2px 8px;border-radius:10px;white-space:nowrap}
-.poi-layer{font-size:11px;background:var(--blue-c);color:var(--blue);padding:2px 8px;border-radius:10px;white-space:nowrap;font-family:monospace}
-.poi-img{width:44px;height:32px;object-fit:cover;border-radius:4px;background:#eee}
-.poi-img-empty{width:44px;height:32px;border-radius:4px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:18px}
-.act-btns{display:flex;gap:6px}
-.act-btn{padding:4px 10px;border-radius:6px;border:0.5px solid;font-size:12px;cursor:pointer;white-space:nowrap}
-.act-edit{background:#f0f7ff;color:var(--blue);border-color:#b5d4f4}
-.act-edit:hover{background:#dff0ff}
-.act-del{background:#fff0f0;color:var(--red);border-color:#f5c1c1}
-.act-del:hover{background:#ffe0e0}
-.coords{font-family:monospace;font-size:11px;color:var(--text-m)}
-.no-results{text-align:center;padding:40px;color:var(--text-m);font-size:14px}
-.pagination{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.page-btn{padding:6px 12px;border-radius:6px;border:0.5px solid var(--border);background:white;cursor:pointer;font-size:13px}
-.page-btn.active{background:var(--forest);color:white;border-color:var(--forest)}
-.page-btn:hover:not(.active){background:#f5f5f5}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px}
-.modal-bg.open{display:flex}
-.modal{background:white;border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
-.modal-header{padding:16px 20px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1}
-.modal-header h2{font-size:16px;font-weight:600;color:var(--forest)}
-.modal-close{font-size:22px;cursor:pointer;color:var(--text-m);background:none;border:none;line-height:1}
-.modal-body{padding:20px}
-.modal-footer{padding:14px 20px;border-top:0.5px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:white}
-.form-row{margin-bottom:14px}
-.form-row label{display:block;font-size:12px;font-weight:500;color:var(--text-m);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
-.form-row input,.form-row textarea,.form-row select{width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:white;color:var(--text)}
-.form-row input:focus,.form-row textarea:focus,.form-row select:focus{outline:none;border-color:var(--forest);box-shadow:0 0 0 2px rgba(26,58,42,.1)}
-.form-row textarea{resize:vertical;min-height:80px;line-height:1.5}
-.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.img-preview{width:100%;height:120px;object-fit:cover;border-radius:8px;border:0.5px solid var(--border);margin-top:6px;display:none}
-.img-preview.visible{display:block}
-.form-hint{font-size:11px;color:var(--text-m);margin-top:4px}
-.gps-btn{margin-top:6px;font-size:12px;padding:6px 12px}
-/* Badge layer auto/manuel */
-.layer-auto{font-size:11px;color:var(--green-t);background:var(--green-c);border-radius:6px;padding:2px 8px;display:inline-block;margin-top:4px}
-.layer-manual{font-size:11px;color:var(--amber-t);background:var(--amber-c);border-radius:6px;padding:2px 8px;display:inline-block;margin-top:4px}
-.export-zone{background:var(--forest);color:white;border-radius:12px;padding:16px 20px;margin-top:20px}
-.export-zone h3{font-size:14px;font-weight:500;margin-bottom:8px;color:var(--sand)}
-.export-code{background:rgba(0,0,0,.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:11px;color:#aed6f1;max-height:120px;overflow-y:auto;white-space:pre;margin-bottom:10px}
-.export-btns{display:flex;gap:8px;flex-wrap:wrap}
-.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none}
-.alert.success{background:var(--green-c);color:var(--green-t);border:0.5px solid #9FE1CB;display:block}
-.alert.warn{background:var(--amber-c);color:var(--amber-t);border:0.5px solid #FAC775;display:block}
-.delete-confirm{background:#fff0f0;border:0.5px solid #f5c1c1;border-radius:10px;padding:14px;margin-bottom:14px}
-.delete-confirm p{font-size:14px;color:var(--red);font-weight:500;margin-bottom:4px}
-.delete-confirm small{font-size:12px;color:var(--text-m)}
-@media(max-width:600px){
-  .form-2col,.form-3col{grid-template-columns:1fr}
-  th:nth-child(4),td:nth-child(4),th:nth-child(6),td:nth-child(6){display:none}
+/* -----------------------------------------------------------
+   STYLE GLOBAL
+   ----------------------------------------------------------- */
+body {
+  font-family: Arial, sans-serif;
+  background: #f3e9d7;
+  margin: 0;
+  padding: 0;
+}
+
+/* -----------------------------------------------------------
+   BANDEAU D'EN-TÊTE
+   ----------------------------------------------------------- */
+.header {
+  background: #f3e9d7;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 4px solid #2ecc71;
+  position: relative;
+}
+
+.header img {
+  height: 80px;
+  position: absolute;
+  left: 20px;
+  top: 5px;
+}
+
+.header-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.sous-titre {
+  display: block;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* -----------------------------------------------------------
+   CONTENU
+   ----------------------------------------------------------- */
+.page {
+  padding: 20px;
+}
+
+.card-info {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.etape {
+  background: #2ecc71;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px auto;
+  width: fit-content;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+}
+
+.col {
+  flex: 1;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* -----------------------------------------------------------
+   GRILLE EMOJIS
+   ----------------------------------------------------------- */
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.emoji-grid div {
+  font-size: 24px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.emoji-grid div.selected {
+  background: #2ecc71;
+  color: white;
+}
+
+/* -----------------------------------------------------------
+   LISTE DES ÉVÉNEMENTS
+   ----------------------------------------------------------- */
+.evt-item {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.evt-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.evt-title {
+  font-weight: bold;
+  font-size: 16px;
+  flex: 1;
+  word-break: break-word;
+}
+
+.evt-date {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+
+.evt-image-icon {
+  margin-top: 6px;
+  font-size: 18px;
+}
+
+/* Boutons */
+.btn-modifier {
+  background: #f39c12;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-supprimer {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btn-ajouter {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.btn-export {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-github {
+  background: #24292e;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-github:disabled {
+  background: #6a737d;
+  cursor: wait;
+}
+
+.sync-info {
+  font-size: 12px;
+  color: #555;
+  text-align: center;
+  margin-top: 8px;
+  min-height: 16px;
+}
+
+.sync-info.erreur {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.sync-info.succes {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+/* -----------------------------------------------------------
+   VALIDATION VISUELLE (champs obligatoires)
+   ----------------------------------------------------------- */
+.champ-erreur {
+  border: 2px solid red !important;
+  background: #ffe5e5;
 }
 </style>
+
+<!-- Charge le fichier officiel des événements (copie locale, sert de point de départ hors-ligne) -->
+<script src="evenements.js"></script>
 </head>
+
 <body>
-<header>
-  <div>
-    <h1>M'IAM — Administration</h1>
-    <p>Île-aux-Moines · Gestion des points d'intérêt</p>
-  </div>
-  <span class="hbadge" id="total-badge">0 POI</span>
-</header>
 
+<!-- -----------------------------------------------------------
+     BANDEAU D'EN-TÊTE
+     ----------------------------------------------------------- -->
+<div class="header">
+  <img src="blason.webp.webp" alt="Blason Île-aux-Moines">
+
+  <div class="header-title">
+    M'IAM — Gestionnaire de l'Agenda<br>
+    <span class="sous-titre">
+      Interface officielle de mise à jour des animations estivales de l'Île-aux-Moines.<br>
+      <em>(Dossier : Gestionevenements)</em>
+    </span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- -----------------------------------------------------------
+     BLOC MODE D'EMPLOI
+     ----------------------------------------------------------- -->
+<div class="card-info">
+  💡 <strong>Mode d'emploi simple :</strong><br><br>
+
+  0. <strong>Synchronisez</strong> : Cliquez sur le bouton noir « 🔄 Actualiser depuis GitHub » pour recharger la liste actuellement publiée en ligne avant de faire vos modifications.<br><br>
+
+  1. <strong>Gérez la liste</strong> : Ajoutez de nouveaux événements ou corrigez les existants avec les boutons orange « Modifier » et rouge « Supprimer ».<br><br>
+
+  2. <strong>Téléchargez</strong> : Une fois terminé, cliquez sur le gros bouton bleu ci‑dessous pour obtenir le fichier de mise à jour <code>evenements.js</code>.<br><br>
+
+  3. <strong>Publiez</strong> : Dans le dossier <strong>Gestionevenements</strong>, renommez l’ancien fichier <code>evenements.js</code> (par exemple : <code>evenements‑ancien.js</code>) afin de conserver une copie de sauvegarde, puis glissez‑déposez le nouveau fichier téléchargé à la place.<br>
+     Glissez ensuite ce fichier <code>evenements.js</code> dans votre dépôt GitHub (onglet <strong>Code</strong>), puis validez avec <strong>Commit changes</strong>.<br>
+     L’application se met à jour automatiquement. Si la mise à jour ne s’affiche pas immédiatement, rechargez la page (<strong>Ctrl + F5</strong>).
+</div>
+
+<div class="etape">📥 Étape terminale : Télécharger le fichier evenements.js mis à jour</div>
+
+<!-- -----------------------------------------------------------
+     DEUX COLONNES
+     ----------------------------------------------------------- -->
 <div class="container">
-  <div id="alert-box" class="alert"></div>
-  <div class="stats" id="stats-grid"></div>
 
-  <div class="toolbar">
-    <input type="text" id="search" placeholder="Rechercher un POI..." oninput="renderTable()">
-    <select id="filter-cat" onchange="renderTable()">
-      <option value="">Toutes les catégories</option>
-    </select>
-    <select id="filter-layer" onchange="renderTable()">
-      <option value="">Toutes les couches</option>
-    </select>
-    <button class="btn btn-green" onclick="openAdd()">+ Ajouter un POI</button>
-    <button class="btn btn-green" onclick="showExport()">Exporter JSON</button>
-  </div>
+  <!-- ---------------------------------------------------------
+       COLONNE GAUCHE : FORMULAIRE
+       --------------------------------------------------------- -->
+  <div class="col">
+    <div class="card">
+      <h2>📝 Ajouter ou modifier un événement</h2>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th style="width:44px">Photo</th>
-          <th>Nom</th>
-          <th>Catégorie</th>
-          <th>Couche (layer)</th>
-          <th>Coordonnées</th>
-          <th style="width:120px">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="poi-table"></tbody>
-    </table>
-    <div id="no-results" class="no-results" style="display:none">Aucun POI trouvé</div>
-  </div>
-  <div class="pagination" id="pagination"></div>
+      <label>Nom de l'événement *</label>
+      <input type="text" id="nom">
 
-  <div class="export-zone" id="export-zone" style="display:none">
-    <h3>JSON à copier dans pois.js</h3>
-    <div class="export-code" id="export-code"></div>
-    <div class="export-btns">
-      <button class="btn btn-green" onclick="copyExport()">Copier tout</button>
-      <button class="btn btn-gray" style="color:white;border-color:rgba(255,255,255,.3)" onclick="document.getElementById('export-zone').style.display='none'">Fermer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Ajouter/Modifier -->
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="modal-title">Ajouter un POI</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="edit-idx" value="-1">
-
-      <div class="form-row">
-        <label>Nom du lieu *</label>
-        <input type="text" id="f-name" placeholder="Ex : Le Café du Port">
+      <label>Émoji visuel *</label>
+      <div class="emoji-grid">
+        <div data-value="📅">📅</div>
+        <div data-value="🎵">🎵</div>
+        <div data-value="🎭">🎭</div>
+        <div data-value="🎪">🎪</div>
+        <div data-value="🎨">🎨</div>
+        <div data-value="🎤">🎤</div>
+        <div data-value="🎬">🎬</div>
+        <div data-value="🎉">🎉</div>
+        <div data-value="⛵">⛵</div>
+        <div data-value="🗿">🗿</div>
+        <div data-value="🎧">🎧</div>
+        <div data-value="🎻">🎻</div>
       </div>
+      <input type="hidden" id="emoji">
 
-      <div class="form-3col">
-        <div class="form-row">
-          <label>Catégorie *</label>
-          <select id="f-cat" onchange="updateEmojiAndLayer()">
-            <option value="Restaurant">🍽️ Restaurant</option>
-            <option value="Restauration rapide">🥙 Restauration rapide</option>
-            <option value="Bar">🍺 Bar</option>
-            <option value="Alimentation">🥖 Alimentation</option>
-            <option value="Commerce">🛒 Commerce</option>
-            <option value="Artisanat &amp; Cadeaux">🎁 Artisanat &amp; Cadeaux</option>
-            <option value="Hébergement">🛏️ Hébergement</option>
-            <option value="Location vélo">🚲 Location vélo</option>
-            <option value="Transport">⛴️ Transport</option>
-            <option value="Camping">⛺ Camping</option>
-            <option value="Information">ℹ️ Information</option>
-            <option value="Plage">🏖️ Plage</option>
-            <option value="Loisirs">🌿 Loisirs</option>
-            <option value="Patrimoine &amp; curiosités">🏛️ Patrimoine &amp; curiosités</option>
-            <option value="Patrimoine religieux">⛪ Patrimoine religieux</option>
-            <option value="Mégalithe">🗿 Mégalithe</option>
-            <option value="Art &amp; Artisanat">🎨 Art &amp; Artisanat</option>
-            <option value="Curiosités">✨ Curiosités</option>
-            <option value="Santé">🏥 Santé</option>
-            <option value="Toilettes">🚻 Toilettes</option>
-            <option value="Pique-nique">🧺 Pique-nique</option>
-            <option value="Poubelles">🗑️ Poubelles</option>
-            <option value="Secours">🔴 Secours</option>
-            <option value="Service">🏧 Service</option>
-          </select>
+      <label>Association organisatrice</label>
+      <input type="text" id="association">
+
+      <div class="grid grid-2">
+        <div>
+          <label>Date de début *</label>
+          <input type="date" id="date_debut">
         </div>
-        <div class="form-row">
-          <label>Emoji</label>
-          <input type="text" id="f-emoji" placeholder="🍽️" maxlength="4">
-          <span class="form-hint">Auto selon catégorie</span>
-        </div>
-        <div class="form-row">
-          <label>Couche d'affichage *</label>
-          <select id="f-layer" onchange="markLayerManual()">
-            <option value="poi-main">poi-main — Commerces &amp; Sites</option>
-            <option value="poi-heritage">poi-heritage — Patrimoine</option>
-            <option value="poi-alim">poi-alim — Alimentation</option>
-            <option value="plages">plages — Plages</option>
-            <option value="loisirs">loisirs — Loisirs</option>
-            <option value="sante">sante — Santé</option>
-            <option value="secours">secours — Secours</option>
-            <option value="toilettes">toilettes — Toilettes</option>
-            <option value="pique-nique">pique-nique — Pique-nique</option>
-            <option value="poubelles">poubelles — Poubelles</option>
-            <option value="vtc">vtc — VTC</option>
-            <option value="dab">dab — DAB</option>
-            <option value="transports">transports — Transports</option>
-            <option value="loisirs">loisirs — Loisirs &amp; Camping</option>
-          </select>
-          <span id="layer-badge" class="layer-auto">🤖 Auto selon catégorie</span>
+        <div>
+          <label>Date de fin</label>
+          <input type="date" id="date_fin">
         </div>
       </div>
 
-      <div class="form-2col">
-        <div class="form-row">
-          <label>Latitude *</label>
-          <input type="number" id="f-lat" placeholder="47.5964" step="0.000001">
-        </div>
-        <div class="form-row">
-          <label>Longitude *</label>
-          <input type="number" id="f-lon" placeholder="-2.8466" step="0.000001">
-        </div>
-      </div>
-      <button class="btn btn-gray gps-btn" onclick="openGoogleMaps()">📍 Trouver les coordonnées sur Google Maps</button>
-      <div class="form-hint" style="margin-bottom:12px">Clic droit sur Google Maps → les coordonnées s'affichent → copiez-les ici</div>
+      <label>Horaire</label>
+      <input type="text" id="heure">
 
-      <div class="form-row">
-        <label>URL de la photo</label>
-        <input type="text" id="f-image" placeholder="https://..." oninput="previewImg()">
-        <img id="img-preview" class="img-preview" alt="Aperçu">
-        <span class="form-hint">Hébergez sur imgbb.com ou commons.wikimedia.org et copiez le lien direct</span>
-      </div>
+      <!-- Le champ LIEU sera remplacé par la liste déroulante dans le Bloc 3 -->
+      <label>Lieu *</label>
+      <select id="lieu"></select>
+      <input type="text" id="lieu_autre" placeholder="Saisir un lieu personnalisé" style="display:none; margin-top:6px;">
 
-      <div class="form-row">
-        <label>Description</label>
-        <textarea id="f-desc" placeholder="Texte libre. Utilisez \n pour les sauts de ligne.&#10;Ex : Crêperie - Brasserie&#10;tél : 02 97 26 ..."></textarea>
-      </div>
+      <label>Latitude *</label>
+      <input type="text" id="lat">
 
-      <div class="form-row">
-        <label>Lien web (optionnel)</label>
-        <input type="text" id="f-link-url" placeholder="https://www.monsite.fr">
-        <input type="text" id="f-link-label" placeholder='Texte du lien (ex : "Voir le site")' style="margin-top:6px">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-gray" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-green" onclick="savePOI()">Enregistrer</button>
+      <label>Longitude *</label>
+      <input type="text" id="lng">
+
+      <label>Conditions d'accès</label>
+      <input type="text" id="acces">
+
+      <label>URL de l'image</label>
+      <input type="text" id="image">
+
+      <label>Lien site / billetterie</label>
+      <input type="text" id="site">
+
+      <label>Description</label>
+      <textarea id="description" rows="4"></textarea>
+
+      <button class="btn-ajouter">Ajouter à la liste</button>
+      <button class="btn-export">📥 Télécharger evenements.js</button>
     </div>
   </div>
-</div>
 
-<!-- Modal Supprimer -->
-<div class="modal-bg" id="modal-del">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-header">
-      <h2>Supprimer un POI</h2>
-      <button class="modal-close" onclick="document.getElementById('modal-del').classList.remove('open')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="delete-confirm">
-        <p id="del-name">Nom du POI</p>
-        <small>Cette action est irréversible dans cette interface. Le fichier pois.js n'est pas modifié tant que vous n'avez pas exporté et remplacé le fichier sur GitHub.</small>
-      </div>
-      <p style="font-size:13px;color:var(--text-m)">Voulez-vous vraiment supprimer ce point d'intérêt de la liste ?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-gray" onclick="document.getElementById('modal-del').classList.remove('open')">Annuler</button>
-      <button class="btn btn-red" onclick="confirmDelete()">Supprimer</button>
+  <!-- ---------------------------------------------------------
+       COLONNE DROITE : LISTE DES ÉVÉNEMENTS
+       --------------------------------------------------------- -->
+  <div class="col">
+    <div class="card">
+      <h2>📋 Événements enregistrés (<span id="count">0</span>)</h2>
+
+      <button class="btn-github" id="btn-sync-github">🔄 Actualiser depuis GitHub</button>
+      <div class="sync-info" id="sync-info"></div>
+
+      <div id="liste-evenements" style="margin-top:15px;"></div>
     </div>
   </div>
-</div>
 
-<script src="pois.js"></script>
+</div> <!-- fin container -->
+</div> <!-- fin page -->
+
 <script>
-const CAT_EMOJIS = {
-  "Restaurant":"🍽️","Restauration rapide":"🥙","Bar":"🍺","Alimentation":"🥖",
-  "Commerce":"🛒","Artisanat & Cadeaux":"🎁","Hébergement":"🛏️","Location vélo":"🚲",
-  "Transport":"⛴️","Camping":"⛺","Information":"ℹ️","Plage":"🏖️","Loisirs":"🌿",
-  "Patrimoine & curiosités":"🏛️","Patrimoine religieux":"⛪","Mégalithe":"🗿",
-  "Art & Artisanat":"🎨","Curiosités":"✨","Santé":"🏥","Toilettes":"🚻",
-  "Pique-nique":"🧺","Poubelles":"🗑️","Secours":"🔴","Service":"🏧"
-};
+/* -----------------------------------------------------------
+   CONFIGURATION — À ADAPTER À VOTRE DÉPÔT
+   -----------------------------------------------------------
+   Remplacez la ligne ci-dessous par l'URL "raw" réelle de votre
+   fichier evenements.js publié sur GitHub. Elle ressemble à :
 
-const CAT_LAYERS = {
-  "Restaurant":"poi-main","Restauration rapide":"poi-main","Bar":"poi-main",
-  "Alimentation":"poi-alim","Commerce":"poi-alim","Artisanat & Cadeaux":"poi-main",
-  "Hébergement":"poi-main","Location vélo":"poi-alim","Transport":"poi-main",
-  "Camping":"poi-main","Information":"poi-main","Plage":"plages","Loisirs":"loisirs",
-  "Patrimoine & curiosités":"poi-heritage","Patrimoine religieux":"poi-heritage",
-  "Mégalithe":"poi-heritage","Art & Artisanat":"poi-heritage","Curiosités":"poi-heritage",
-  "Santé":"sante","Toilettes":"toilettes","Pique-nique":"pique-nique",
-  "Poubelles":"poubelles","Secours":"secours","Service":"poi-main"
-};
+   https://raw.githubusercontent.com/VOTRE-UTILISATEUR/VOTRE-DEPOT/main/Gestionevenements/evenements.js
 
-let layerIsManual = false;
+   (le nom de la branche - "main" ou "master" - et le chemin du
+   fichier dans le dépôt dépendent de votre organisation)
+   ----------------------------------------------------------- */
+const GITHUB_RAW_URL = "https://raw.githubusercontent.com/VOTRE-UTILISATEUR/VOTRE-DEPOT/main/Gestionevenements/evenements.js";
 
-// ── DONNÉES _POIS ─────────────────────────────────────────────────────────────
-// Remplacer le contenu ci-dessous par le JSON exporté depuis pois.js
-// Chargé automatiquement depuis pois.js — aucune synchronisation manuelle requise !
-// pois.js doit être dans le même dossier que admin.html
-let _POIS = (typeof POIS !== 'undefined') ? POIS.map(p => ({...p})) : [];
-// ─────────────────────────────────────────────────────────────────────────────
+/* -----------------------------------------------------------
+   LISTE DES LIEUX — remplissage automatique du <select>
+   ----------------------------------------------------------- */
 
-let filteredPOIS = [];
-let currentPage = 1;
-const PAGE_SIZE = 25;
-let deleteIdx = -1;
+const LIEUX = [
+  { nom: "Place du Marché", lat: "47.5954", lng: "-2.8482" },
+  { nom: "Salle du Conseil Municipal", lat: "47.5952", lng: "-2.8480" },
+  { nom: "Salle annexe de la Mairie", lat: "47.5970", lng: "-2.8458" },
+  { nom: "Église Saint Michel", lat: "47.59857", lng: "-2.84267" },
+  { nom: "Port du Lério", lat: "47.5980", lng: "-2.8540" },
+  { nom: "La Petite Galerie", lat: "47.6000", lng: "-2.8510" },
+  { nom: "Salle du Rinville", lat: "47.5943", lng: "-2.8502" },
+  { nom: "Parc du château du Guerric", lat: "47.6004", lng: "-2.8571" }
+];
 
-function init() {
-  _POIS.forEach((p, i) => { p._idx = i; });
-  buildStats();
-  buildCatFilter();
-  buildLayerFilter();
-  renderTable();
-}
+// Remplissage du <select id="lieu">
+function chargerListeLieux() {
+  const select = document.getElementById("lieu");
+  select.innerHTML = `<option value="">— Choisir un lieu —</option>`;
 
-function buildStats() {
-  const cats = {};
-  _POIS.forEach(p => { cats[p.cat] = (cats[p.cat]||0)+1; });
-  const grid = document.getElementById('stats-grid');
-  const withImg = _POIS.filter(p=>p.image).length;
-  const noImg = _POIS.length - withImg;
-  grid.innerHTML = `
-    <div class="stat"><div class="stat-n">${_POIS.length}</div><div class="stat-l">POI total</div></div>
-    <div class="stat"><div class="stat-n">${withImg}</div><div class="stat-l">Avec photo</div></div>
-    <div class="stat"><div class="stat-n" style="color:#c0392b">${noImg}</div><div class="stat-l">Sans photo</div></div>
-    <div class="stat"><div class="stat-n">${Object.keys(cats).length}</div><div class="stat-l">Catégories</div></div>`;
-  document.getElementById('total-badge').textContent = _POIS.length + ' POI';
-}
-
-function buildCatFilter() {
-  const cats = [...new Set(_POIS.map(p=>p.cat))].sort();
-  const sel = document.getElementById('filter-cat');
-  cats.forEach(c => {
-    const o = document.createElement('option');
-    o.value = c; o.textContent = (CAT_EMOJIS[c]||'') + ' ' + c;
-    sel.appendChild(o);
-  });
-}
-
-function buildLayerFilter() {
-  const layers = [...new Set(_POIS.map(p=>p.layer||'poi-main'))].sort();
-  const sel = document.getElementById('filter-layer');
-  layers.forEach(l => {
-    const o = document.createElement('option');
-    o.value = l; o.textContent = l;
-    sel.appendChild(o);
-  });
-}
-
-function renderTable() {
-  const q = document.getElementById('search').value.toLowerCase();
-  const cat = document.getElementById('filter-cat').value;
-  const layer = document.getElementById('filter-layer').value;
-  filteredPOIS = _POIS.filter(p => {
-    const matchQ = !q || p.name.toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q);
-    const matchC = !cat || p.cat === cat;
-    const matchL = !layer || (p.layer||'poi-main') === layer;
-    return matchQ && matchC && matchL;
+  LIEUX.forEach(l => {
+    const opt = document.createElement("option");
+    opt.value = l.nom;
+    opt.textContent = l.nom;
+    opt.dataset.lat = l.lat;
+    opt.dataset.lng = l.lng;
+    select.appendChild(opt);
   });
 
-  const totalPages = Math.ceil(filteredPOIS.length / PAGE_SIZE);
-  if (currentPage > totalPages) currentPage = 1;
-  const start = (currentPage-1)*PAGE_SIZE;
-  const page = filteredPOIS.slice(start, start+PAGE_SIZE);
-  const tbody = document.getElementById('poi-table');
-  tbody.innerHTML = '';
-  document.getElementById('no-results').style.display = filteredPOIS.length ? 'none' : 'block';
+  // Option "Autre lieu"
+  const autre = document.createElement("option");
+  autre.value = "autre";
+  autre.textContent = "Autre lieu (saisie manuelle)";
+  select.appendChild(autre);
+}
 
-  page.forEach(poi => {
-    const realIdx = poi._idx;
-    const img = poi.image
-      ? `<img class="poi-img" src="${poi.image}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="poi-img-empty" style="display:none">${poi.emoji||'📍'}</div>`
-      : `<div class="poi-img-empty">${poi.emoji||'📍'}</div>`;
-    const autoLayer = CAT_LAYERS[poi.cat] || 'poi-main';
-    const isAuto = (poi.layer||'poi-main') === autoLayer;
-    const layerBadge = isAuto
-      ? `<span class="poi-layer" style="background:var(--green-c);color:var(--green-t)">${poi.layer||autoLayer}</span>`
-      : `<span class="poi-layer" style="background:var(--amber-c);color:var(--amber-t)">✏️ ${poi.layer||autoLayer}</span>`;
-    tbody.innerHTML += `<tr>
-      <td>${img}</td>
-      <td><span class="poi-name">${poi.name}</span></td>
-      <td><span class="poi-cat">${poi.emoji||''} ${poi.cat}</span></td>
-      <td>${layerBadge}</td>
-      <td><span class="coords">${poi.lat.toFixed(4)}, ${poi.lon.toFixed(4)}</span></td>
-      <td><div class="act-btns">
-        <button class="act-btn act-edit" onclick="openEdit(${realIdx})">Modifier</button>
-        <button class="act-btn act-del" onclick="openDelete(${realIdx})">Suppr.</button>
-      </div></td></tr>`;
+/* -----------------------------------------------------------
+   GPS AUTOMATIQUE + gestion du champ "Autre lieu"
+   ----------------------------------------------------------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  chargerListeLieux();
+
+  document.getElementById("lieu").addEventListener("change", function () {
+    const opt = this.selectedOptions[0];
+
+    if (opt.value === "autre") {
+      // Champ libre visible
+      document.getElementById("lieu_autre").style.display = "block";
+      document.getElementById("lat").value = "";
+      document.getElementById("lng").value = "";
+    } else {
+      // Champ libre caché
+      document.getElementById("lieu_autre").style.display = "none";
+
+      // GPS auto
+      document.getElementById("lat").value = opt.dataset.lat || "";
+      document.getElementById("lng").value = opt.dataset.lng || "";
+    }
   });
-  renderPagination(totalPages);
+});
+
+/* -----------------------------------------------------------
+   VALIDATION VISUELLE — champs obligatoires en rouge
+   ----------------------------------------------------------- */
+
+function validerChamps() {
+  let ok = true;
+
+  // Champs obligatoires
+  const obligatoires = [
+    "nom",
+    "emoji",
+    "date_debut",
+    (document.getElementById("lieu").value === "autre" ? "lieu_autre" : "lieu"),
+    "lat",
+    "lng"
+  ];
+
+  obligatoires.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value || el.value.trim() === "") {
+      el.classList.add("champ-erreur");
+      ok = false;
+    } else {
+      el.classList.remove("champ-erreur");
+    }
+  });
+
+  return ok;
+}
+</script>
+<script>
+/* -----------------------------------------------------------
+   RESTAURATION AUTOMATIQUE DEPUIS LOCALSTORAGE
+   ----------------------------------------------------------- */
+if (localStorage.getItem("evenements_local")) {
+  try {
+    const sauvegarde = JSON.parse(localStorage.getItem("evenements_local"));
+    if (Array.isArray(sauvegarde)) {
+      EVENEMENTS.length = 0;
+      sauvegarde.forEach(e => EVENEMENTS.push(e));
+    }
+  } catch(e) {}
 }
 
-function renderPagination(total) {
-  const pg = document.getElementById('pagination');
-  if (total <= 1) { pg.innerHTML=''; return; }
-  let html = '';
-  for (let i=1; i<=total; i++)
-    html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
-  pg.innerHTML = html;
+/* -----------------------------------------------------------
+   SAUVEGARDE AUTOMATIQUE
+   ----------------------------------------------------------- */
+function sauvegarderLocal() {
+  localStorage.setItem("evenements_local", JSON.stringify(EVENEMENTS));
 }
 
-function goPage(n) { currentPage=n; renderTable(); window.scrollTo(0,200); }
+/* -----------------------------------------------------------
+   AFFICHAGE DES ÉVÉNEMENTS
+   ----------------------------------------------------------- */
+function afficherEvenements() {
+  const cont = document.getElementById('liste-evenements');
+  const count = document.getElementById('count');
+  cont.innerHTML = '';
 
-function updateEmojiAndLayer() {
-  const cat = document.getElementById('f-cat').value;
-  document.getElementById('f-emoji').value = CAT_EMOJIS[cat] || '';
-  if (!layerIsManual) {
-    const autoLayer = CAT_LAYERS[cat] || 'poi-main';
-    document.getElementById('f-layer').value = autoLayer;
-    document.getElementById('layer-badge').textContent = '🤖 Auto selon catégorie';
-    document.getElementById('layer-badge').className = 'layer-auto';
+  EVENEMENTS.forEach((evt, index) => {
+    const div = document.createElement('div');
+    div.className = 'evt-item';
+
+    div.innerHTML = `
+      <div class="evt-top">
+        <div class="evt-title">${evt.emoji} ${evt.nom}</div>
+        <div>
+          <button class="btn-modifier" data-index="${index}">Modifier</button>
+          <button class="btn-supprimer" data-index="${index}">Supprimer</button>
+        </div>
+      </div>
+
+      <div class="evt-date">${evt.date_debut} → ${evt.date_fin || ""}</div>
+      <div class="evt-image-icon">${evt.image ? '🖼️' : ''}</div>
+    `;
+
+    cont.appendChild(div);
+  });
+
+  count.textContent = EVENEMENTS.length;
+  sauvegarderLocal();
+}
+
+/* -----------------------------------------------------------
+   VIDAGE DU FORMULAIRE
+   ----------------------------------------------------------- */
+function viderFormulaire() {
+  const champs = [
+    'nom','emoji','association','date_debut','date_fin','heure',
+    'lieu','lieu_autre','lat','lng','acces','image','site','description'
+  ];
+
+  champs.forEach(id => document.getElementById(id).value = "");
+
+  // Désélectionner les emojis
+  document.querySelectorAll('.emoji-grid div').forEach(d => d.classList.remove('selected'));
+
+  // Cacher le champ "Autre lieu"
+  document.getElementById('lieu_autre').style.display = "none";
+}
+
+/* -----------------------------------------------------------
+   AJOUT D'ÉVÉNEMENT
+   ----------------------------------------------------------- */
+function ajouterEvenement() {
+
+  if (!validerChamps()) {
+    alert("Veuillez remplir les champs obligatoires.");
+    return;
   }
-}
 
-function markLayerManual() {
-  layerIsManual = true;
-  document.getElementById('layer-badge').textContent = '✏️ Modifié manuellement';
-  document.getElementById('layer-badge').className = 'layer-manual';
-}
+  const lieuFinal = (document.getElementById('lieu').value === "autre"
+    ? document.getElementById('lieu_autre').value
+    : document.getElementById('lieu').value);
 
-function previewImg() {
-  const url = document.getElementById('f-image').value.trim();
-  const img = document.getElementById('img-preview');
-  if (url) { img.src=url; img.classList.add('visible'); }
-  else img.classList.remove('visible');
-}
-
-function openAdd() {
-  layerIsManual = false;
-  document.getElementById('edit-idx').value = '-1';
-  document.getElementById('modal-title').textContent = 'Ajouter un POI';
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-cat').value = 'Restaurant';
-  document.getElementById('f-emoji').value = '🍽️';
-  document.getElementById('f-layer').value = 'poi-main';
-  document.getElementById('layer-badge').textContent = '🤖 Auto selon catégorie';
-  document.getElementById('layer-badge').className = 'layer-auto';
-  document.getElementById('f-lat').value = '';
-  document.getElementById('f-lon').value = '';
-  document.getElementById('f-image').value = '';
-  document.getElementById('f-desc').value = '';
-  document.getElementById('f-link-url').value = '';
-  document.getElementById('f-link-label').value = '';
-  document.getElementById('img-preview').classList.remove('visible');
-  document.getElementById('modal').classList.add('open');
-}
-
-function openEdit(idx) {
-  const poi = _POIS[idx];
-  layerIsManual = false;
-  document.getElementById('edit-idx').value = idx;
-  document.getElementById('modal-title').textContent = 'Modifier — ' + poi.name;
-  document.getElementById('f-name').value = poi.name;
-  document.getElementById('f-cat').value = poi.cat;
-  document.getElementById('f-emoji').value = poi.emoji || CAT_EMOJIS[poi.cat] || '';
-  const currentLayer = poi.layer || CAT_LAYERS[poi.cat] || 'poi-main';
-  const autoLayer = CAT_LAYERS[poi.cat] || 'poi-main';
-  document.getElementById('f-layer').value = currentLayer;
-  if (currentLayer !== autoLayer) {
-    layerIsManual = true;
-    document.getElementById('layer-badge').textContent = '✏️ Modifié manuellement';
-    document.getElementById('layer-badge').className = 'layer-manual';
-  } else {
-    document.getElementById('layer-badge').textContent = '🤖 Auto selon catégorie';
-    document.getElementById('layer-badge').className = 'layer-auto';
-  }
-  document.getElementById('f-lat').value = poi.lat;
-  document.getElementById('f-lon').value = poi.lon;
-  document.getElementById('f-image').value = poi.image || '';
-  document.getElementById('f-desc').value = poi.description || '';
-  const link = poi.links && poi.links[0];
-  document.getElementById('f-link-url').value = link ? link[0] : '';
-  document.getElementById('f-link-label').value = link ? link[1] : '';
-  previewImg();
-  document.getElementById('modal').classList.add('open');
-}
-
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
-
-function savePOI() {
-  const name = document.getElementById('f-name').value.trim();
-  const lat = parseFloat(document.getElementById('f-lat').value);
-  const lon = parseFloat(document.getElementById('f-lon').value);
-  const cat = document.getElementById('f-cat').value;
-  const layer = document.getElementById('f-layer').value;
-
-  if (!name) { showAlert('Le nom est obligatoire.', 'warn'); return; }
-  if (isNaN(lat) || isNaN(lon)) { showAlert('Les coordonnées GPS sont obligatoires.', 'warn'); return; }
-  if (lat < 47.55 || lat > 47.62) { showAlert('Latitude incorrecte (entre 47.55 et 47.62).', 'warn'); return; }
-  if (lon < -2.88 || lon > -2.80) { showAlert('Longitude incorrecte (entre -2.88 et -2.80).', 'warn'); return; }
-
-  const linkUrl = document.getElementById('f-link-url').value.trim();
-  const linkLabel = document.getElementById('f-link-label').value.trim();
-  const links = linkUrl ? [[linkUrl, linkLabel || 'Voir le site']] : [];
-
-  const poi = {
-    name,
-    lat: parseFloat(lat.toFixed(6)),
-    lon: parseFloat(lon.toFixed(6)),
-    cat,
-    color: '#2d5e3f',
-    image: document.getElementById('f-image').value.trim(),
-    description: document.getElementById('f-desc').value,
-    links,
-    emoji: document.getElementById('f-emoji').value.trim() || CAT_EMOJIS[cat] || '📍',
-    layer
+  const evt = {
+    nom: document.getElementById('nom').value,
+    emoji: document.getElementById('emoji').value,
+    association: document.getElementById('association').value,
+    date_debut: document.getElementById('date_debut').value,
+    date_fin: document.getElementById('date_fin').value,
+    heure: document.getElementById('heure').value,
+    lieu: lieuFinal,
+    lat: document.getElementById('lat').value,
+    lng: document.getElementById('lng').value,
+    acces: document.getElementById('acces').value,
+    image: document.getElementById('image').value,
+    site: document.getElementById('site').value,
+    description: document.getElementById('description').value
   };
 
-  const idx = parseInt(document.getElementById('edit-idx').value);
-  if (idx >= 0) {
-    _POIS[idx] = poi;
-    showAlert('POI modifié. Exportez et mettez à jour pois.js sur GitHub.', 'success');
+  EVENEMENTS.push(evt);
+  afficherEvenements();
+  viderFormulaire();
+}
+
+/* -----------------------------------------------------------
+   SUPPRESSION
+   ----------------------------------------------------------- */
+function supprimerEvenement(index) {
+  EVENEMENTS.splice(index, 1);
+  afficherEvenements();
+}
+
+/* -----------------------------------------------------------
+   MODIFICATION
+   ----------------------------------------------------------- */
+function modifierEvenement(index) {
+  const evt = EVENEMENTS[index];
+
+  document.getElementById('nom').value = evt.nom;
+  document.getElementById('emoji').value = evt.emoji;
+  document.getElementById('association').value = evt.association;
+  document.getElementById('date_debut').value = evt.date_debut;
+  document.getElementById('date_fin').value = evt.date_fin;
+  document.getElementById('heure').value = evt.heure;
+
+  // Gestion du lieu
+  const select = document.getElementById('lieu');
+  if ([...select.options].some(o => o.value === evt.lieu)) {
+    select.value = evt.lieu;
+    document.getElementById('lieu_autre').style.display = "none";
   } else {
-    _POIS.push(poi);
-    showAlert('POI ajouté. Exportez et mettez à jour pois.js sur GitHub.', 'success');
+    select.value = "autre";
+    document.getElementById('lieu_autre').style.display = "block";
+    document.getElementById('lieu_autre').value = evt.lieu;
   }
-  closeModal();
-  buildStats();
-  renderTable();
+
+  document.getElementById('lat').value = evt.lat;
+  document.getElementById('lng').value = evt.lng;
+  document.getElementById('acces').value = evt.acces;
+  document.getElementById('image').value = evt.image;
+  document.getElementById('site').value = evt.site;
+  document.getElementById('description').value = evt.description;
+
+  EVENEMENTS.splice(index, 1);
+  afficherEvenements();
 }
 
-function openDelete(idx) {
-  deleteIdx = idx;
-  document.getElementById('del-name').textContent = _POIS[idx].name;
-  document.getElementById('modal-del').classList.add('open');
+/* -----------------------------------------------------------
+   EXPORT AUTOMATIQUE DU FICHIER evenements.js
+   ----------------------------------------------------------- */
+function exporterEvenements() {
+  const maintenant = new Date();
+  const horodatage = maintenant.toLocaleString("fr-FR");
+
+  const contenu =
+`// M'IAM — Fichier des événements
+// Généré automatiquement le ${horodatage}
+// Version : ${maintenant.getFullYear()}.${String(maintenant.getMonth()+1).padStart(2,'0')}.${String(maintenant.getDate()).padStart(2,'0')}
+
+const EVENEMENTS = ${JSON.stringify(EVENEMENTS, null, 2)};
+`;
+
+  const blob = new Blob([contenu], { type: "application/javascript" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "evenements.js";
+  a.click();
+
+  URL.revokeObjectURL(url);
 }
 
-function confirmDelete() {
-  if (deleteIdx < 0) return;
-  const name = _POIS[deleteIdx].name;
-  _POIS.splice(deleteIdx, 1);
-  deleteIdx = -1;
-  document.getElementById('modal-del').classList.remove('open');
-  buildStats();
-  renderTable();
-  showAlert('"' + name + '" supprimé. Exportez et mettez à jour pois.js.', 'success');
+/* -----------------------------------------------------------
+   IMPORT DEPUIS GITHUB
+   -----------------------------------------------------------
+   Va chercher le fichier evenements.js publié sur GitHub,
+   en extrait le tableau EVENEMENTS, et remplace la liste
+   actuellement affichée (et sauvegardée en local).
+   ----------------------------------------------------------- */
+async function importerDepuisGitHub() {
+  const btn = document.getElementById('btn-sync-github');
+  const info = document.getElementById('sync-info');
+
+  if (GITHUB_RAW_URL.includes("VOTRE-UTILISATEUR")) {
+    info.textContent = "⚠️ Configurez d'abord GITHUB_RAW_URL dans le code avec l'adresse de votre dépôt.";
+    info.className = "sync-info erreur";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "⏳ Récupération en cours...";
+  info.textContent = "";
+  info.className = "sync-info";
+
+  try {
+    // Anti-cache : GitHub (et le navigateur) peuvent garder une copie
+    // périmée pendant quelques minutes sans ce paramètre.
+    const urlSansCache = GITHUB_RAW_URL + (GITHUB_RAW_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+
+    const reponse = await fetch(urlSansCache, { cache: "no-store" });
+
+    if (!reponse.ok) {
+      throw new Error("Réponse HTTP " + reponse.status);
+    }
+
+    const texte = await reponse.text();
+
+    // Extrait le contenu du tableau entre "const EVENEMENTS = [" et "];"
+    const correspondance = texte.match(/const\s+EVENEMENTS\s*=\s*(\[[\s\S]*\])\s*;/);
+
+    if (!correspondance) {
+      throw new Error("Format inattendu : impossible de trouver le tableau EVENEMENTS dans le fichier.");
+    }
+
+    const donnees = JSON.parse(correspondance[1]);
+
+    if (!Array.isArray(donnees)) {
+      throw new Error("Le contenu récupéré n'est pas une liste d'événements valide.");
+    }
+
+    EVENEMENTS.length = 0;
+    donnees.forEach(e => EVENEMENTS.push(e));
+
+    afficherEvenements();
+
+    const heure = new Date().toLocaleString("fr-FR");
+    info.textContent = `✅ ${donnees.length} événement(s) importé(s) depuis GitHub (${heure})`;
+    info.className = "sync-info succes";
+
+  } catch (err) {
+    console.error(err);
+    info.textContent = "❌ Échec de la synchronisation : " + err.message;
+    info.className = "sync-info erreur";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🔄 Actualiser depuis GitHub";
+  }
 }
 
-function showExport() {
-  const clean = _POIS.map(p => { const c = {...p}; delete c._idx; return c; });
-  const lines = clean.map((p,i) => '  ' + JSON.stringify(p) + (i < clean.length-1 ? ',' : ''));
-  const code = "// M'IAM — Points d'intérêt de l'Île-aux-Moines\nconst POIS = [\n" + lines.join('\n') + '\n];';
-  document.getElementById('export-code').textContent = code;
-  document.getElementById('export-zone').style.display = 'block';
-  document.getElementById('export-zone').scrollIntoView({behavior:'smooth'});
-}
+/* -----------------------------------------------------------
+   BRANCHER LES BOUTONS
+   ----------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
 
-function copyExport() {
-  navigator.clipboard.writeText(document.getElementById('export-code').textContent).then(() => {
-    showAlert('Copié ! Dans pois.js sur GitHub : Ctrl+A pour tout sélectionner, puis Ctrl+V pour coller.', 'success');
+  afficherEvenements();
+
+  // Sélection emoji
+  document.querySelectorAll('.emoji-grid div').forEach(div => {
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.emoji-grid div').forEach(d => d.classList.remove('selected'));
+      div.classList.add('selected');
+      document.getElementById('emoji').value = div.dataset.value;
+    });
   });
-}
 
-function openGoogleMaps() { window.open('https://www.google.com/maps/place/Ile+aux+Moines','_blank'); }
+  document.querySelector('.btn-ajouter')
+    .addEventListener('click', ajouterEvenement);
 
-function showAlert(msg, type) {
-  const el = document.getElementById('alert-box');
-  el.textContent = msg; el.className = 'alert ' + type;
-  el.scrollIntoView({behavior:'smooth',block:'nearest'});
-  setTimeout(() => el.className = 'alert', 6000);
-}
+  document.querySelector('.btn-export')
+    .addEventListener('click', exporterEvenements);
 
-window.addEventListener('DOMContentLoaded', init);
+  document.getElementById('btn-sync-github')
+    .addEventListener('click', importerDepuisGitHub);
+
+  document.getElementById('liste-evenements')
+    .addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-supprimer')) {
+        supprimerEvenement(e.target.dataset.index);
+      }
+      if (e.target.classList.contains('btn-modifier')) {
+        modifierEvenement(e.target.dataset.index);
+      }
+    });
+});
 </script>
 </body>
-</html>
