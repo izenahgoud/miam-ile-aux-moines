@@ -725,12 +725,25 @@ const FORMSPREE_URL = "https://formspree.io/f/xbgrlqwr";
 
 function toggleFeedback() {
   const panel = document.getElementById('feedback-panel');
-  panel.classList.toggle('open');
-  if (panel.classList.contains('open')) {
-    document.getElementById('feedback-text').focus();
-  } else {
+  const champ = document.getElementById('feedback-text');
+  const estOuvert = panel.classList.contains('open');
+
+  if (estOuvert) {
+    // IMPORTANT : sur iOS/Safari, masquer un champ qui a encore le focus
+    // ne referme PAS le clavier virtuel tout seul (contrairement à
+    // Chrome/Android). Il faut forcer la perte de focus explicitement
+    // avant de cacher le panneau, sinon le clavier reste affiché et
+    // bloque l'accès à la carte en dessous.
+    champ.blur();
+    panel.classList.remove('open');
     document.getElementById('feedback-status').textContent = '';
     document.getElementById('feedback-status').className = '';
+    // Filet de sécurité : Safari décale parfois la page pendant que le
+    // clavier est affiché ; on force un retour en position normale.
+    window.scrollTo(0, 0);
+  } else {
+    panel.classList.add('open');
+    champ.focus();
   }
 }
 
@@ -770,9 +783,12 @@ async function envoyerAvis() {
     if (!reponse.ok) throw new Error('HTTP ' + reponse.status);
 
     document.getElementById('feedback-text').value = '';
+    document.getElementById('feedback-text').blur(); // referme le clavier iOS avant la fermeture différée
     statut.textContent = "Merci, votre message a bien été envoyé !";
     statut.className = 'ok';
-    setTimeout(() => { toggleFeedback(); }, 1800);
+    setTimeout(() => {
+      document.getElementById('feedback-panel').classList.remove('open');
+    }, 1800);
 
   } catch (err) {
     console.error(err);
