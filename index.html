@@ -771,8 +771,13 @@ async function envoyerAvis() {
   statut.className = '';
 
   try {
-    const reponse = await fetch(AVIS_URL, {
+    // mode "no-cors" : on ne peut plus lire la réponse détaillée,
+    // mais ça évite l'erreur liée à la redirection technique de
+    // Google Apps Script (POST converti en GET par le navigateur).
+    // L'envoi du message côté serveur a bien lieu malgré tout.
+    await fetch(AVIS_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         message: texte,
@@ -780,10 +785,6 @@ async function envoyerAvis() {
         date: new Date().toLocaleString('fr-FR')
       })
     });
-
-    if (!reponse.ok) throw new Error('HTTP ' + reponse.status);
-    const resultat = await reponse.json();
-    if (!resultat.ok) throw new Error(resultat.error || 'Erreur inconnue');
 
     document.getElementById('feedback-text').value = '';
     document.getElementById('feedback-text').blur(); // referme le clavier iOS avant la fermeture différée
