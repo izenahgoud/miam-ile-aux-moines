@@ -712,16 +712,17 @@ document.addEventListener('keydown', e => {
 });
 </script>
 <div id="crealion"><img src="" alt="créalion"></div>
-<div id="version-badge">v3.1.0</div>
+<div id="version-badge">v3.2.0</div>
 <script>
 /* -----------------------------------------------------------
-   AVIS UTILISATEURS — envoi anonyme vers Formspree
+   AVIS UTILISATEURS — envoi anonyme vers Google Sheets
    -----------------------------------------------------------
-   Remplacez FORMSPREE_URL par l'URL de votre formulaire
-   (ex. https://formspree.io/f/xxxxxxxx). Cette adresse est
-   publique sans risque : elle ne révèle pas votre email.
+   AVIS_URL pointe vers le déploiement Apps Script qui ajoute
+   chaque message comme nouvelle ligne dans votre Google Sheets.
+   Cette adresse est publique sans risque : elle ne révèle pas
+   votre email ni le contenu de votre feuille.
    ----------------------------------------------------------- */
-const FORMSPREE_URL = "https://formspree.io/f/xbgrlqwr";
+const AVIS_URL = "https://script.google.com/macros/s/AKfycbxssS7Ea-8Ig7H-4r0C2KbRdqnsxFOFOEJEdWpI5R4dACYB97eROGDwdEExYOntpi7M/exec";
 
 function toggleFeedback() {
   const panel = document.getElementById('feedback-panel');
@@ -758,7 +759,7 @@ async function envoyerAvis() {
     return;
   }
 
-  if (FORMSPREE_URL.includes("VOTRE-ID-FORMSPREE")) {
+  if (AVIS_URL.includes("VOTRE-ID")) {
     statut.textContent = "⚠️ Formulaire non configuré.";
     statut.className = 'err';
     return;
@@ -770,9 +771,9 @@ async function envoyerAvis() {
   statut.className = '';
 
   try {
-    const reponse = await fetch(FORMSPREE_URL, {
+    const reponse = await fetch(AVIS_URL, {
       method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         message: texte,
         page: window.location.href,
@@ -781,6 +782,8 @@ async function envoyerAvis() {
     });
 
     if (!reponse.ok) throw new Error('HTTP ' + reponse.status);
+    const resultat = await reponse.json();
+    if (!resultat.ok) throw new Error(resultat.error || 'Erreur inconnue');
 
     document.getElementById('feedback-text').value = '';
     document.getElementById('feedback-text').blur(); // referme le clavier iOS avant la fermeture différée
