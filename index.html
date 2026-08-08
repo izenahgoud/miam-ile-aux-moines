@@ -59,9 +59,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 #locate-btn:hover{transform:scale(1.08)}
 #feedback-btn{position:absolute;bottom:20px;left:14px;z-index:10;width:44px;height:44px;border-radius:50%;background:var(--cream);color:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.3);font-size:18px;transition:transform .15s}
 #feedback-btn:hover{transform:scale(1.08)}
-#feedback-panel{position:absolute;bottom:74px;left:14px;z-index:30;width:min(320px,80vw);background:rgba(18,34,22,0.98);backdrop-filter:blur(12px);border-radius:16px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none;color:var(--cream)}
+#feedback-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:29;display:none}
+#feedback-backdrop.open{display:block}
+#feedback-panel{position:fixed;top:76px;left:50%;transform:translateX(-50%);z-index:30;width:min(320px,86vw);background:rgba(18,34,22,0.98);backdrop-filter:blur(12px);border-radius:16px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none;color:var(--cream)}
 #feedback-panel.open{display:block}
-#feedback-panel h3{font-size:15px;margin-bottom:8px;font-weight:600}
+#feedback-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--cream);font-size:20px;line-height:1;cursor:pointer;padding:4px 8px}
+#feedback-panel h3{font-size:15px;margin-bottom:8px;font-weight:600;padding-right:20px}
 #feedback-text{width:100%;min-height:80px;border-radius:10px;border:none;padding:10px;font-size:14px;font-family:inherit;resize:vertical;margin-bottom:8px}
 #feedback-actions{display:flex;gap:8px}
 #feedback-send{flex:1;background:var(--sea);color:white;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:500;cursor:pointer}
@@ -223,7 +226,9 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 
 <button id="locate-btn" onclick="centerOnUser()" title="Me localiser">📍</button>
 <button id="feedback-btn" onclick="toggleFeedback()" title="Donnez votre avis">😊</button>
+<div id="feedback-backdrop" onclick="toggleFeedback()"></div>
 <div id="feedback-panel">
+  <button id="feedback-close" onclick="toggleFeedback()" title="Fermer">✕</button>
   <h3>Votre avis nous intéresse</h3>
   <textarea id="feedback-text" placeholder="Une remarque, une idée, un problème rencontré…" maxlength="1000"></textarea>
   <div id="feedback-actions">
@@ -712,7 +717,7 @@ document.addEventListener('keydown', e => {
 });
 </script>
 <div id="crealion"><img src="" alt="créalion"></div>
-<div id="version-badge">v3.2.0</div>
+<div id="version-badge">v3.2.1</div>
 <script>
 /* -----------------------------------------------------------
    AVIS UTILISATEURS — envoi anonyme vers Google Sheets
@@ -726,6 +731,7 @@ const AVIS_URL = "https://script.google.com/macros/s/AKfycbxssS7Ea-8Ig7H-4r0C2Kb
 
 function toggleFeedback() {
   const panel = document.getElementById('feedback-panel');
+  const fond = document.getElementById('feedback-backdrop');
   const champ = document.getElementById('feedback-text');
   const estOuvert = panel.classList.contains('open');
 
@@ -737,6 +743,7 @@ function toggleFeedback() {
     // bloque l'accès à la carte en dessous.
     champ.blur();
     panel.classList.remove('open');
+    fond.classList.remove('open');
     document.getElementById('feedback-status').textContent = '';
     document.getElementById('feedback-status').className = '';
     // Filet de sécurité : Safari décale parfois la page pendant que le
@@ -744,6 +751,7 @@ function toggleFeedback() {
     window.scrollTo(0, 0);
   } else {
     panel.classList.add('open');
+    fond.classList.add('open');
     champ.focus();
   }
 }
@@ -792,6 +800,7 @@ async function envoyerAvis() {
     statut.className = 'ok';
     setTimeout(() => {
       document.getElementById('feedback-panel').classList.remove('open');
+      document.getElementById('feedback-backdrop').classList.remove('open');
     }, 1800);
 
   } catch (err) {
