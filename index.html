@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -712,7 +711,7 @@ document.addEventListener('keydown', e => {
 });
 </script>
 <div id="crealion"><img src="" alt="créalion"></div>
-<div id="version-badge">v3.2.2</div>
+<div id="version-badge">v3.2.3</div>
 <script>
 /* -----------------------------------------------------------
    AVIS UTILISATEURS — envoi anonyme vers Google Sheets
@@ -742,6 +741,16 @@ function toggleFeedback() {
     // Filet de sécurité : Safari décale parfois la page pendant que le
     // clavier est affiché ; on force un retour en position normale.
     window.scrollTo(0, 0);
+    // Parade au "clic fantôme" iOS Safari : juste après la fermeture,
+    // Safari peut renvoyer un clic à l'endroit du dernier toucher, qui
+    // atterrit alors sur la carte en dessous et ouvre le popup d'un
+    // point. On fait ignorer les clics à la carte pendant un court
+    // instant pour absorber ce clic fantôme sans rien changer d'autre.
+    if (typeof map !== 'undefined' && map.getContainer) {
+      const conteneurCarte = map.getContainer();
+      conteneurCarte.style.pointerEvents = 'none';
+      setTimeout(() => { conteneurCarte.style.pointerEvents = ''; }, 400);
+    }
   } else {
     panel.classList.add('open');
     champ.focus();
@@ -792,6 +801,11 @@ async function envoyerAvis() {
     statut.className = 'ok';
     setTimeout(() => {
       document.getElementById('feedback-panel').classList.remove('open');
+      if (typeof map !== 'undefined' && map.getContainer) {
+        const conteneurCarte = map.getContainer();
+        conteneurCarte.style.pointerEvents = 'none';
+        setTimeout(() => { conteneurCarte.style.pointerEvents = ''; }, 400);
+      }
     }, 1800);
 
   } catch (err) {
