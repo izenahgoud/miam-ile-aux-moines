@@ -104,7 +104,7 @@ const EVENEMENTS = [
     "lng": -2.845835,
     "lieu": "Salle annexe de la Mairie",
     "acces": "Accès libre",
-    "description": "",
+    "description": "Vernissage le mardi 11 août à 11h00",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/arcile.jpg.webp",
     "site": "www.arcile.fr"
   },
