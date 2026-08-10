@@ -27,7 +27,7 @@ const EVENEMENTS = [
     "heure": "19h24 - 21h13",
     "lieu": "Pierre noire (Bigre Mendu)",
     "lat": "47.596900",
-    "lng": "-2,851585",
+    "lng": "-2.851585",
     "acces": "libre, libre, libre",
     "image": "https://i.ibb.co/Z1F9wzfT/eclipse.jpg",
     "site": "",
