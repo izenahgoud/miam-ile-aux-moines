@@ -14,7 +14,7 @@ const EVENEMENTS = [
     "lng": 0,
     "lieu": "",
     "acces": "",
-    "description": ""
+    "description": "",
     "image": "",
     "site": ""
   },
