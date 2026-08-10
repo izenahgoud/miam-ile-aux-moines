@@ -30,7 +30,7 @@ const EVENEMENTS = [
     "lng": "-2,851585",
     "acces": "libre, libre, libre",
     "image": "https://i.ibb.co/Z1F9wzfT/eclipse.jpg",
-    "site": "https://youtu.be/AonTN2zEWyc?si=EGWnO8y-_PmT5o0j",
+    "site": "",
     "description": "ÉCLIPSE SOLAIRE\nUne éclipse solaire partielle à 96 % aura lieu le 12 août prochain. Le phénomène débutera à 19h24, sera à son maximum à 20h20 et se terminera à 21h13 où elle\ndeviendra difficilement visible.\nPour l’observer, rdv à la Pierre Noire.\n100 paires de lunettes seront offertes et distribuées le mercredi 12 août de 10h à 12h devant la mairie (2 paires max par famille)."
   },
   {
