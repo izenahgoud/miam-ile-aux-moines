@@ -19,6 +19,21 @@ const EVENEMENTS = [
     "site": ""
   },
   {
+    "nom": "BAL du 15 AOÛT",
+    "emoji": "🎉",
+    "association": "ACCA Ile-aux-Moines",
+    "date_debut": "2026-08-15",
+    "date_fin": "2026-08-16",
+    "heure": "29h30 - 02h00",
+    "lieu": "Place du Marché",
+    "lat": "47.5954",
+    "lng": "-2.8482",
+    "acces": "Accès libre. Venez tous !",
+    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/AFFICHE-BAL-ACCA-15-08-2026.png.webp",
+    "site": "",
+    "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal poulaire place du marché"
+  },
+  {
     "nom": "La nostalgie des blattes",
     "emoji": "🎭",
     "association": "Théâtre en Herbe",
