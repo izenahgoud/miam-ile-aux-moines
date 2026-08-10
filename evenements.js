@@ -1,6 +1,6 @@
 // M'IAM — Fichier des événements
-// Généré automatiquement le 06/08/2026 16:50:49
-// Version : 2026.08.06 (Corrigée)
+// Généré automatiquement le 10/08/2026 21:30:26
+// Version : 2026.08.10
 
 const EVENEMENTS = [
   {
@@ -47,36 +47,6 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/AFFICHE-BAL-ACCA-15-08-2026.png.webp",
     "site": "",
     "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal poulaire place du marché"
-  },
-  {
-    "nom": "La nostalgie des blattes",
-    "emoji": "🎭",
-    "association": "Théâtre en Herbe",
-    "date_debut": "2026-08-10",
-    "date_fin": "2026-08-10",
-    "heure": "19h00 - 21h00",
-    "lieu": "Jardin du Rinville",
-    "lat": 47.594507,
-    "lng": -2.850312,
-    "acces": "Accès libre. Participation souhaitée.",
-    "image": "https://i.ibb.co/27WBSr85/prog-herbe-scaled-01.jpg",
-    "site": "",
-    "description": ""
-  },
-  {
-    "nom": "J'ai mangé ma fourchette",
-    "emoji": "🎭",
-    "association": "Théâtre en Herbe",
-    "date_debut": "2026-09-11",
-    "date_fin": "2026-09-11",
-    "heure": "19h00 - 21h00",
-    "lieu": "Jardin du Rinville",
-    "lat": 47.594507,
-    "lng": -2.850312,
-    "acces": "Accès libre. Participation souhaitée.",
-    "image": "https://i.ibb.co/4wRrPxYK/prog-herbe-scaled-02.jpg",
-    "site": "",
-    "description": ""
   },
   {
     "nom": "UBU Président",
@@ -154,18 +124,18 @@ const EVENEMENTS = [
     "description": "Amanda Flavier, violon et Elodie Soulard, accordéon"
   },
   {
-    "nom": "Adeline Weber Guibal",
-    "emoji": "🎨",
-    "association": "Adeline Weber Guibal",
-    "date_debut": "2026-08-06",
-    "date_fin": "2026-08-10",
-    "heure": "10h00 - 13h00 16h00 - 19h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": 47.597088,
-    "lng": -2.845835,
-    "acces": "Accès libre",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/expo-weber-scaled.jpg.webp",
-    "site": "https://adelineweberguibal.fr/",
-    "description": "Sculpteur d’origine Lorraine, Adeline Weber-Guibal s ‘est formée à la Sculpture en Bronze à Aix en Provence, fréquentant tour à tour les milieux du bronze et du cristal."
+    "nom": "J'ai mangé ma fourchette",
+    "emoji": "🎭",
+    "association": "Théâtre en Herbe",
+    "date_debut": "2026-08-11",
+    "date_fin": "2026-08-11",
+    "heure": "19h00 - 21h00",
+    "lieu": "Jardin du Rinville",
+    "lat": "47.594507",
+    "lng": "-2.850312",
+    "acces": "Accès libre. Participation souhaitée.",
+    "image": "https://i.ibb.co/4wRrPxYK/prog-herbe-scaled-02.jpg",
+    "site": "",
+    "description": "Un véritable spectacle de music-hall conçu autour de chansons composées par les plus grands spécialistes du genre – Bourvil, Fernandel, les Frères Jacques, Boby Lapointe ou Jean Yanne… "
   }
 ];
