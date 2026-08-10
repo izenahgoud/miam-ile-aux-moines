@@ -79,19 +79,19 @@ const EVENEMENTS = [
     "description": ""
   },
   {
-    "nom": "",
+    "nom": "LA MER NATURE",
     "emoji": "🎨",
-    "association": "",
-    "date_debut": "",
-    "date_fin": "",
-    "heure": "11h00- 13h00 15h00 - 19h00",
+    "association": "Sylvie BAC",
+    "date_debut": "2026-08-10",
+    "date_fin": "2026-08-30",
+    "heure": "10h00-18h00",
     "lieu": "La Petite Galerie",
     "lat": 47.6,
     "lng": -2.851,
     "acces": "Accès libre. Venez nombreux.",
-    "image": "",
-    "site": "",
-    "description": ""
+    "image": "https://ibb.co/0VXbwKgF",
+    "site": "https://sylviebacgallery.fr/",
+    "description": "Ma démarche :\nJe suis entièrement autodidacte, bien qu’ayant par le passé travaillé avec des artistes professionnels, notamment lorsque je vivais en Espagne, à Zaragoza , ou je travaillais comme peintre en décor , pour la réalisation de façades de bars et restaurants."
   },
   {
     "nom": "exposition Jean-Pierre ARCILE",
