@@ -89,7 +89,7 @@ const EVENEMENTS = [
     "lat": 47.6,
     "lng": -2.851,
     "acces": "Accès libre. Venez nombreux.",
-    "image": "https://ibb.co/0VXbwKgF",
+    "image": "https://i.ibb.co/wrLmv79w/sylviebac.jpg",
     "site": "https://sylviebacgallery.fr/",
     "description": "Ma démarche :\nJe suis entièrement autodidacte, bien qu’ayant par le passé travaillé avec des artistes professionnels, notamment lorsque je vivais en Espagne, à Zaragoza , ou je travaillais comme peintre en décor , pour la réalisation de façades de bars et restaurants."
   },
