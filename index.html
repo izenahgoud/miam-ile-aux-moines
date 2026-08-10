@@ -799,15 +799,21 @@ async function envoyerAvis() {
     document.getElementById('feedback-text').blur(); // referme le clavier iOS avant la fermeture différée
     statut.textContent = "Merci, votre message a bien été envoyé !";
     statut.className = 'ok';
-    setTimeout(() => {
-      document.getElementById('feedback-panel').classList.remove('open');
-      if (typeof map !== 'undefined' && map.getContainer) {
-        const conteneurCarte = map.getContainer();
-        conteneurCarte.style.pointerEvents = 'none';
-        setTimeout(() => { conteneurCarte.style.pointerEvents = ''; }, 400);
-      }
-    }, 1800);
-
+setTimeout(() => {
+  document.getElementById('feedback-panel').classList.remove('open');
+  // Fermer le clavier iOS et réinitialiser la vue
+  document.getElementById('feedback-text').blur();
+  window.scrollTo(0, 0);
+  if (typeof map !== 'undefined' && map.getContainer) {
+    const conteneurCarte = map.getContainer();
+    conteneurCarte.style.pointerEvents = 'none';
+    setTimeout(() => { 
+      conteneurCarte.style.pointerEvents = '';
+      // Forcer Leaflet à recalculer la taille après fermeture du clavier
+      map.invalidateSize();
+    }, 400);
+  }
+}, 1800);
   } catch (err) {
     console.error(err);
     statut.textContent = "Échec de l'envoi, réessayez plus tard.";
