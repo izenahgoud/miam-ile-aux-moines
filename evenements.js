@@ -52,9 +52,9 @@ const EVENEMENTS = [
     "nom": "UBU Président",
     "emoji": "🎭",
     "association": "Théâtre en Herbe",
-    "date_debut": "2026-09-12",
-    "date_fin": "2026-09-12",
-    "heure": "18h00 - 19h00",
+    "date_debut": "2026-08-12",
+    "date_fin": "2026-08-12",
+    "heure": "18h00 - 19h15",
     "lieu": "Jardin du Rinville",
     "lat": 47.594507,
     "lng": -2.850312,
@@ -124,33 +124,18 @@ const EVENEMENTS = [
     "site": "https://lilicros.com/"
   },
   {
-    "nom": "CARNET DE VOYAGE",
+    "nom": "",
     "emoji": "🎵",
     "association": "Escales musicales",
-    "date_debut": "2026-08-07",
-    "date_fin": "2026-08-07",
+    "date_debut": "2026-08-17",
+    "date_fin": "2026-08-17",
     "heure": "20h00 - 22h00",
     "lieu": "Église Saint Michel",
     "lat": 47.59857,
     "lng": -2.84267,
     "acces": "Accès avec billet",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2025/10/concert7-aout.jpg.webp",
-    "site": "https://www.escalesmusicales.fr/",
-    "description": "Amanda Flavier, violon et Elodie Soulard, accordéon"
-  },
-  {
-    "nom": "J'ai mangé ma fourchette",
-    "emoji": "🎭",
-    "association": "Théâtre en Herbe",
-    "date_debut": "2026-08-11",
-    "date_fin": "2026-08-11",
-    "heure": "19h00 - 21h00",
-    "lieu": "Jardin du Rinville",
-    "lat": "47.594507",
-    "lng": "-2.850312",
-    "acces": "Accès libre. Participation souhaitée.",
-    "image": "https://i.ibb.co/4wRrPxYK/prog-herbe-scaled-02.jpg",
-    "site": "",
-    "description": "Un véritable spectacle de music-hall conçu autour de chansons composées par les plus grands spécialistes du genre – Bourvil, Fernandel, les Frères Jacques, Boby Lapointe ou Jean Yanne… "
+    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/concert326aff_page-0001.jpg.webp",
+    "site": "https://www.escalesmusicales.fr/concert-escales-musicales-17-aout-2026/",
+    "description": "Laurent Boukobzka a commencé à apprendre le piano très tôt et a poursuivi ses études au Conservatoire National Supérieure de Musique de Paris avec obtention du premier prix de piano et de musique de chambre."
   }
-];
+ ];
