@@ -119,7 +119,7 @@ const EVENEMENTS = [
     "lng": -2.845835,
     "lieu": "Salle annexe de la Mairie",
     "acces": "Accès libre. Venez nombreux",
-    "description": "Et la petite Dominique... ne l'auriez-vous pas laissée sur le chemin ? Ma thérapeute a prononcé ces mots et une porte s'est ouverte en moi."
+    "description": ""
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/lili.png.webp",
     "site": "https://lilicros.com/"
   },
