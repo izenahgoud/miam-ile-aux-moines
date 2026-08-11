@@ -108,6 +108,21 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/arcile.jpg.webp",
     "site": "www.arcile.fr"
   },
+   {
+    "nom": "PLEUREUSE DE CENDRES ",
+    "emoji": "🎨",
+    "association": "LILI CROS",
+    "date_debut": "2026-09-16",
+    "date_fin": "2026-09-20",
+    "heure": "10h00 - 18h00",
+    "lat": 47.597088,
+    "lng": -2.845835,
+    "lieu": "Salle annexe de la Mairie",
+    "acces": "Accès libre. Venez nombreux",
+    "description": "Lili Cros remonte le temps à la rencontre de la fillette qu’elle a été. Elle expose poèmes, collages et créations sonores\n« Pleureuse de cendres, m’a permis de renouer avec une part oubliée de moi-même »",
+    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/lili.png.webp",
+    "site": "https://lilicros.com/"
+  },
   {
     "nom": "CARNET DE VOYAGE",
     "emoji": "🎵",
