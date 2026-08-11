@@ -119,9 +119,7 @@ const EVENEMENTS = [
     "lng": -2.845835,
     "lieu": "Salle annexe de la Mairie",
     "acces": "Accès libre. Venez nombreux",
-    "description": "Et la petite Dominique... ne l'auriez-vous pas laissée sur le chemin ? Ma thérapeute a prononcé ces mots et une porte s'est ouverte en moi.
-J'ai retrouvé des photographies argentiques que mon père avait prises quand j'étais enfant, en particulier pendant les premières années de ma vie en Côte d'Ivoire.
-Alors des poèmes sont apparus. Puis des images. Puis des collages. Enfin, des musiques. C'est ainsi que pas à pas, j'ai renoué avec une part oubliée de moi-même.",
+    "description": "Et la petite Dominique... ne l'auriez-vous pas laissée sur le chemin ? Ma thérapeute a prononcé ces mots et une porte s'est ouverte en moi."
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/lili.png.webp",
     "site": "https://lilicros.com/"
   },
