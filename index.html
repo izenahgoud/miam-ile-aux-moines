@@ -56,19 +56,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 .sep{height:1px;background:rgba(232,213,163,0.08);margin:5px 14px}
 #locate-btn{position:absolute;bottom:20px;right:14px;z-index:10;width:44px;height:44px;border-radius:50%;background:var(--cream);color:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.3);font-size:18px;transition:transform .15s}
 #locate-btn:hover{transform:scale(1.08)}
-#feedback-btn{position:absolute;bottom:20px;left:14px;z-index:10;width:44px;height:44px;border-radius:50%;background:var(--cream);color:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.3);font-size:18px;transition:transform .15s}
-#feedback-btn:hover{transform:scale(1.08)}
-#feedback-panel{position:absolute;bottom:74px;left:14px;z-index:30;width:min(320px,80vw);background:rgba(18,34,22,0.98);backdrop-filter:blur(12px);border-radius:16px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none;color:var(--cream)}
-#feedback-panel.open{display:block}
-#feedback-panel h3{font-size:15px;margin-bottom:8px;font-weight:600}
-#feedback-text{width:100%;min-height:80px;border-radius:10px;border:none;padding:10px;font-size:14px;font-family:inherit;resize:vertical;margin-bottom:8px}
-#feedback-actions{display:flex;gap:8px}
-#feedback-send{flex:1;background:var(--sea);color:white;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:500;cursor:pointer}
-#feedback-send:disabled{opacity:.6;cursor:wait}
-#feedback-cancel{background:transparent;color:var(--cream);border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer}
-#feedback-status{font-size:12px;margin-top:8px;text-align:center;min-height:14px}
-#feedback-status.ok{color:#8deb5e}
-#feedback-status.err{color:#e74c3c}
 #alert-popup{position:absolute;top:70px;left:50%;transform:translateX(-50%);z-index:20;background:var(--sea);color:white;border-radius:24px;padding:10px 20px;font-size:13px;font-weight:500;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:slideDown .3s ease;max-width:85vw;display:none}
 @keyframes slideDown{from{opacity:0;top:50px}to{opacity:1;top:70px}}
 #poi-panel{position:absolute;bottom:0;left:0;right:0;z-index:30;transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.2,.64,1);max-height:88dvh;background:var(--cream);border-radius:24px 24px 0 0;overflow:hidden;box-shadow:0 -8px 40px rgba(0,0,0,.3)}
@@ -221,16 +208,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 </div>
 
 <button id="locate-btn" onclick="centerOnUser()" title="Me localiser">📍</button>
-<button id="feedback-btn" onclick="toggleFeedback()" title="Donnez votre avis">😊</button>
-<div id="feedback-panel">
-  <h3>Votre avis nous intéresse</h3>
-  <textarea id="feedback-text" placeholder="Une remarque, une idée, un problème rencontré…" maxlength="1000"></textarea>
-  <div id="feedback-actions">
-    <button id="feedback-send" onclick="envoyerAvis()">Envoyer</button>
-    <button id="feedback-cancel" onclick="toggleFeedback()">Annuler</button>
-  </div>
-  <div id="feedback-status"></div>
-</div>
 <div id="alert-popup"></div>
 
 <div id="poi-panel">
@@ -711,118 +688,6 @@ document.addEventListener('keydown', e => {
 });
 </script>
 <div id="crealion"><img src="" alt="créalion"></div>
-<div id="version-badge">v3.2.4</div>
-<script>
-/* -----------------------------------------------------------
-   AVIS UTILISATEURS — envoi anonyme vers Google Sheets
-   -----------------------------------------------------------
-   AVIS_URL pointe vers le déploiement Apps Script qui ajoute
-   chaque message comme nouvelle ligne dans votre Google Sheets.
-   Cette adresse est publique sans risque : elle ne révèle pas
-   votre email ni le contenu de votre feuille.
-   ----------------------------------------------------------- */
-const AVIS_URL = "https://script.google.com/macros/s/AKfycbxssS7Ea-8Ig7H-4r0C2KbRdqnsxFOFOEJEdWpI5R4dACYB97eROGDwdEExYOntpi7M/exec";
-
-function toggleFeedback() {
-  const panel = document.getElementById('feedback-panel');
-  const champ = document.getElementById('feedback-text');
-  const estOuvert = panel.classList.contains('open');
-
-  if (estOuvert) {
-    // IMPORTANT : sur iOS/Safari, masquer un champ qui a encore le focus
-    // ne referme PAS le clavier virtuel tout seul (contrairement à
-    // Chrome/Android). Il faut forcer la perte de focus explicitement
-    // avant de cacher le panneau, sinon le clavier reste affiché et
-    // bloque l'accès à la carte en dessous.
-    champ.blur();
-    panel.classList.remove('open');
-    document.getElementById('feedback-status').textContent = '';
-    document.getElementById('feedback-status').className = '';
-    // Filet de sécurité : Safari décale parfois la page pendant que le
-    // clavier est affiché ; on force un retour en position normale.
-    window.scrollTo(0, 0);
-    // Parade au "clic fantôme" iOS Safari : juste après la fermeture,
-    // Safari peut renvoyer un clic à l'endroit du dernier toucher, qui
-    // atterrit alors sur la carte en dessous et ouvre le popup d'un
-    // point. On fait ignorer les clics à la carte pendant un court
-    // instant pour absorber ce clic fantôme sans rien changer d'autre.
-    if (typeof map !== 'undefined' && map.getContainer) {
-      const conteneurCarte = map.getContainer();
-      conteneurCarte.style.pointerEvents = 'none';
-      setTimeout(() => { conteneurCarte.style.pointerEvents = ''; }, 400);
-    }
-  } else {
-    panel.classList.add('open');
-    champ.focus();
-  }
-}
-
-async function envoyerAvis() {
-  const texte = document.getElementById('feedback-text').value.trim();
-  const btn = document.getElementById('feedback-send');
-  const statut = document.getElementById('feedback-status');
-
-  if (!texte) {
-    statut.textContent = "Écrivez un message avant d'envoyer.";
-    statut.className = 'err';
-    return;
-  }
-
-  if (AVIS_URL.includes("VOTRE-ID")) {
-    statut.textContent = "⚠️ Formulaire non configuré.";
-    statut.className = 'err';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "Envoi…";
-  statut.textContent = '';
-  statut.className = '';
-
-  try {
-    // mode "no-cors" : on ne peut plus lire la réponse détaillée,
-    // mais ça évite l'erreur liée à la redirection technique de
-    // Google Apps Script (POST converti en GET par le navigateur).
-    // L'envoi du message côté serveur a bien lieu malgré tout.
-    await fetch(AVIS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        message: texte,
-        page: window.location.href,
-        date: new Date().toLocaleString('fr-FR')
-      })
-    });
-
-    document.getElementById('feedback-text').value = '';
-    document.getElementById('feedback-text').blur(); // referme le clavier iOS avant la fermeture différée
-    statut.textContent = "Merci, votre message a bien été envoyé !";
-    statut.className = 'ok';
-setTimeout(() => {
-  document.getElementById('feedback-panel').classList.remove('open');
-  // Fermer le clavier iOS et réinitialiser la vue
-  document.getElementById('feedback-text').blur();
-  window.scrollTo(0, 0);
-  if (typeof map !== 'undefined' && map.getContainer) {
-    const conteneurCarte = map.getContainer();
-    conteneurCarte.style.pointerEvents = 'none';
-    setTimeout(() => { 
-      conteneurCarte.style.pointerEvents = '';
-      // Forcer Leaflet à recalculer la taille après fermeture du clavier
-      map.invalidateSize();
-    }, 400);
-  }
-}, 1800);
-  } catch (err) {
-    console.error(err);
-    statut.textContent = "Échec de l'envoi, réessayez plus tard.";
-    statut.className = 'err';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Envoyer";
-  }
-}
-</script>
+<div id="version-badge">v3.3.0</div>
 </body>
 </html>
