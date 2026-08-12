@@ -19,21 +19,6 @@ const EVENEMENTS = [
     "site": ""
   },
   {
-    "nom": "ECLIPSE DU SOLEIL",
-    "emoji": "📅",
-    "association": "Johannes KEPLER",
-    "date_debut": "2026-08-12",
-    "date_fin": "2026-08-12",
-    "heure": "19h24 - 21h13",
-    "lieu": "Pierre noire (Bigre Mendu)",
-    "lat": "47.596900",
-    "lng": "-2.851585",
-    "acces": "libre, libre, libre",
-    "image": "https://i.ibb.co/Z1F9wzfT/eclipse.jpg",
-    "site": "",
-    "description": "ÉCLIPSE SOLAIRE\nUne éclipse solaire partielle à 96 % aura lieu le 12 août prochain. Le phénomène débutera à 19h24, sera à son maximum à 20h20 et se terminera à 21h13 où elle\ndeviendra difficilement visible.\nPour l’observer, rdv à la Pierre Noire.\n100 paires de lunettes seront offertes et distribuées le mercredi 12 août de 10h à 12h devant la mairie (2 paires max par famille)."
-  },
-  {
     "nom": "BAL du 15 AOÛT",
     "emoji": "🎉",
     "association": "ACCA Ile-aux-Moines",
@@ -49,21 +34,6 @@ const EVENEMENTS = [
     "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal poulaire place du marché"
   },
   {
-    "nom": "UBU Président",
-    "emoji": "🎭",
-    "association": "Théâtre en Herbe",
-    "date_debut": "2026-08-12",
-    "date_fin": "2026-08-12",
-    "heure": "18h00 - 19h15",
-    "lieu": "Jardin du Rinville",
-    "lat": 47.594507,
-    "lng": -2.850312,
-    "acces": "Accès libre. Participation souhaitée.",
-    "image": "https://i.ibb.co/N22kLPnj/prog-herbe-scaled-03.jpg",
-    "site": "",
-    "description": "Spectacle avancé pour permettre l'observation de l'éclipse du soleil à partir de 19h30."
-  },
-  {
     "nom": "Anatomie d'un aveuglement",
     "emoji": "🎭",
     "association": "Théâtre en Herbe",
@@ -76,7 +46,8 @@ const EVENEMENTS = [
     "acces": "Accès libre. Participation souhaitée.",
     "image": "https://i.ibb.co/chYCXSJR/prog-herbe-scaled-04.jpg",
     "site": "",
-    "description": ""
+    "description": "Ou comment la propagande peut arriver à tromper des hommes réputés instruits et intelligents.\nEn 1933, Édouard Herriot, figure majeure de la IIIᵉ République, est invité par Staline en Ukraine. Objectif officiel : saluer la collectivisation et renforcer les liens franco-soviétiques.
+      \nLa réalité ? Une mise en scène redoutable. Un aveuglement total. Et une tragédie soigneusement dissimulée :\nl’Holodomor, la grande famine ukrainienne, qui coûta la vie à plusieurs millions de personnes."
   },
   {
     "nom": "LA MER NATURE",
@@ -106,7 +77,7 @@ const EVENEMENTS = [
     "acces": "Accès libre",
     "description": "Vernissage le mardi 11 août à 11h00",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/arcile.jpg.webp",
-    "site": "www.arcile.fr"
+    "site": "https://www.arcile.fr"
   },
    {
     "nom": "PLEUREUSE DE CENDRES ",
