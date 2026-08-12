@@ -24,14 +24,14 @@ const EVENEMENTS = [
     "association": "ACCA Ile-aux-Moines",
     "date_debut": "2026-08-15",
     "date_fin": "2026-08-16",
-    "heure": "29h30 - 02h00",
+    "heure": "20h30 - 02h00",
     "lieu": "Place du Marché",
-    "lat": "47.596805",
-    "lng": "-2.845934",
+    "lat": 47.596805,
+    "lng": -2.845934,
     "acces": "Accès libre. Venez tous !",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/AFFICHE-BAL-ACCA-15-08-2026.png.webp",
     "site": "",
-    "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal poulaire place du marché"
+    "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal populaire place du marché"
   },
   {
     "nom": "Anatomie d'un aveuglement",
@@ -46,8 +46,7 @@ const EVENEMENTS = [
     "acces": "Accès libre. Participation souhaitée.",
     "image": "https://i.ibb.co/chYCXSJR/prog-herbe-scaled-04.jpg",
     "site": "",
-    "description": "Ou comment la propagande peut arriver à tromper des hommes réputés instruits et intelligents.\nEn 1933, Édouard Herriot, figure majeure de la IIIᵉ République, est invité par Staline en Ukraine. Objectif officiel : saluer la collectivisation et renforcer les liens franco-soviétiques.
-      \nLa réalité ? Une mise en scène redoutable. Un aveuglement total. Et une tragédie soigneusement dissimulée :\nl’Holodomor, la grande famine ukrainienne, qui coûta la vie à plusieurs millions de personnes.",
+    "description": "Ou comment la propagande peut arriver à tromper des hommes réputés instruits et intelligents.\nEn 1933, Édouard Herriot, figure majeure de la IIIᵉ République, est invité par Staline en Ukraine. Objectif officiel : saluer la collectivisation et renforcer les liens franco-soviétiques.\n\nLa réalité ? Une mise en scène redoutable. Un aveuglement total. Et une tragédie soigneusement dissimulée :\nl’Holodomor, la grande famine ukrainienne, qui coûta la vie à plusieurs millions de personnes."
   },
   {
     "nom": "LA MER NATURE",
@@ -55,7 +54,7 @@ const EVENEMENTS = [
     "association": "Sylvie BAC",
     "date_debut": "2026-08-10",
     "date_fin": "2026-08-30",
-    "heure": "10h00-18h00",
+    "heure": "10h00 - 18h00",
     "lieu": "La Petite Galerie",
     "lat": 47.6,
     "lng": -2.851,
@@ -65,37 +64,37 @@ const EVENEMENTS = [
     "description": "Ma démarche :\nJe suis entièrement autodidacte, bien qu’ayant par le passé travaillé avec des artistes professionnels, notamment lorsque je vivais en Espagne, à Zaragoza , ou je travaillais comme peintre en décor , pour la réalisation de façades de bars et restaurants."
   },
   {
-    "nom": "exposition Jean-Pierre ARCILE",
+    "nom": "Exposition Jean-Pierre ARCILE",
     "emoji": "🎨",
     "association": "Jean-Pierre Arcile",
     "date_debut": "2026-08-11",
     "date_fin": "2026-08-15",
     "heure": "10h00 - 12h30 16h00 - 19h00",
+    "lieu": "Salle annexe de la Mairie",
     "lat": 47.597088,
     "lng": -2.845835,
-    "lieu": "Salle annexe de la Mairie",
     "acces": "Accès libre",
-    "description": "Vernissage le mardi 11 août à 11h00",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/arcile.jpg.webp",
-    "site": "https://www.arcile.fr"
+    "site": "https://www.arcile.fr",
+    "description": "Vernissage le mardi 11 août à 11h00"
   },
-   {
-    "nom": "PLEUREUSE DE CENDRES ",
+  {
+    "nom": "PLEUREUSE DE CENDRES",
     "emoji": "🎨",
     "association": "LILI CROS",
     "date_debut": "2026-09-16",
     "date_fin": "2026-09-20",
     "heure": "10h00 - 18h00",
+    "lieu": "Salle annexe de la Mairie",
     "lat": 47.597088,
     "lng": -2.845835,
-    "lieu": "Salle annexe de la Mairie",
     "acces": "Accès libre. Venez nombreux",
-    "description": "",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/lili.png.webp",
-    "site": "https://lilicros.com/"
+    "site": "https://lilicros.com/",
+    "description": ""
   },
   {
-    "nom": "",
+    "nom": "Concert Escales musicales",
     "emoji": "🎵",
     "association": "Escales musicales",
     "date_debut": "2026-08-17",
@@ -109,4 +108,4 @@ const EVENEMENTS = [
     "site": "https://www.escalesmusicales.fr/concert-escales-musicales-17-aout-2026/",
     "description": "Laurent Boukobzka a commencé à apprendre le piano très tôt et a poursuivi ses études au Conservatoire National Supérieure de Musique de Paris avec obtention du premier prix de piano et de musique de chambre."
   }
- ];
+];
