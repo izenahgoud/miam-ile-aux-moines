@@ -37,8 +37,8 @@ const EVENEMENTS = [
     "nom": "Anatomie d'un aveuglement",
     "emoji": "🎭",
     "association": "Théâtre en Herbe",
-    "date_debut": "2026-09-13",
-    "date_fin": "2026-09-13",
+    "date_debut": "2026-08-13",
+    "date_fin": "2026-08-13",
     "heure": "19h00 - 21h00",
     "lieu": "Jardin du Rinville",
     "lat": 47.594507,
@@ -47,7 +47,7 @@ const EVENEMENTS = [
     "image": "https://i.ibb.co/chYCXSJR/prog-herbe-scaled-04.jpg",
     "site": "",
     "description": "Ou comment la propagande peut arriver à tromper des hommes réputés instruits et intelligents.\nEn 1933, Édouard Herriot, figure majeure de la IIIᵉ République, est invité par Staline en Ukraine. Objectif officiel : saluer la collectivisation et renforcer les liens franco-soviétiques.
-      \nLa réalité ? Une mise en scène redoutable. Un aveuglement total. Et une tragédie soigneusement dissimulée :\nl’Holodomor, la grande famine ukrainienne, qui coûta la vie à plusieurs millions de personnes."
+      \nLa réalité ? Une mise en scène redoutable. Un aveuglement total. Et une tragédie soigneusement dissimulée :\nl’Holodomor, la grande famine ukrainienne, qui coûta la vie à plusieurs millions de personnes.",
   },
   {
     "nom": "LA MER NATURE",
