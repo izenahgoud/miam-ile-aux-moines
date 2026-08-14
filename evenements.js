@@ -34,21 +34,6 @@ const EVENEMENTS = [
     "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal populaire place du marché"
   },
   {
-    "nom": "Anatomie d'un aveuglement",
-    "emoji": "🎭",
-    "association": "Théâtre en Herbe",
-    "date_debut": "2026-08-13",
-    "date_fin": "2026-08-13",
-    "heure": "19h00 - 21h00",
-    "lieu": "Jardin du Rinville",
-    "lat": 47.594507,
-    "lng": -2.850312,
-    "acces": "Accès libre. Participation souhaitée.",
-    "image": "https://i.ibb.co/chYCXSJR/prog-herbe-scaled-04.jpg",
-    "site": "",
-    "description": "Ou comment la propagande peut arriver à tromper des hommes réputés instruits et intelligents.\nEn 1933, Édouard Herriot, figure majeure de la IIIᵉ République, est invité par Staline en Ukraine. Objectif officiel : saluer la collectivisation et renforcer les liens franco-soviétiques.\n\nLa réalité ? Une mise en scène redoutable. Un aveuglement total. Et une tragédie soigneusement dissimulée :\nl’Holodomor, la grande famine ukrainienne, qui coûta la vie à plusieurs millions de personnes."
-  },
-  {
     "nom": "LA MER NATURE",
     "emoji": "🎨",
     "association": "Sylvie BAC",
@@ -82,8 +67,8 @@ const EVENEMENTS = [
     "nom": "PLEUREUSE DE CENDRES",
     "emoji": "🎨",
     "association": "LILI CROS",
-    "date_debut": "2026-09-16",
-    "date_fin": "2026-09-20",
+    "date_debut": "2026-08-16",
+    "date_fin": "2026-08-20",
     "heure": "10h00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
     "lat": 47.597088,
@@ -91,7 +76,7 @@ const EVENEMENTS = [
     "acces": "Accès libre. Venez nombreux",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/lili.png.webp",
     "site": "https://lilicros.com/",
-    "description": ""
+    "description": " Un projet expérimental mêlant arts plastiques, poèmes et chansons. Un cheminement vers son « enfant intérieur », qui n’avait d’abord pas vocation à être montré. Lili Cros s’est plongée à la recherche de la petite Dominique et vous propose de plonger gratuitement dans sa « bulle »."
   },
   {
     "nom": "Concert Escales musicales",
