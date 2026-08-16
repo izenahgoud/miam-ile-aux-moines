@@ -19,21 +19,6 @@ const EVENEMENTS = [
     "site": ""
   },
   {
-    "nom": "BAL du 15 AOÛT",
-    "emoji": "🎉",
-    "association": "ACCA Ile-aux-Moines",
-    "date_debut": "2026-08-15",
-    "date_fin": "2026-08-16",
-    "heure": "20h30 - 02h00",
-    "lieu": "Place du Marché",
-    "lat": 47.596805,
-    "lng": -2.845934,
-    "acces": "Accès libre. Venez tous !",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/AFFICHE-BAL-ACCA-15-08-2026.png.webp",
-    "site": "",
-    "description": "20h30 Vente des lampions place du marché\n21h00 Bal des enfants place du marché\n22h30 Descente aux lampions au port du Lério\n23h00 Feu d'artifice dans l'anse du Lério\n23h45 Bal populaire place du marché"
-  },
-  {
     "nom": "LA MER NATURE",
     "emoji": "🎨",
     "association": "Sylvie BAC",
@@ -47,21 +32,6 @@ const EVENEMENTS = [
     "image": "https://i.ibb.co/wrLmv79w/sylviebac.jpg",
     "site": "https://sylviebacgallery.fr/",
     "description": "Ma démarche :\nJe suis entièrement autodidacte, bien qu’ayant par le passé travaillé avec des artistes professionnels, notamment lorsque je vivais en Espagne, à Zaragoza , ou je travaillais comme peintre en décor , pour la réalisation de façades de bars et restaurants."
-  },
-  {
-    "nom": "Exposition Jean-Pierre ARCILE",
-    "emoji": "🎨",
-    "association": "Jean-Pierre Arcile",
-    "date_debut": "2026-09-11",
-    "date_fin": "2026-09-15",
-    "heure": "10h00 - 12h30 16h00 - 19h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": 47.597088,
-    "lng": -2.845835,
-    "acces": "Accès libre",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/arcile.jpg.webp",
-    "site": "https://www.arcile.fr",
-    "description": "Vernissage le mardi 11 août à 11h00"
   },
   {
     "nom": "PLEUREUSE DE CENDRES",
