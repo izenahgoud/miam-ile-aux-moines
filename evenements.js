@@ -49,21 +49,6 @@ const EVENEMENTS = [
     "description": " Un projet expérimental mêlant arts plastiques, poèmes et chansons. Un cheminement vers son « enfant intérieur », qui n’avait d’abord pas vocation à être montré. Lili Cros s’est plongée à la recherche de la petite Dominique et vous propose de plonger gratuitement dans sa « bulle »."
   },
   {
-    "nom": "Concert Escales musicales",
-    "emoji": "🎵",
-    "association": "Escales musicales",
-    "date_debut": "2026-08-17",
-    "date_fin": "2026-08-17",
-    "heure": "20h00 - 22h00",
-    "lieu": "Église Saint Michel",
-    "lat": 47.59857,
-    "lng": -2.84267,
-    "acces": "Accès avec billet",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/concert326aff_page-0001.jpg.webp",
-    "site": "https://www.escalesmusicales.fr/concert-escales-musicales-17-aout-2026/",
-    "description": "Laurent Boukobzka a commencé à apprendre le piano très tôt et a poursuivi ses études au Conservatoire National Supérieure de Musique de Paris avec obtention du premier prix de piano et de musique de chambre."
-  },
-    {
     "nom": "Exposition Lise Blanchet & Stëf Delarouge",
     "emoji": "🎨",
     "association": "",
