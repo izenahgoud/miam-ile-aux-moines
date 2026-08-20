@@ -34,26 +34,11 @@ const EVENEMENTS = [
     "description": "Ma démarche :\nJe suis entièrement autodidacte, bien qu’ayant par le passé travaillé avec des artistes professionnels, notamment lorsque je vivais en Espagne, à Zaragoza , ou je travaillais comme peintre en décor , pour la réalisation de façades de bars et restaurants."
   },
   {
-    "nom": "PLEUREUSE DE CENDRES",
-    "emoji": "🎨",
-    "association": "LILI CROS",
-    "date_debut": "2026-08-16",
-    "date_fin": "2026-08-20",
-    "heure": "10h00 - 18h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": 47.597088,
-    "lng": -2.845835,
-    "acces": "Accès libre. Venez nombreux",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/lili.png.webp",
-    "site": "https://lilicros.com/",
-    "description": " Un projet expérimental mêlant arts plastiques, poèmes et chansons. Un cheminement vers son « enfant intérieur », qui n’avait d’abord pas vocation à être montré. Lili Cros s’est plongée à la recherche de la petite Dominique et vous propose de plonger gratuitement dans sa « bulle »."
-  },
-  {
     "nom": "Exposition Lise Blanchet & Stëf Delarouge",
     "emoji": "🎨",
     "association": "",
-    "date_debut": "2026-09-21",
-    "date_fin": "2026-09-25",
+    "date_debut": "2026-08-21",
+    "date_fin": "2026-08-25",
     "heure": "10h00 - 12h30 14h00 - 18h00",
     "lieu": "Salle annexe de la Mairie",
     "lat": "47.5970",
