@@ -34,26 +34,11 @@ const EVENEMENTS = [
     "description": "Ma démarche :\nJe suis entièrement autodidacte, bien qu’ayant par le passé travaillé avec des artistes professionnels, notamment lorsque je vivais en Espagne, à Zaragoza , ou je travaillais comme peintre en décor , pour la réalisation de façades de bars et restaurants."
   },
   {
-    "nom": "Exposition Lise Blanchet & Stëf Delarouge",
-    "emoji": "🎨",
-    "association": "",
-    "date_debut": "2026-08-21",
-    "date_fin": "2026-08-25",
-    "heure": "10h00 - 12h30 14h00 - 18h00",
-    "lieu": "Salle annexe de la Mairie",
-    "lat": "47.5970",
-    "lng": "-2.8458",
-    "acces": "Accès libre. Venez nombreux",
-    "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2023/04/blanchet.jpg.webp",
-    "site": "https://www.facebook.com/photo/?fbid=402312505356762&set=a.402312508690095",
-    "description": "Deux artistes du Bono et du collectif « Arts o Bono ». Deux approches : le pigment et le pixel.\nAu Bono onze artistes se sont regroupés dans le collectif Arts Ô Bono"
-  },
-  {
     "nom": "PASTELS",
     "emoji": "🎨",
     "association": "Clotilde Aksin-Frappier",
-    "date_debut": "2026-09-26",
-    "date_fin": "2026-09-30",
+    "date_debut": "2026-08-26",
+    "date_fin": "2026-08-30",
     "heure": "10h00 - 13h00 15h30 - 19h00",
     "lieu": "Salle annexe de la Mairie",
     "lat": "47.5970",
