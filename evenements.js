@@ -22,8 +22,8 @@ const EVENEMENTS = [
     "nom": "Concert de musique contemporaine",
     "emoji": "🎵",
     "association": "Escales Musicales",
-    "date_debut": "2026-01-22",
-    "date_fin": "2026-01-22",
+    "date_debut": "2026-10-22",
+    "date_fin": "2026-10-22",
     "heure": "20h00 - 22h00",
     "lieu": "Église Saint Michel",
     "lat": "47.59857",
@@ -47,5 +47,5 @@ const EVENEMENTS = [
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/10/Invitation-1.png.webp",
     "site": "https://www.mairie-ileauxmoines.fr/agenda/presentation-de-linventaire-participatif-du-patrimoine/",
     "description": "Présentation de l’inventaire participatif du patrimoine"
-  }
+  },
 ];
