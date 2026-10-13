@@ -16,9 +16,9 @@ const EVENEMENTS = [
     "acces": "Adhérent du Ciné-Club",
     "image": "https://www.mairie-ileauxmoines.fr/wp-content/uploads/2024/10/BOJARSKI-A4_page-0001.jpg.webp",
     "site": "https://www.passeursdefilms.fr/",
-    "description": "L'AFFAIRE BOJARSKI, le nouveau film de Jean-Paul Salomé, le 14 janvier au cinéma 🎬\n\nAvec Reda Kateb, Sara Giraudeau, Bastien Bouillon et Pierre Lottin.\n\n________________\n\nJan Bojarski, jeune ingénieur polonais, se réfugie en France pendant la guerre.\nIl y utilise ses dons pour fabriquer des faux papiers pendant l’occupation allemande.\nAprès la guerre, son absence d’état civil l’empêche de déposer les brevets de ses nombreuses inventions et il est limité à des petits boulots mal rémunérés… jusqu’au jour où un gangster lui propose d’utiliser ses talents exceptionnels pour fabriquer des faux billets.\nDémarre alors pour lui une double vie à l’insu de sa famille.\nTrès vite, il se retrouve dans le viseur de l’inspecteur Mattei, meilleur flic de France."
+    "description": "description": "L'AFFAIRE BOJARSKI, le nouveau film de Jean-Paul Salomé, le 14 janvier au cinéma 🎬\n\nAvec Reda Kateb, Sara Giraudeau, Bastien Bouillon et Pierre Lottin.\n\n________________\n\nJan Bojarski..."
   },
-  {
+  { 
     "nom": "Concert de musique contemporaine",
     "emoji": "🎵",
     "association": "Escales Musicales",
