@@ -40,7 +40,7 @@ const EVENEMENTS = [
     "date_debut": "2026-10-22",
     "date_fin": "2026-10-22",
     "heure": "16h00 - 17h30",
-    "lieu": "Salle annexe de la Mairie",
+    "lieu": "Salle Louis Garin",
     "lat": "47.5970",
     "lng": "-2.8458",
     "acces": "Entrée libre - Venez nombreux.",
