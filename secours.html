@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plaques de secours – Île-aux-Moines</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--forest:#1a3a2a;--sand:#e8d5a3;--sand-light:#f5edd8;--cream:#faf6ed;--text:#1c2b22;--muted:#5a7060;--red:#c0392b}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"DM Sans",system-ui,Arial,sans-serif;background:var(--forest);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
+header{background:var(--forest);color:var(--sand-light);padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:18px;font-weight:700;line-height:1.15}
+header small{display:block;font-size:12px;opacity:.75;font-weight:400}
+.search{margin-left:auto;display:flex;gap:6px}
+.search input{width:130px;padding:8px 10px;border-radius:8px;border:1px solid rgba(232,213,163,.4);background:var(--cream);font-size:15px}
+main{flex:1;min-height:0;display:flex}
+#map{flex:1;min-width:0}
+#list{width:260px;overflow-y:auto;background:var(--cream);border-left:1px solid #d8cfb5}
+#list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid #e6dec6;background:none;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer}
+#list button:hover,#list button.on{background:var(--sand-light)}
+#list b{flex:none;min-width:30px;height:24px;border-radius:12px;background:var(--red);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
+#list span{min-width:0}
+#list i{display:block;font-style:normal;font-size:11px;color:var(--muted)}
+.poi-marker{width:28px;height:28px;border-radius:50% 50% 50% 3px;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;background:var(--red)}
+.poi-marker span{transform:rotate(45deg);font-size:11px;font-weight:800;color:#fff;letter-spacing:-.02em;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.poi-marker.act{box-shadow:0 0 0 3px var(--sand),0 4px 12px rgba(0,0,0,.5)}
+.pop b{font-size:15px}.pop div{font-size:12px;color:#444;margin-top:2px}
+@media(max-width:640px){main{flex-direction:column}#list{width:100%;height:34%;border-left:0;border-top:1px solid #d8cfb5}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Plaques de secours<small>Île-aux-Moines · 45 plaques</small></h1>
+  <form class="search" onsubmit="return false"><input id="q" type="search" inputmode="numeric" placeholder="N° de plaque" aria-label="Rechercher un numéro de plaque"></form>
+</header>
+<main>
+  <div id="map"></div>
+  <nav id="list" aria-label="Liste des plaques"></nav>
+</main>
+<script>
+const PLAQUES=[{"n":1,"lieu":"le Bois'Amour","lat":47.600018,"lon":-2.853345},{"n":2,"lieu":"le Drehen","lat":47.598524,"lon":-2.851177},{"n":3,"lieu":"Beg er Mendu","lat":47.596259,"lon":-2.851521},{"n":4,"lieu":"le Rinville","lat":47.594233,"lon":-2.852717},{"n":5,"lieu":"le Gazolven","lat":47.592222,"lon":-2.854707},{"n":6,"lieu":"le Greignon","lat":47.590594,"lon":-2.85578},{"n":7,"lieu":"le Greignon","lat":47.589538,"lon":-2.85651},{"n":8,"lieu":"le Rahic (ouest)","lat":47.58728,"lon":-2.856038},{"n":9,"lieu":"le Goret","lat":47.584711,"lon":-2.855619},{"n":10,"lieu":"le Goret","lat":47.583893,"lon":-2.85666},{"n":11,"lieu":"le Rudel","lat":47.581686,"lon":-2.857078},{"n":12,"lieu":"le Rudel","lat":47.580032,"lon":-2.856971},{"n":13,"lieu":"Coste Hechen","lat":47.576561,"lon":-2.858789},{"n":14,"lieu":"les 3 sapins","lat":47.574325,"lon":-2.859272},{"n":15,"lieu":"Boglieux","lat":47.571437,"lon":-2.859911},{"n":16,"lieu":"Bois de Kerbozec","lat":47.568839,"lon":-2.862035},{"n":17,"lieu":"Kerbozec","lat":47.567409,"lon":-2.860946},{"n":18,"lieu":"Raz Vihan","lat":47.565469,"lon":-2.860785},{"n":19,"lieu":"Raz Vras","lat":47.562619,"lon":-2.860509},{"n":20,"lieu":"Pointe de Nioul","lat":47.560057,"lon":-2.859712},{"n":21,"lieu":"Le Nioul","lat":47.561788,"lon":-2.858344},{"n":22,"lieu":"Port Diahuen","lat":47.564497,"lon":-2.858433},{"n":23,"lieu":"Kerbozec (sud)","lat":47.56662,"lon":-2.857947},{"n":24,"lieu":"Carlez","lat":47.565968,"lon":-2.854407},{"n":25,"lieu":"Brannec","lat":47.566189,"lon":-2.85019},{"n":26,"lieu":"Brannec","lat":47.567355,"lon":-2.849793},{"n":27,"lieu":"Penhap","lat":47.568361,"lon":-2.853098},{"n":30,"lieu":"Le guip","lat":47.574409,"lon":-2.855939},{"n":31,"lieu":"Anse du guip","lat":47.575397,"lon":-2.853098},{"n":32,"lieu":"Pointe du Sperneguy","lat":47.578161,"lon":-2.850641},{"n":33,"lieu":"le Salzen","lat":47.579848,"lon":-2.852036},{"n":34,"lieu":"Kerno (est)","lat":47.582171,"lon":-2.852041},{"n":35,"lieu":"Croix de Kerno (est)","lat":47.584458,"lon":-2.850974},{"n":36,"lieu":"Croix de Kerno","lat":47.586404,"lon":-2.850802},{"n":37,"lieu":"le Vran","lat":47.588691,"lon":-2.847884},{"n":38,"lieu":"le Vran","lat":47.590087,"lon":-2.846682},{"n":39,"lieu":"le Naudeux","lat":47.589972,"lon":-2.843281},{"n":40,"lieu":"le Naudeux","lat":47.589002,"lon":-2.839386},{"n":41,"lieu":"le Bois de la Chêvre","lat":47.588168,"lon":-2.836543},{"n":42,"lieu":"le Lann","lat":47.589566,"lon":-2.836007},{"n":43,"lieu":"Brouël (sud)","lat":47.589884,"lon":-2.83049},{"n":44,"lieu":"Brouël (sud)","lat":47.589587,"lon":-2.827912},{"n":53,"lieu":"le Trec'h (est)","lat":47.599804,"lon":-2.840105},{"n":54,"lieu":"Beg Moussir","lat":47.603834,"lon":-2.838094},{"n":55,"lieu":"la Pointe du Trech","lat":47.605939,"lon":-2.837166}];
+const map=L.map("map",{zoomControl:true}).setView([47.5835,-2.848],14);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
+const list=document.getElementById("list");
+const items=[];let current=null;
+PLAQUES.forEach(p=>{
+  const icon=L.divIcon({className:"",html:'<div class="poi-marker"><span>'+p.n+'</span></div>',iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-28]});
+  const m=L.marker([p.lat,p.lon],{icon}).addTo(map);
+  m.bindPopup('<div class="pop"><b>Plaque N° '+p.n+'</b><div>'+p.lieu+'</div><div>'+p.lat.toFixed(6)+', '+p.lon.toFixed(6)+'</div></div>');
+  const b=document.createElement("button");
+  b.innerHTML='<b>'+p.n+'</b><span>'+p.lieu+'<i>'+p.lat.toFixed(5)+', '+p.lon.toFixed(5)+'</i></span>';
+  b.onclick=()=>select(p.n,true);
+  m.on("click",()=>select(p.n,false));
+  list.appendChild(b);items.push({p,m,b});
+});
+function select(n,fly){
+  const it=items.find(i=>i.p.n===n);if(!it)return;
+  if(current){current.b.classList.remove("on");const e=current.m.getElement();e&&e.firstChild.classList.remove("act")}
+  current=it;it.b.classList.add("on");const e=it.m.getElement();e&&e.firstChild.classList.add("act");
+  if(fly)map.flyTo([it.p.lat,it.p.lon],Math.max(map.getZoom(),17),{duration:.6});
+  it.m.openPopup();it.b.scrollIntoView({block:"nearest"});
+}
+document.getElementById("q").addEventListener("input",e=>{
+  const n=parseInt(e.target.value,10);if(!isNaN(n))select(n,true);
+});
+map.fitBounds(L.latLngBounds(PLAQUES.map(p=>[p.lat,p.lon])).pad(.08));
+</script>
+</body>
+</html>
