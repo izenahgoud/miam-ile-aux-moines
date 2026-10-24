@@ -1,0 +1,16 @@
+{
+  "id": "./secours.html",
+  "name": "Plaques de secours — Île-aux-Moines",
+  "short_name": "Secours IAM",
+  "description": "Carte des plaques de secours de l'Île-aux-Moines",
+  "lang": "fr",
+  "start_url": "./secours.html",
+  "scope": "./secours.html",
+  "display": "standalone",
+  "background_color": "#1a3a2a",
+  "theme_color": "#c0392b",
+  "icons": [
+    { "src": "icons/secours-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/secours-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
