@@ -1,7 +1,9 @@
 {
   "name": "M'IAM — Île-aux-Moines",
   "short_name": "M'IAM",
+  "id": "./index.html",
   "start_url": "./index.html",
+  "scope": "./index.html",
   "display": "standalone",
   "background_color": "#1a3a2a",
   "theme_color": "#1a3a2a",
