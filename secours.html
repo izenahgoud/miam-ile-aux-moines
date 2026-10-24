@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Plaques de secours – Île-aux-Moines</title>
+<link rel="manifest" href="secours-manifest.json">
+<link rel="apple-touch-icon" href="icons/secours-192.png">
+<meta name="theme-color" content="#c0392b">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
@@ -28,6 +31,17 @@ main{flex:1;min-height:0;display:flex}
 .poi-marker span{transform:rotate(45deg);font-size:11px;font-weight:800;color:#fff;letter-spacing:-.02em;text-shadow:0 1px 1px rgba(0,0,0,.35)}
 .poi-marker.act{box-shadow:0 0 0 3px var(--sand),0 4px 12px rgba(0,0,0,.5)}
 .pop b{font-size:15px}.pop div{font-size:12px;color:#444;margin-top:2px}
+#fiche{background:var(--cream);color:var(--text);padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #d8cfb5;min-height:64px}
+#fiche .vide{font-size:14px;color:var(--muted)}
+#fiche .num{flex:none;min-width:52px;height:44px;border-radius:22px;background:var(--red);color:#fff;font-size:24px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 10px}
+#fiche .num.non{background:#8a8a8a}
+#fiche .txt{flex:1;min-width:150px}
+#fiche .lieu{font-size:17px;font-weight:700;line-height:1.2}
+#fiche .gps{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;user-select:all}
+#fiche .actions{display:flex;gap:8px;flex-wrap:wrap}
+#fiche .btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;background:var(--forest);color:var(--sand-light)}
+#fiche .btn.sec{background:#e6dec6;color:var(--text)}
+#fiche .btn:focus-visible,#q:focus-visible{outline:3px solid var(--sand);outline-offset:2px}
 @media(max-width:640px){main{flex-direction:column}#list{width:100%;height:34%;border-left:0;border-top:1px solid #d8cfb5}}
 </style>
 </head>
@@ -36,6 +50,7 @@ main{flex:1;min-height:0;display:flex}
   <h1>Plaques de secours<small>Île-aux-Moines · 45 plaques</small></h1>
   <form class="search" onsubmit="return false"><input id="q" type="search" inputmode="numeric" placeholder="N° de plaque" aria-label="Rechercher un numéro de plaque"></form>
 </header>
+<section id="fiche" aria-live="polite"><span class="vide">Tapez un numéro de plaque ou touchez un repère sur la carte.</span></section>
 <main>
   <div id="map"></div>
   <nav id="list" aria-label="Liste des plaques"></nav>
@@ -56,17 +71,31 @@ PLAQUES.forEach(p=>{
   m.on("click",()=>select(p.n,false));
   list.appendChild(b);items.push({p,m,b});
 });
+const fiche=document.getElementById("fiche");
+function showFiche(n){
+  const it=items.find(i=>i.p.n===n);
+  if(!it){fiche.innerHTML='<div class="num non">'+n+'</div><div class="txt"><div class="lieu">Plaque N° '+n+' : non posée</div><div class="gps">Cette plaque n\'existe pas sur le terrain.</div></div>';return}
+  const p=it.p,c=p.lat.toFixed(6)+", "+p.lon.toFixed(6);
+  const url="https://www.google.com/maps/dir/?api=1&destination="+p.lat+","+p.lon+"&travelmode=walking";
+  fiche.innerHTML='<div class="num">'+p.n+'</div><div class="txt"><div class="lieu">'+p.lieu+'</div><div class="gps">'+c+'</div></div>'
+   +'<div class="actions"><a class="btn" href="'+url+'" target="_blank" rel="noopener">Ouvrir dans Plans</a><button class="btn sec" type="button" id="cp">Copier les coordonnées</button></div>';
+  document.getElementById("cp").onclick=function(){
+    const b=this,ok=()=>{b.textContent="Copié";setTimeout(()=>b.textContent="Copier les coordonnées",1800)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(c).then(ok,()=>{b.textContent=c})}else{b.textContent=c}
+  };
+}
 function select(n,fly){
   const it=items.find(i=>i.p.n===n);if(!it)return;
   if(current){current.b.classList.remove("on");const e=current.m.getElement();e&&e.firstChild.classList.remove("act")}
   current=it;it.b.classList.add("on");const e=it.m.getElement();e&&e.firstChild.classList.add("act");
   if(fly)map.flyTo([it.p.lat,it.p.lon],Math.max(map.getZoom(),17),{duration:.6});
-  it.m.openPopup();it.b.scrollIntoView({block:"nearest"});
+  it.m.openPopup();it.b.scrollIntoView({block:"nearest"});showFiche(n);
 }
 document.getElementById("q").addEventListener("input",e=>{
-  const n=parseInt(e.target.value,10);if(!isNaN(n))select(n,true);
+  const n=parseInt(e.target.value,10);if(isNaN(n))return;if(items.some(i=>i.p.n===n))select(n,true);else showFiche(n);
 });
 map.fitBounds(L.latLngBounds(PLAQUES.map(p=>[p.lat,p.lon])).pad(.08));
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
 </script>
 </body>
 </html>
