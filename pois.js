@@ -1,777 +1,235 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<title>M'IAM — Gestion des points d'intérêt</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-:root{--forest:#1a3a2a;--forest-m:#2d5e3f;--sand:#e8d5a3;--cream:#faf6ed;--red:#c0392b;--blue:#185FA5;--blue-c:#e6f1fb;--green-c:#E1F5EE;--green-t:#0F6E56;--amber-c:#FAEEDA;--amber-t:#854F0B;--border:#ddd;--text:#222;--text-m:#666}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f0f2f0;color:var(--text);min-height:100vh}
-header{background:var(--forest);color:white;padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:1000}
-header h1{font-size:18px;font-weight:600}
-header p{font-size:11px;color:var(--sand);margin-top:2px}
-.hbadge{font-size:11px;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:12px;margin-left:auto;white-space:nowrap}
-.hbadge.dirty{background:#e67e22}
-.container{max-width:980px;margin:0 auto;padding:20px 16px 60px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px}
-.stat{background:white;border:.5px solid var(--border);border-radius:10px;padding:10px 14px;text-align:center}
-.stat-n{font-size:26px;font-weight:600;color:var(--forest)}
-.stat-l{font-size:12px;color:var(--text-m);margin-top:2px}
-.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
-.toolbar input[type=text]{flex:1;min-width:200px;padding:8px 12px;border:.5px solid var(--border);border-radius:8px;font-size:14px;background:white}
-.toolbar select{padding:8px 10px;border:.5px solid var(--border);border-radius:8px;font-size:13px;background:white;max-width:220px}
-.btn{padding:8px 16px;border-radius:8px;border:.5px solid;font-size:13px;cursor:pointer;font-weight:500;transition:all .15s}
-.btn-green{background:var(--forest);color:white;border-color:var(--forest)}
-.btn-green:hover{background:var(--forest-m)}
-.btn-orange{background:#e67e22;color:white;border-color:#e67e22}
-.btn-orange:hover{background:#d36f15}
-.btn-red{background:#fff0f0;color:var(--red);border-color:#f5c1c1}
-.btn-gray{background:white;color:var(--text);border-color:var(--border)}
-.btn-gray:hover{background:#f5f5f5}
-.btn-sm{padding:4px 10px;font-size:12px}
-.table-wrap{background:white;border:.5px solid var(--border);border-radius:12px;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead tr{background:var(--forest);color:white}
-th{padding:10px 12px;text-align:left;font-weight:500;font-size:12px;white-space:nowrap}
-td{padding:8px 12px;border-bottom:.5px solid #f0f0f0;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#fafaf8}
-.poi-name{font-weight:500;color:var(--forest)}
-.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px;background:var(--amber-c);color:var(--amber-t);white-space:nowrap}
-.poi-cat{font-size:11px;background:var(--green-c);color:var(--green-t);padding:2px 8px;border-radius:10px;white-space:nowrap}
-.poi-img{width:44px;height:32px;object-fit:cover;border-radius:4px;background:#eee;display:block}
-.poi-img-empty{width:44px;height:32px;border-radius:4px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:18px}
-.act-btns{display:flex;gap:6px}
-.act-btn{padding:4px 10px;border-radius:6px;border:.5px solid;font-size:12px;cursor:pointer;white-space:nowrap}
-.act-edit{background:#f0f7ff;color:var(--blue);border-color:#b5d4f4}
-.act-del{background:#fff0f0;color:var(--red);border-color:#f5c1c1}
-.coords{font-family:monospace;font-size:11px;color:var(--text-m)}
-.no-results{text-align:center;padding:40px;color:var(--text-m);font-size:14px}
-.pagination{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}
-.page-btn{padding:6px 12px;border-radius:6px;border:.5px solid var(--border);background:white;cursor:pointer;font-size:13px}
-.page-btn.active{background:var(--forest);color:white;border-color:var(--forest)}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:20px}
-.modal-bg.open{display:flex}
-.modal{background:white;border-radius:16px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto}
-.modal-header{padding:16px 20px;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:5}
-.modal-header h2{font-size:16px;font-weight:600;color:var(--forest)}
-.modal-close{font-size:22px;cursor:pointer;color:var(--text-m);background:none;border:none}
-.modal-body{padding:20px}
-.modal-footer{padding:14px 20px;border-top:.5px solid var(--border);display:flex;gap:10px;justify-content:flex-end;position:sticky;bottom:0;background:white;z-index:5}
-.form-row{margin-bottom:14px}
-.form-row label{display:block;font-size:12px;font-weight:500;color:var(--text-m);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
-.form-row input,.form-row textarea,.form-row select{width:100%;padding:9px 12px;border:.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:white;color:var(--text)}
-.form-row input:focus,.form-row textarea:focus,.form-row select:focus{outline:none;border-color:var(--forest);box-shadow:0 0 0 2px rgba(26,58,42,.1)}
-.form-row textarea{resize:vertical;min-height:90px;line-height:1.5}
-.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-hint{font-size:11px;color:var(--text-m);margin-top:4px;display:block}
-.img-preview{width:100%;height:120px;object-fit:cover;border-radius:8px;border:.5px solid var(--border);margin-top:6px;display:none}
-.img-preview.visible{display:block}
-#pick-map{height:240px;border-radius:10px;border:.5px solid var(--border);margin-bottom:10px;z-index:1}
-.link-row{display:grid;grid-template-columns:1fr 150px 34px;gap:6px;margin-bottom:6px}
-.link-row button{border:.5px solid #f5c1c1;background:#fff0f0;color:var(--red);border-radius:8px;cursor:pointer}
-.panel{background:white;border:.5px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:16px}
-.panel summary{cursor:pointer;font-weight:600;color:var(--forest);font-size:14px}
-.panel ol{margin:10px 0 0 20px;font-size:13px;line-height:1.7}
-.panel p{font-size:13px;margin-top:8px;line-height:1.6}
-.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;line-height:1.5}
-.alert.success{background:var(--green-c);color:var(--green-t);border:.5px solid #9FE1CB;display:block}
-.alert.warn{background:var(--amber-c);color:var(--amber-t);border:.5px solid #FAC775;display:block}
-.alert.error{background:#fff0f0;color:var(--red);border:.5px solid #f5c1c1;display:block}
-.banner{background:var(--amber-c);color:var(--amber-t);border:.5px solid #FAC775;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;display:none;line-height:1.6}
-.banner.show{display:block}
-.banner .btn{margin-top:8px;margin-right:6px}
-.export-zone{background:var(--forest);color:white;border-radius:12px;padding:16px 20px;margin-top:20px;display:none}
-.export-zone h3{font-size:14px;font-weight:500;margin-bottom:8px;color:var(--sand)}
-.export-zone ul{font-size:12px;margin:0 0 10px 18px;line-height:1.6;max-height:140px;overflow-y:auto}
-.export-zone .steps{font-size:13px;line-height:1.7;margin-bottom:12px;background:rgba(255,255,255,.08);padding:10px 14px;border-radius:8px}
-.export-btns{display:flex;gap:8px;flex-wrap:wrap}
-.drop{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;background:white;margin-bottom:16px;display:none}
-.drop.show{display:block}
-@media(max-width:640px){
-  .form-2col{grid-template-columns:1fr}
-  .link-row{grid-template-columns:1fr 34px}.link-row input:nth-child(2){grid-column:1/2}
-  th:nth-child(4),td:nth-child(4){display:none}
-}
-</style>
-</head>
-<body>
-<header>
-  <div>
-    <h1>M'IAM — Gestion des points d'intérêt</h1>
-    <p>Île-aux-Moines · Outil réservé à la Mairie · v2.1</p>
-  </div>
-  <span class="hbadge" id="total-badge">0 POI</span>
-</header>
+// M'IAM — Points d'intérêt de l'Île-aux-Moines
+// Pour modifier un POI : trouvez-le par son nom (Ctrl+F), modifiez les valeurs entre guillemets
+// Champs : name, lat, lon, cat, image, description, links, emoji, layer
+// RÈGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI
 
-<div class="container">
-  <div id="alert-box" class="alert"></div>
-
-  <div id="draft-banner" class="banner"></div>
-
-  <details class="panel">
-    <summary>📖 Mode d'emploi (à lire la première fois)</summary>
-    <ol>
-      <li>La liste des lieux se charge automatiquement. Sinon, cliquez sur <b>📂 Ouvrir pois.js</b>.</li>
-      <li>Utilisez <b>+ Ajouter un lieu</b>, <b>Modifier</b> ou <b>Suppr.</b> pour faire vos changements. Rien n'est publié à ce stade.</li>
-      <li>Pour placer un lieu, <b>cliquez sur la carte</b> dans la fenêtre d'édition : les coordonnées se remplissent toutes seules.</li>
-      <li>Quand vous avez terminé, cliquez sur <b>⬇ Télécharger pois.js</b>.</li>
-      <li>Envoyez ce fichier <b>pois.js</b> à l'administrateur de M'IAM (ou déposez-le sur GitHub si vous en avez l'accès) : la carte sera mise à jour après publication.</li>
-    </ol>
-    <p>💾 Vos modifications sont conservées automatiquement sur cet ordinateur : vous pouvez fermer la page et revenir plus tard.</p>
-    <p>⚠️ Les plaques de secours (catégorie « Secours ») sont utilisées par la commission sécurité : ne les modifiez que si vous êtes sûr, et prévenez l'administrateur.</p>
-  </details>
-
-  <div id="drop" class="drop">
-    <p style="margin-bottom:10px">Impossible de charger <b>pois.js</b> automatiquement.</p>
-    <button class="btn btn-green" onclick="document.getElementById('file-in').click()">📂 Ouvrir pois.js</button>
-    <p style="font-size:12px;color:var(--text-m);margin-top:8px">Vous pouvez aussi glisser le fichier pois.js sur cette page.</p>
-  </div>
-  <input type="file" id="file-in" accept=".js,.json,.txt" style="display:none">
-
-  <div class="stats" id="stats-grid"></div>
-
-  <div class="toolbar">
-    <input type="text" id="search" placeholder="Rechercher un lieu…" oninput="currentPage=1;renderTable()">
-    <select id="filter-cat" onchange="currentPage=1;renderTable()"><option value="">Toutes les catégories</option></select>
-    <select id="filter-flag" onchange="currentPage=1;renderTable()">
-      <option value="">Tous les lieux</option>
-      <option value="nophoto">Sans photo</option>
-      <option value="http">Photo non sécurisée (http)</option>
-      <option value="dup">Doublons</option>
-      <option value="layer">Invisibles sur la carte (couche inconnue)</option>
-    </select>
-  </div>
-  <div class="toolbar">
-    <button class="btn btn-green" onclick="openAdd()">+ Ajouter un lieu</button>
-    <button class="btn btn-gray" onclick="document.getElementById('file-in').click()">📂 Ouvrir pois.js</button>
-    <button class="btn btn-gray" id="btn-fixlayers" onclick="fixLayers()" style="display:none">🔧 Rendre visibles les lieux invisibles</button>
-    <button class="btn btn-gray" id="btn-dedupe" onclick="removeDuplicates()" style="display:none">🧹 Supprimer les doublons</button>
-    <button class="btn btn-orange" id="btn-export" onclick="showExport()" style="margin-left:auto">⬇ Télécharger pois.js</button>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th style="width:44px">Photo</th><th>Nom</th><th>Catégorie</th><th>Coordonnées</th><th style="width:130px">Actions</th>
-      </tr></thead>
-      <tbody id="poi-table"></tbody>
-    </table>
-    <div id="no-results" class="no-results" style="display:none">Aucun lieu trouvé</div>
-  </div>
-  <div class="pagination" id="pagination"></div>
-
-  <div class="export-zone" id="export-zone">
-    <h3>Récapitulatif de vos modifications</h3>
-    <ul id="change-list"></ul>
-    <div class="steps">
-      1. Cliquez sur <b>Télécharger pois.js</b>.<br>
-      2. Envoyez le fichier à l'administrateur M'IAM (ou déposez-le sur GitHub : <i>Add file → Upload files → Commit changes</i>).<br>
-      3. Attendez la coche verte ✅ sur GitHub : la carte est alors à jour.
-    </div>
-    <div class="export-btns">
-      <button class="btn btn-orange" onclick="downloadExport()">⬇ Télécharger pois.js</button>
-      <button class="btn btn-gray" onclick="copyExport()">Copier le contenu</button>
-      <button class="btn btn-gray" onclick="document.getElementById('export-zone').style.display='none'">Fermer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Ajouter / Modifier -->
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2 id="modal-title">Ajouter un lieu</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="modal-alert" class="alert"></div>
-      <input type="hidden" id="edit-idx" value="-1">
-
-      <div class="form-row">
-        <label>Nom du lieu *</label>
-        <input type="text" id="f-name" placeholder="Ex : Le Café du Port">
-      </div>
-
-      <div class="form-2col">
-        <div class="form-row">
-          <label>Catégorie *</label>
-          <select id="f-cat" onchange="updateEmoji()"></select>
-        </div>
-        <div class="form-row">
-          <label>Emoji</label>
-          <input type="text" id="f-emoji" maxlength="4">
-          <span class="form-hint">Rempli selon la catégorie</span>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label>Rubrique du menu de la carte</label>
-        <select id="f-layer"></select>
-        <span class="form-hint">Détermine dans quelle case du menu « Catégories » le lieu apparaît. Proposée automatiquement selon la catégorie.</span>
-      </div>
-
-      <div class="form-row">
-        <label>Position sur la carte *</label>
-        <div id="pick-map"></div>
-        <span class="form-hint" style="margin-bottom:8px">Cliquez sur la carte ou déplacez le repère bleu pour placer le lieu.</span>
-        <div class="form-2col">
-          <input type="number" id="f-lat" placeholder="Latitude (47.5964)" step="0.000001" oninput="coordsTyped()">
-          <input type="number" id="f-lon" placeholder="Longitude (-2.8466)" step="0.000001" oninput="coordsTyped()">
-        </div>
-        <input type="text" id="f-paste" placeholder="Ou collez ici « 47.5964, -2.8466 » copié depuis Google Maps" style="margin-top:8px" oninput="pasteCoords()">
-      </div>
-
-      <div class="form-row">
-        <label>URL de la photo</label>
-        <input type="text" id="f-image" placeholder="https://…" oninput="previewImg()">
-        <img id="img-preview" class="img-preview" alt="Aperçu" onerror="this.classList.remove('visible')">
-        <span class="form-hint">Préférez une adresse en https:// (Wikimedia Commons, imgbb.com). Les adresses en http:// peuvent ne pas s'afficher.</span>
-      </div>
-
-      <div class="form-row">
-        <label>Description</label>
-        <textarea id="f-desc" placeholder="Une information par ligne.&#10;Ex : Crêperie - Brasserie&#10;tél : 02 97 26 …"></textarea>
-        <span class="form-hint">Appuyez sur Entrée pour passer à la ligne.</span>
-      </div>
-
-      <div class="form-row">
-        <label>Liens web (optionnel)</label>
-        <div id="links-box"></div>
-        <button type="button" class="btn btn-gray btn-sm" onclick="addLinkRow()">+ Ajouter un lien</button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-gray" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-green" onclick="savePOI()">Enregistrer</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Supprimer -->
-<div class="modal-bg" id="modal-del">
-  <div class="modal" style="max-width:440px">
-    <div class="modal-header">
-      <h2>Supprimer un lieu</h2>
-      <button class="modal-close" onclick="closeDel()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="background:#fff0f0;border:.5px solid #f5c1c1;border-radius:10px;padding:14px;margin-bottom:14px">
-        <p id="del-name" style="font-size:14px;color:var(--red);font-weight:500;margin-bottom:4px"></p>
-        <small style="font-size:12px;color:var(--text-m)">La carte publiée ne change qu'après le téléchargement et l'envoi du fichier pois.js.</small>
-      </div>
-      <p id="del-extra" style="font-size:13px;color:var(--amber-t);margin-bottom:8px;display:none">⚠️ Plaque de secours : la page secours.html devra aussi être mise à jour par l'administrateur.</p>
-      <p style="font-size:13px;color:var(--text-m)">Voulez-vous vraiment supprimer ce lieu de la liste ?</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-gray" onclick="closeDel()">Annuler</button>
-      <button class="btn btn-red" onclick="confirmDelete()">Supprimer</button>
-    </div>
-  </div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-/* ============ Configuration ============ */
-const POIS_URL = 'pois.js';
-const DRAFT_KEY = 'miam_admin_poi_draft_v2';
-const ISLAND = {lat:47.5964, lon:-2.8466, zoom:15};
-const BOUNDS = {latMin:47.55, latMax:47.62, lonMin:-2.88, lonMax:-2.80};
-
-const CAT_EMOJIS = {
-  "Restaurant":"🍽️","Restauration rapide":"🥙","Bar":"🍺","Commerce":"🛒",
-  "Hébergement":"🛏️","Location vélo":"🚲","Transport":"⛴️","Camping":"⛺",
-  "Information":"ℹ️","Plage":"🏖️","Loisirs":"🌿","Patrimoine & curiosités":"🏛️",
-  "Patrimoine religieux":"⛪","Mégalithe":"🗿","Art & Artisanat":"🎨",
-  "Curiosités":"✨","Santé":"🏥","Toilettes":"🚻","Pique-nique":"🧺",
-  "Poubelles":"🗑️","Secours":"🔴","Service":"🏧","Alimentation":"🥖","Défibrillateurs":"❤️"
-};
-/* Couches déclarées dans index.html (layerState). Une couche absente de cette liste n'affiche RIEN sur la carte.
-   Si vous ajoutez une couche dans index.html, ajoutez-la aussi ici. */
-const LAYERS = {
-  "poi-main":"Restaurants, bars, hébergements, infos",
-  "poi-alim":"Alimentation, commerces, locations de vélos",
-  "poi-heritage":"Patrimoine & sites",
-  "sante":"Santé",
-  "Défibrillateurs":"Défibrillateurs",
-  "secours":"Plaques de secours",
-  "pique-nique":"Aires de pique-nique",
-  "toilettes":"Toilettes publiques",
-  "poubelles":"Poubelles & tri",
-  "vtc":"Passeur & VTC",
-  "loisirs":"Loisirs & jardins",
-  "plages":"Plages"
-};
-/* Couche proposée pour une catégorie (sinon : la plus fréquente dans pois.js) */
-const CAT_LAYERS = {
-  "Restaurant":"poi-main","Restauration rapide":"poi-main","Bar":"poi-main","Hébergement":"poi-main",
-  "Information":"poi-main","Transport":"poi-main","Service":"poi-main",
-  "Alimentation":"poi-alim","Commerce":"poi-alim","Location vélo":"poi-alim","Art & Artisanat":"poi-alim",
-  "Camping":"loisirs","Loisirs":"loisirs","Plage":"plages",
-  "Patrimoine & curiosités":"poi-heritage","Patrimoine religieux":"poi-heritage","Mégalithe":"poi-heritage","Curiosités":"poi-heritage",
-  "Santé":"sante","Défibrillateurs":"Défibrillateurs","Toilettes":"toilettes","Pique-nique":"pique-nique",
-  "Poubelles":"poubelles","Secours":"secours"
-};
-/* Compteurs écrits « en dur » dans le menu de index.html */
-const MENU_COUNTS = {"secours":45, "poubelles":61};
-
-/* ============ État ============ */
-let _POIS = [];
-let loadedFromFile = '';
-let currentPage = 1;
-const PAGE_SIZE = 25;
-let deleteIdx = -1;
-let dirty = false;
-let changeLog = [];
-let pickMap = null, pickMarker = null;
-let dupKeys = new Set();
-let commentLines = [];
-
-/* ============ Utilitaires ============ */
-const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const keyOf = p => (p.name||'').trim().toLowerCase() + '|' + Number(p.lat).toFixed(6) + '|' + Number(p.lon).toFixed(6);
-
-function mostCommon(arr){
-  const c = {}; arr.forEach(v => c[v] = (c[v]||0)+1);
-  return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0];
-}
-function layerForCat(cat){
-  return CAT_LAYERS[cat] || mostCommon(_POIS.filter(p=>p.cat===cat && LAYERS[p.layer]).map(p=>p.layer)) || 'poi-main';
-}
-function colorForCat(cat){
-  return mostCommon(_POIS.filter(p=>p.cat===cat).map(p=>p.color)) || 'Blue';
-}
-function allCats(){
-  return [...new Set([...Object.keys(CAT_EMOJIS), ..._POIS.map(p=>p.cat)])].sort((a,b)=>a.localeCompare(b,'fr'));
-}
-function showAlert(msg, type, boxId){
-  const el = $(boxId || 'alert-box');
-  el.textContent = msg;
-  el.className = 'alert ' + type;
-  if (!boxId) el.scrollIntoView({behavior:'smooth', block:'nearest'});
-  clearTimeout(el._t);
-  if (type !== 'error') el._t = setTimeout(() => el.className = 'alert', 7000);
-}
-function markDirty(msg){
-  dirty = true;
-  if (msg) changeLog.push(msg);
-  saveDraft();
-  updateBadge();
-}
-function updateBadge(){
-  const b = $('total-badge');
-  b.textContent = _POIS.length + ' lieux' + (dirty ? ' · modifié' : '');
-  b.classList.toggle('dirty', dirty);
-}
-window.addEventListener('beforeunload', e => { if (dirty){ e.preventDefault(); e.returnValue=''; } });
-
-/* ============ Brouillon local ============ */
-function saveDraft(){
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({date:new Date().toISOString(), pois:_POIS, log:changeLog})); } catch(e){}
-}
-function readDraft(){
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch(e){ return null; }
-}
-function clearDraft(){ try { localStorage.removeItem(DRAFT_KEY); } catch(e){} }
-
-/* ============ Chargement de pois.js ============ */
-function parsePoisText(text){
-  const m = /(?:const|let|var)\s+POIS\s*=\s*\[/.exec(text);
-  if (!m) throw new Error("Le fichier ne contient pas « const POIS = [ … ] ».");
-  const start = m.index + m[0].length - 1;
-  const end = text.lastIndexOf(']');
-  if (end < start) throw new Error("Fin de la liste introuvable (« ] » manquant).");
-  const comments = [], kept = [];
-  text.slice(start, end+1).split('\n').forEach(l => (l.trim().startsWith('//') ? comments : kept).push(l));
-  let arr;
-  try { arr = JSON.parse(kept.join('\n')); }
-  catch(e){ throw new Error("Erreur dans pois.js (virgule, guillemet ou accolade manquant) : " + e.message); }
-  if (!Array.isArray(arr)) throw new Error("La liste des lieux est invalide.");
-  arr._comments = comments;
-  return arr;
-}
-function normalizePoi(p){
-  return Object.assign({name:'', lat:0, lon:0, cat:'', color:'Blue', image:'', description:'', links:[], emoji:'', layer:''}, p, {
-    lat: Number(p.lat), lon: Number(p.lon),
-    links: Array.isArray(p.links) ? p.links : []
-  });
-}
-function applyLoaded(arr, label){
-  _POIS = arr.map(normalizePoi);
-  commentLines = arr._comments || [];
-  loadedFromFile = label;
-  dirty = false; changeLog = [];
-  $('drop').classList.remove('show');
-  const draft = readDraft();
-  if (draft && Array.isArray(draft.pois) && JSON.stringify(draft.pois) !== JSON.stringify(_POIS)){
-    const d = new Date(draft.date).toLocaleString('fr-FR');
-    const b = $('draft-banner');
-    b.innerHTML = '💾 Un brouillon de modifications non envoyées existe (enregistré le ' + esc(d) + ', ' + draft.pois.length + ' lieux).<br>'
-      + '<button class="btn btn-green btn-sm" id="b-restore">Reprendre mon brouillon</button>'
-      + '<button class="btn btn-gray btn-sm" id="b-drop">Repartir du fichier pois.js</button>';
-    b.classList.add('show');
-    $('b-restore').onclick = () => {
-      _POIS = draft.pois.map(normalizePoi); changeLog = draft.log || []; dirty = true;
-      b.classList.remove('show'); refreshAll();
-      showAlert('Brouillon rétabli. N\'oubliez pas de télécharger pois.js quand vous avez fini.', 'success');
-    };
-    $('b-drop').onclick = () => { clearDraft(); b.classList.remove('show'); };
-  }
-  refreshAll();
-  if (commentLines.length) showAlert(commentLines.length + ' ligne(s) mise(s) en commentaire (//) dans pois.js : elles sont conservées telles quelles à l\'export.', 'warn');
-}
-async function autoLoad(){
-  try {
-    const r = await fetch(POIS_URL + '?t=' + Date.now(), {cache:'no-store'});
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    applyLoaded(parsePoisText(await r.text()), POIS_URL);
-  } catch(e){
-    $('drop').classList.add('show');
-    refreshAll();
-  }
-}
-function loadFile(file){
-  const rd = new FileReader();
-  rd.onload = () => {
-    try { applyLoaded(parsePoisText(rd.result), file.name); showAlert('Fichier « ' + file.name + ' » chargé : ' + _POIS.length + ' lieux.', 'success'); }
-    catch(e){ showAlert('Lecture impossible : ' + e.message, 'error'); }
-  };
-  rd.readAsText(file, 'utf-8');
-}
-$('file-in').addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); e.target.value=''; });
-window.addEventListener('dragover', e => e.preventDefault());
-window.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
-
-/* ============ Affichage ============ */
-function refreshAll(){
-  computeDuplicates();
-  buildStats();
-  buildCatFilter();
-  buildCatSelect();
-  buildLayerSelect();
-  renderTable();
-  updateBadge();
-}
-function computeDuplicates(){
-  const seen = {}; dupKeys = new Set();
-  _POIS.forEach(p => { const k = keyOf(p); if (seen[k]) dupKeys.add(k); seen[k] = true; });
-  $('btn-dedupe').style.display = dupKeys.size ? '' : 'none';
-  $('btn-fixlayers').style.display = _POIS.some(badLayer) ? '' : 'none';
-}
-function badLayer(p){ return !LAYERS[p.layer]; }
-function isHttp(p){ return /^http:\/\//i.test(p.image||''); }
-
-function buildStats(){
-  const total = _POIS.length;
-  const noImg = _POIS.filter(p=>!p.image).length;
-  const http = _POIS.filter(isHttp).length;
-  const cats = new Set(_POIS.map(p=>p.cat)).size;
-  const cell = (n,l,color) => `<div class="stat"><div class="stat-n" ${color?`style="color:${color}"`:''}>${n}</div><div class="stat-l">${l}</div></div>`;
-  $('stats-grid').innerHTML = cell(total,'Lieux') + cell(cats,'Catégories') + cell(noImg,'Sans photo', noImg?'#c0392b':'') + cell(http,'Photos en http', http?'#e67e22':'') + cell(dupKeys.size,'Doublons', dupKeys.size?'#c0392b':'') + cell(_POIS.filter(badLayer).length,'Invisibles sur la carte', _POIS.some(badLayer)?'#c0392b':'');
-}
-function buildCatFilter(){
-  const sel = $('filter-cat'), cur = sel.value;
-  sel.innerHTML = '<option value="">Toutes les catégories</option>';
-  [...new Set(_POIS.map(p=>p.cat))].sort((a,b)=>a.localeCompare(b,'fr')).forEach(c => {
-    const o = document.createElement('option');
-    o.value = c; o.textContent = (CAT_EMOJIS[c]||'') + ' ' + c;
-    sel.appendChild(o);
-  });
-  sel.value = cur;
-}
-function buildLayerSelect(){
-  $('f-layer').innerHTML = Object.entries(LAYERS).map(([k,v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join('');
-}
-function buildCatSelect(){
-  $('f-cat').innerHTML = allCats().map(c => `<option value="${esc(c)}">${esc((CAT_EMOJIS[c]||'📍') + ' ' + c)}</option>`).join('');
-}
-
-function renderTable(){
-  const q = $('search').value.toLowerCase().trim();
-  const cat = $('filter-cat').value, flag = $('filter-flag').value;
-  const list = _POIS.filter(p => {
-    const mq = !q || p.name.toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q) || (p.cat||'').toLowerCase().includes(q);
-    const mc = !cat || p.cat === cat;
-    const mf = !flag || (flag==='nophoto' && !p.image) || (flag==='http' && isHttp(p)) || (flag==='dup' && dupKeys.has(keyOf(p))) || (flag==='layer' && badLayer(p));
-    return mq && mc && mf;
-  });
-  const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
-  if (currentPage > totalPages) currentPage = 1;
-  const page = list.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
-  $('no-results').style.display = list.length ? 'none' : 'block';
-  $('poi-table').innerHTML = page.map(p => {
-    const idx = _POIS.indexOf(p);
-    const emo = esc(p.emoji || CAT_EMOJIS[p.cat] || '📍');
-    const img = p.image
-      ? `<img class="poi-img" src="${esc(p.image)}" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.querySelector('.poi-img-empty').style.display='flex'"><div class="poi-img-empty" style="display:none">${emo}</div>`
-      : `<div class="poi-img-empty">${emo}</div>`;
-    const tags = (isHttp(p) ? '<span class="tag">photo http</span>' : '') + (dupKeys.has(keyOf(p)) ? '<span class="tag">doublon</span>' : '') + (badLayer(p) ? '<span class="tag" style="background:#fff0f0;color:#c0392b">invisible sur la carte</span>' : '');
-    return `<tr><td>${img}</td>
-      <td><span class="poi-name">${esc(p.name)}</span>${tags}</td>
-      <td><span class="poi-cat">${emo} ${esc(p.cat)}</span></td>
-      <td><span class="coords">${Number(p.lat).toFixed(4)}, ${Number(p.lon).toFixed(4)}</span></td>
-      <td><div class="act-btns">
-        <button class="act-btn act-edit" onclick="openEdit(${idx})">Modifier</button>
-        <button class="act-btn act-del" onclick="openDelete(${idx})">Suppr.</button>
-      </div></td></tr>`;
-  }).join('');
-  let pg = '';
-  if (totalPages > 1) for (let i=1;i<=totalPages;i++) pg += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
-  $('pagination').innerHTML = pg;
-}
-function goPage(n){ currentPage = n; renderTable(); window.scrollTo({top:0, behavior:'smooth'}); }
-
-/* ============ Fenêtre d'édition ============ */
-function updateEmoji(){ $('f-emoji').value = CAT_EMOJIS[$('f-cat').value] || '📍'; $('f-layer').value = layerForCat($('f-cat').value); }
-function previewImg(){
-  const url = $('f-image').value.trim(), img = $('img-preview');
-  if (url){ img.src = url; img.classList.add('visible'); } else img.classList.remove('visible');
-}
-function addLinkRow(url, label){
-  const row = document.createElement('div');
-  row.className = 'link-row';
-  row.innerHTML = '<input type="text" class="lk-url" placeholder="https://…"><input type="text" class="lk-label" placeholder="Texte du lien"><button type="button" title="Retirer ce lien">✕</button>';
-  row.querySelector('.lk-url').value = url || '';
-  row.querySelector('.lk-label').value = label || '';
-  row.querySelector('button').onclick = () => row.remove();
-  $('links-box').appendChild(row);
-}
-function fillLinks(links){
-  $('links-box').innerHTML = '';
-  (links||[]).forEach(l => addLinkRow(l[0], l[1]));
-}
-
-function initPickMap(){
-  if (!window.L) { $('pick-map').innerHTML = '<p style="padding:20px;font-size:13px;color:#666">La carte n\'a pas pu se charger (pas de connexion ?). Saisissez les coordonnées à la main.</p>'; return; }
-  if (!pickMap){
-    pickMap = L.map('pick-map').setView([ISLAND.lat, ISLAND.lon], ISLAND.zoom);
-    const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'});
-    const ign = L.tileLayer('https://data.geopf.fr/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {maxZoom:18, attribution:'© IGN'});
-    const photo = L.tileLayer('https://data.geopf.fr/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}', {maxZoom:19, attribution:'© IGN'});
-    osm.addTo(pickMap);
-    L.control.layers({'Plan OpenStreetMap':osm, 'Plan IGN':ign, 'Photo aérienne IGN':photo}, null, {collapsed:true}).addTo(pickMap);
-    /* Si OpenStreetMap refuse les tuiles (page ouverte depuis un fichier local, sans « Referer »), on bascule sur le plan IGN. */
-    let osmFails = 0;
-    osm.on('tileerror', () => {
-      if (++osmFails === 3 && pickMap.hasLayer(osm)){ pickMap.removeLayer(osm); ign.addTo(pickMap); }
-    });
-    pickMap.on('click', e => setPoint(e.latlng.lat, e.latlng.lng, false));
-  }
-  setTimeout(() => pickMap.invalidateSize(), 50);
-}
-function setPoint(lat, lon, recenter){
-  $('f-lat').value = lat.toFixed(6);
-  $('f-lon').value = lon.toFixed(6);
-  if (!pickMap) return;
-  if (!pickMarker){
-    pickMarker = L.marker([lat, lon], {draggable:true}).addTo(pickMap);
-    pickMarker.on('dragend', () => { const p = pickMarker.getLatLng(); $('f-lat').value = p.lat.toFixed(6); $('f-lon').value = p.lng.toFixed(6); });
-  } else pickMarker.setLatLng([lat, lon]);
-  if (recenter) pickMap.setView([lat, lon], 17);
-}
-function clearPoint(){
-  if (pickMarker && pickMap){ pickMap.removeLayer(pickMarker); }
-  pickMarker = null;
-  if (pickMap) pickMap.setView([ISLAND.lat, ISLAND.lon], ISLAND.zoom);
-}
-function coordsTyped(){
-  const lat = parseFloat($('f-lat').value), lon = parseFloat($('f-lon').value);
-  if (!isNaN(lat) && !isNaN(lon) && pickMap) setPoint(lat, lon, true);
-}
-function pasteCoords(){
-  const m = $('f-paste').value.match(/(-?\d+[.,]\d+)\s*[,;\s]\s*(-?\d+[.,]\d+)/);
-  if (m){
-    setPoint(parseFloat(m[1].replace(',','.')), parseFloat(m[2].replace(',','.')), true);
-    $('f-paste').value = '';
-  }
-}
-
-function openAdd(){
-  if (!_POIS.length && !confirm("Aucun fichier pois.js n'est chargé : vous allez créer une liste incomplète. Continuer ?")) return;
-  $('edit-idx').value = '-1';
-  $('modal-title').textContent = 'Ajouter un lieu';
-  $('modal-alert').className = 'alert';
-  $('f-name').value = '';
-  $('f-cat').value = 'Restaurant'; updateEmoji();
-  $('f-lat').value = ''; $('f-lon').value = ''; $('f-paste').value = '';
-  $('f-image').value = ''; $('f-desc').value = '';
-  fillLinks([]);
-  previewImg();
-  $('modal').classList.add('open');
-  initPickMap(); clearPoint();
-}
-function openEdit(idx){
-  const p = _POIS[idx];
-  $('edit-idx').value = idx;
-  $('modal-title').textContent = 'Modifier — ' + p.name;
-  $('modal-alert').className = 'alert';
-  $('f-name').value = p.name;
-  $('f-cat').value = p.cat;
-  $('f-emoji').value = p.emoji || CAT_EMOJIS[p.cat] || '';
-  if (!LAYERS[p.layer]){ const o = document.createElement('option'); o.value = p.layer; o.textContent = '⚠ ' + p.layer + ' (inconnue : invisible sur la carte)'; $('f-layer').appendChild(o); }
-  $('f-layer').value = p.layer;
-  $('f-lat').value = p.lat; $('f-lon').value = p.lon; $('f-paste').value = '';
-  $('f-image').value = p.image || '';
-  $('f-desc').value = p.description || '';
-  fillLinks(p.links);
-  previewImg();
-  $('modal').classList.add('open');
-  initPickMap();
-  clearPoint();
-  setPoint(p.lat, p.lon, true);
-}
-function closeModal(){ $('modal').classList.remove('open'); }
-
-function savePOI(){
-  const err = m => showAlert(m, 'warn', 'modal-alert');
-  const name = $('f-name').value.trim();
-  const lat = parseFloat($('f-lat').value), lon = parseFloat($('f-lon').value);
-  const cat = $('f-cat').value;
-  if (!name) return err('Le nom est obligatoire.');
-  if (isNaN(lat) || isNaN(lon)) return err('Placez le lieu sur la carte (ou saisissez latitude et longitude).');
-  if (lat < BOUNDS.latMin || lat > BOUNDS.latMax || lon < BOUNDS.lonMin || lon > BOUNDS.lonMax)
-    return err("Ces coordonnées sont en dehors de l'Île-aux-Moines. Vérifiez (latitude ≈ 47,6 ; longitude ≈ −2,85).");
-
-  const image = $('f-image').value.trim();
-  if (image && !/^https?:\/\//i.test(image)) return err("L'adresse de la photo doit commencer par https://");
-
-  const links = [];
-  for (const row of document.querySelectorAll('#links-box .link-row')){
-    let u = row.querySelector('.lk-url').value.trim();
-    const l = row.querySelector('.lk-label').value.trim();
-    if (!u) continue;
-    if (!/^https?:\/\//i.test(u)) u = 'https://' + u.replace(/^\/+/, '');
-    links.push([u, l || 'Voir le site']);
-  }
-
-  const idx = parseInt($('edit-idx').value);
-  const old = idx >= 0 ? _POIS[idx] : null;
-  const catChanged = !old || old.cat !== cat;
-  if (!LAYERS[$('f-layer').value]) return err('Choisissez une rubrique du menu valide : sinon le lieu ne s\'afficherait pas sur la carte.');
-  if (cat === 'Secours' && !/^\s*\d+\s*-/.test(name)) return err('Une plaque de secours doit commencer par son numéro, par exemple « 12 - le Rudel » : le numéro s\'affiche sur la carte.');
-  const poi = Object.assign({}, old || {}, {
-    name,
-    lat: parseFloat(lat.toFixed(6)),
-    lon: parseFloat(lon.toFixed(6)),
-    cat,
-    color: old && !catChanged ? old.color : colorForCat(cat),
-    image,
-    description: $('f-desc').value.replace(/\r\n/g, '\n').trim(),
-    links,
-    emoji: $('f-emoji').value.trim() || CAT_EMOJIS[cat] || '📍',
-    layer: $('f-layer').value
-  });
-
-  const k = keyOf(poi);
-  if (_POIS.some((p,i) => i !== idx && keyOf(p) === k)) return err('Un lieu identique (même nom, même position) existe déjà.');
-
-  if (old){
-    _POIS[idx] = poi;
-    markDirty('Modifié : ' + name);
-    showAlert('« ' + name + ' » modifié. Pensez à télécharger pois.js quand vous aurez fini.', 'success');
-  } else {
-    _POIS.push(poi);
-    markDirty('Ajouté : ' + name);
-    showAlert('« ' + name + ' » ajouté. Pensez à télécharger pois.js quand vous aurez fini.', 'success');
-  }
-  if (cat === 'Secours') showAlert('Plaque de secours modifiée : prévenez l\'administrateur, la page secours.html doit être mise à jour.', 'warn');
-  closeModal();
-  refreshAll();
-}
-
-/* ============ Suppression ============ */
-function openDelete(idx){
-  deleteIdx = idx;
-  $('del-name').textContent = _POIS[idx].name + ' (' + _POIS[idx].cat + ')';
-  $('del-extra').style.display = _POIS[idx].cat === 'Secours' ? 'block' : 'none';
-  $('modal-del').classList.add('open');
-}
-function closeDel(){ $('modal-del').classList.remove('open'); }
-function confirmDelete(){
-  if (deleteIdx < 0) return;
-  const name = _POIS[deleteIdx].name;
-  _POIS.splice(deleteIdx, 1);
-  deleteIdx = -1;
-  closeDel();
-  markDirty('Supprimé : ' + name);
-  refreshAll();
-  showAlert('« ' + name + ' » supprimé. Pensez à télécharger pois.js quand vous aurez fini.', 'success');
-}
-function fixLayers(){
-  const bad = _POIS.filter(badLayer);
-  if (!bad.length) return;
-  if (!confirm(bad.length + " lieu(x) ont une couche inconnue de la carte et ne s'affichent pas :\n\n" + bad.map(p => '• ' + p.name + ' (' + p.layer + ')').join('\n') + "\n\nLeur attribuer la couche habituelle de leur catégorie ?")) return;
-  bad.forEach(p => { const old = p.layer; p.layer = layerForCat(p.cat); changeLog.push('Couche corrigée : ' + p.name + ' (' + old + ' → ' + p.layer + ')'); });
-  markDirty();
-  refreshAll();
-  showAlert(bad.length + ' lieu(x) corrigé(s). Ils réapparaîtront sur la carte après publication.', 'success');
-}
-function removeDuplicates(){
-  const seen = new Set(), out = [];
-  _POIS.forEach(p => { const k = keyOf(p); if (!seen.has(k)){ seen.add(k); out.push(p); } });
-  const n = _POIS.length - out.length;
-  if (!n) return;
-  if (!confirm(n + ' doublon(s) exact(s) (même nom, même position) vont être supprimés ; la première occurrence est conservée. Continuer ?')) return;
-  _POIS = out;
-  markDirty('Doublons supprimés : ' + n);
-  refreshAll();
-  showAlert(n + ' doublon(s) supprimé(s).', 'success');
-}
-
-/* ============ Export ============ */
-function buildExportText(){
-  const lines = _POIS.map((p,i) => '  ' + JSON.stringify(p) + (i < _POIS.length-1 ? ',' : ''));
-  const head = "// M'IAM — Points d'intérêt de l'Île-aux-Moines\n// Pour modifier un POI : trouvez-le par son nom (Ctrl+F), modifiez les valeurs entre guillemets\n// Champs : name, lat, lon, cat, image, description, links, emoji, layer\n// RÈGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI\n\n";
-  const tail = commentLines.length ? commentLines.join('\n') + '\n' : '';
-  return head + "const POIS = [\n" + lines.join('\n') + '\n' + tail + '];\n';
-}
-function checkExport(text){
-  const back = parsePoisText(text);
-  if (back.length !== _POIS.length) throw new Error('Le contrôle de cohérence a échoué.');
-}
-function showExport(){
-  if (!_POIS.length){ showAlert('Aucun lieu chargé : rien à exporter.', 'warn'); return; }
-  const ul = $('change-list');
-  ul.innerHTML = changeLog.length ? changeLog.map(l => '<li>' + esc(l) + '</li>').join('') : '<li>Aucune modification depuis le chargement.</li>';
-  const warns = [];
-  Object.entries(MENU_COUNTS).forEach(([layer, n]) => {
-    const now = _POIS.filter(p => p.layer === layer).length;
-    if (now !== n) warns.push('Le menu de index.html affiche « (' + n + ') » pour ' + LAYERS[layer] + ' mais il y en a maintenant ' + now + ' : à signaler à l\'administrateur.');
-  });
-  if (_POIS.some(p => p.cat === 'Secours') && changeLog.some(l => /plaque|^(Ajouté|Modifié|Supprimé) : \d+\s*-/i.test(l))) warns.push('Plaques de secours modifiées : la page secours.html doit être régénérée par l\'administrateur.');
-  _POIS.filter(badLayer).forEach(p => warns.push('« ' + p.name + ' » est invisible sur la carte (couche inconnue : ' + p.layer + ').'));
-  ul.innerHTML += warns.map(w => '<li style="color:#f5cba7">⚠️ ' + esc(w) + '</li>').join('');
-  $('export-zone').style.display = 'block';
-  $('export-zone').scrollIntoView({behavior:'smooth'});
-}
-function downloadExport(){
-  try {
-    const text = buildExportText(); checkExport(text);
-    const blob = new Blob([text], {type:'text/javascript;charset=utf-8'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'pois.js';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    dirty = false; updateBadge();
-    showAlert('Fichier pois.js téléchargé (' + _POIS.length + ' lieux). Envoyez-le maintenant à l\'administrateur.', 'success');
-  } catch(e){ showAlert('Export impossible : ' + e.message, 'error'); }
-}
-function copyExport(){
-  try {
-    const text = buildExportText(); checkExport(text);
-    navigator.clipboard.writeText(text).then(
-      () => showAlert('Contenu copié. Le téléchargement du fichier est plus sûr que le copier-coller.', 'success'),
-      () => showAlert('Copie impossible : utilisez « Télécharger pois.js ».', 'warn'));
-  } catch(e){ showAlert('Export impossible : ' + e.message, 'error'); }
-}
-
-/* ============ Démarrage ============ */
-window.addEventListener('DOMContentLoaded', autoLoad);
-</script>
-</body>
-</html>
+// M'IAM — Points d'intérêt de l'Île-aux-Moines
+const POIS = [
+  {"name": "École primaire — Histoire de l'Île-aux-Moines","lat": 47.593248,"lon": -2.849977,"cat": "Patrimoine & curiosités","emoji": "📖","color": "#5d4037","image": "","description": "📖 Histoire de l'Île-aux-Moines\nUn livre remarquable de 100 pages réalisé par les enfants de l'école en 2005.\nIdéal pour connaître l'île et préparer sa visite.\nCliquez sur le lien ci-dessous pour feuilleter le livre.","links": [["https://online.fliphtml5.com/nptse/japw/#p=1", "📖 Feuilleter le livre (nouvel onglet)"]],"layer": "poi-heritage"},
+  {"name":"Camping municipal","lat":47.593718,"lon":-2.844786,"cat":"Camping","color":"DarkGreen","image":"https://www.mairie-ileauxmoines.fr/wp-content/uploads/2026/06/Plan_V02062026.png.webp","description":"Camping municipal\ntél : 02 97 26 30 68","links":[["https://www.mairie-ileauxmoines.fr/tourisme-services/camping-municipal/","Voir le site"]],"emoji":"⛺","layer":"loisirs"},
+  {"name":"Chez Charlemagne","lat":47.598573,"lon":-2.849485,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Chez_Charlemagne.jpg/1280px-Chez_Charlemagne.jpg","description":"Restaurant - Bar\nGrillades, Poissons\nTél : 02 97 26 32 43","links":[["https://www.chezcharlemagne.fr/","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"Chez Jeannette","lat":47.601447,"lon":-2.853945,"cat":"Bar","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Chez_Jeannette.jpg/1920px-Chez_Jeannette.jpg?_=20260501130703","description":"Bar - Snacks - Sandwiches - Gaufres - Glaces\nrue Benoni Praud\ntél : 06 78 02 97 16","links":[],"emoji":"🍺","layer":"poi-main"},
+  {"name":"DAB Distributeur Automatique de Billets","lat":47.597028,"lon":-2.845416,"cat":"Service","color":"DeepSkyBlue","image":"","description":"la Banque Postale\nrue de la Mairie\ntél : 02 97 26 34 39","links":[["https://localiser.laposte.fr/morbihan/ile-aux-moines/ile-aux-moines-560870","Voir le site"]],"emoji":"🏧","layer":"dab"},
+  {"name":"Ile-aux-Moines Locations","lat":47.601381,"lon":-2.853752,"cat":"Location vélo","color":"SaddleBrown","image":"","description":"Location de cycles\ntél : 06 50 46 90 64\nemail : contact@velocouest.fr","links":[["http://www.velocouest.fr/ile-aux-moines-locations","Voir le site"]],"emoji":"🚲","layer":"poi-alim"},
+  {"name":"Chez Jonas","lat":47.6001,"lon":-2.851124,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Chez_Jonas.jpg/1920px-Chez_Jonas.jpg?_=20260501130703","description":"Brasserie - Crêperie - Glaces\n 271 rue Benoni Praud\ntél : 02 97 68 82 93","links":[["https://chez-jonas-site-web.vercel.app/","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"KERICO Pizzeria","lat":47.596921,"lon":-2.84596,"cat":"Restauration rapide","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Kerico.jpg/1280px-Kerico.jpg","description":"place du Marché\ntél : 09 80 66 60 90\n\nchezricoiam@gmail.com","links":[["https://www.facebook.com/kerico_pizzeria-111032647332144/","Voir le site"],["https://instagram.com/kerico_pizzeria?igshid=1xstsu1zlxdep","Voir le site"]],"emoji":"🥙","layer":"poi-main"},
+  {"name":"KerIsa","lat":47.59623,"lon":-2.844858,"cat":"Hébergement","color":"#2d5e3f","image":"","description":"Maison d'hôtes\nrue du presbytère\n56780 ILE AUX MOINES\ntél : 02 97 26 32 52\ntél: 06 30 17 85 45\ntél: 06 34 29 40 46\ne-mail: isabelle@kerisa.com","links":[["http://www.kerisa.fr/","Voir le site"]],"emoji":"🛏️","layer":"poi-main"},
+  {"name":"KOS","lat":47.597182,"lon":-2.847723,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/KOS_Bar_Restaurant.jpg/1280px-KOS_Bar_Restaurant.jpg?_=20260306092802","description":"Bar - Restaurant italien\n115 rue Neuve\ntél: 02 97 41 27 86\nkos56@orange.fr","links":[["https://www.facebook.com/people/Kos-Restaurant/61572585243348/?rdid=XXLPiSSNKLn97r4t&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BXReD7jGD%2F","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"l'Encas","lat":47.596165,"lon":-2.847056,"cat":"Restauration rapide","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lencas.jpg/1280px-Lencas.jpg?","description":"Sandwiches, Moules Frites","links":[],"emoji":"🥙","layer":"poi-main"},
+  {"name":"l'Asphodèle","lat":47.596098,"lon":-2.844796,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/5/5d/Asphodele_restaurant.jpg?_=20260707133014","description":"Restaurant\nrue du Presbytère\ntél: 02 97 26 32 52\ntél: 06 34 29 40 46\ninfo@kerisa.com","links":[["http://www.asphodele.com/","Voir le site"]],"emoji":"🥙","layer":"poi-main"},
+  {"name":"l'Atao","lat":47.596198,"lon":-2.847073,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Atao_cr%C3%AAperie.jpg/1280px-Atao_cr%C3%AAperie.jpg","description":"Brasserie - Crêperie\nplace Ru Vraz\ntél 02 97 26 33 27","links":[],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"la Cabane de Nol","lat":47.599296,"lon":-2.851923,"cat":"Commerce","color":"DarkBlue","image":"https://upload.wikimedia.org/wikipedia/commons/e/e6/Cabanedenol.jpg?_=20260717160739","description":"boissons, glaces, granités, crêpes maison, gaufres\n beignets, pizzas, croques monsieur \n tout cela en restauration à emporter.","links":[],"emoji":"🛒","layer":"poi-alim"},
+  {"name":"l'Escale","lat":47.596608,"lon":-2.845902,"cat":"Commerce","color":"DarkBlue","image":"https://upload.wikimedia.org/wikipedia/commons/9/93/Lescale.jpg?_=20260628073205","description":"Livres, Boissons, Glaces, Cartes postales, Souvenirs.\ntél : 02 97 26 38 40","links":[],"emoji":"🛒","layer":"poi-alim"},
+  {"name":"l'Ile à Vélo","lat":47.599808,"lon":-2.850882,"cat":"Location vélo","color":"SaddleBrown","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lileavelo.jpg/1280px-Lileavelo.jpg","description":"Location de cycles\n291 Rue Bénoni PRAUD\nTél : 06 37 80 19 70\n\nemail : lile-a-velo.iam@orange.fr","links":[["https://location-velos-ileauxmoines.fr","Voir le site"]],"emoji":"🚲","layer":"poi-alim"},
+  {"name":"la Boutique d'Izah","lat":47.596722,"lon":-2.846179,"cat":"Commerce","color":"DarkBlue","image":"https://upload.wikimedia.org/wikipedia/commons/7/7d/Izah_Boutique.jpg","description":"46 Place du Marché\nCadeaux-Souvenirs, Vêtements et Produits de Bretagne\ntél : 02.97.26.39.04","links":[],"emoji":"🛒","layer":"poi-alim"},
+  {"name":"la Cabane du Trec'h","lat":47.605649,"lon":-2.837123,"cat":"Restauration rapide","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Cabanedutrech.jpg/1280px-Cabanedutrech.jpg","description":"Dégustation huitres et fruits de mer/nVente à emporter/nACCEUIL GROUPES & SEMINAIRES","links":[],"emoji":"🥙","layer":"poi-main"},
+  {"name":"la Cabine","lat":47.596569,"lon":-2.846164,"cat":"Restauration rapide","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Lacabine00.jpg/1280px-Lacabine00.jpg","description":"","links":[],"emoji":"🥙","layer":"poi-main"},
+  {"name":"la Chaumière","lat":47.596015,"lon":-2.847221,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/5/57/La_Chaumiere.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260509125107","description":"Crêperie, Saladerie et Brasserie\nplace Ru Vraz, le bourg\ntél 02 97 26 30 77","links":[],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"la Girouette","lat":47.601105,"lon":-2.853235,"cat":"Restauration rapide","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Lagirouette.jpg/1280px-Lagirouette.jpg","description":"Bar à vins et cave à manger\nRue Benoni Praud, 56780 Île-aux-Moines\nTél : 09 70 02 67 99","links":[],"emoji":"🥙","layer":"poi-main"},
+  {"name":"la Petie Brise","lat":47.599146,"lon":-2.850416,"cat":"Commerce","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Lapetitebrise.jpg/1280px-Lapetitebrise.jpg?_=20260301181719","description":"Souvenirs - Produits du bord de mer\nrue Bénoni Praud\ntél : 02 97 26 32 84","links":[],"emoji":"🛒","layer":"poi-alim"},
+  {"name":"la Petite Galerie","lat":47.600034,"lon":-2.851005,"cat":"Art & Artisanat","color":"SaddleBrown","image":"https://upload.wikimedia.org/wikipedia/commons/e/e3/Lapetitegalerie01.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original","description":"Galerie d'Art","links":[],"emoji":"🎨","layer":"poi-alim"},
+  {"name":"la Renverse","lat":47.599868,"lon":-2.851023,"cat":"Commerce","color":"SaddleBrown","image":"https://upload.wikimedia.org/wikipedia/commons/5/5a/Larenverse.jpg?_=20260716180200","description":"Bière artisanale de l'Ile-aux-Moines","links":[["https://www.iles-du-ponant.com/nouvelle-brasserie-a-lile-aux-moines","Voir le site"]],"emoji":"🍺","layer":"poi-alim"},
+  {"name":"le Cap Horn","lat":47.601105,"lon":-2.853047,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cap_Horn.jpg/1920px-Cap_Horn.jpg?_=20260501130319","description":"Restaurant - Brasserie - Bar\nrue Bénoni Praud","links":[["https://www.facebook.com/lecaphorniam/?locale=fr_FR","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"le Comptoir des Iles","lat":47.600962,"lon":-2.852755,"cat":"Restauration rapide","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Comptoirdesiles.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260816124251","description":"Sandwiches, Bar, brasserie\nrue Bénoni Praud\ntél : 02 97 26 39 62","links":[],"emoji":"🥙","layer":"poi-main"},
+  {"name":"le Crialeïs","lat":47.596798,"lon":-2.845497,"cat":"Bar","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/5/53/Le_Crialeis.jpg","description":"Café, Bar, Tabac","links":[],"emoji":"🍺","layer":"poi-main"},
+  {"name":"le Phare","lat":47.59648,"lon":-2.846623,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Le_Phare_2025.jpg/1280px-Le_Phare_2025.jpg","description":"Restaurant Crêperie\ntél : 07 85 23 84 87","links":[],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"le Pod'Bronnek","lat":47.59582,"lon":-2.847235,"cat":"Bar","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Podbronnek.jpg/1280px-Podbronnek.jpg","description":"Bar, Sandwiches\ntél : 02 97 26 32 10","links":[],"emoji":"🍺","layer":"poi-main"},
+  {"name":"le Relais des Mousquetaires","lat":47.593488,"lon":-2.850351,"cat":"Alimentation","color":"Yellow","image":"https://i.ibb.co/cSHt4q7G/Internovembre.jpg","description":"Supérette ouverte toute l'année\nTél : 02 97 26 39 42","links":[],"emoji":"🥖","layer":"poi-alim"},
+  {"name":"le San Francisco","lat":47.600499,"lon":-2.852004,"cat":"Hébergement, Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Hotel_San_francisco.jpg/1280px-Hotel_San_francisco.jpg","description":"Le Port,\nrue Bénoni Praud\ntél : 02 97 26 31 52","links":[["https://lesanfrancisco.com/fr/restaurant-ile-aux-moines","Voir le site"]],"emoji":"🛏️","layer":"poi-main"},
+  {"name":"les Douceurs du Golfe","lat":47.596304,"lon":-2.846905,"cat":"Alimentation","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Boulangerie_et_patisseie.jpg/1280px-Boulangerie_et_patisseie.jpg","description":"Boulangerie, Patisseries, Spécialités de Bretagne\nCafé, Sandwiches\ntél : 02.97.60.86.60.","links":[],"emoji":"🥖","layer":"poi-alim"},
+  {"name":"les Embruns","lat":47.596453,"lon":-2.846881,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Lesembruns.jpg/1280px-Lesembruns.jpg?_=20260301181711","description":"cuisine traditionnelle, poissons et fruits de mer\nrue du Commerce, le bourg\ntél : 02 97 26 30 86","links":[["https://lesembruns-ileauxmoines.fr/","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"Lili voyages","lat":47.600731,"lon":-2.8519,"cat":"Transport","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/5/57/LILI_Voyages.jpg?_=20260411090458","description":"Mini bus — visite de l'île\nDépart du port à 11h15 / 14h / 15h15 / 16h30. Durée : 1h.\nTarif : 14€ et 11€ (5-10 ans)\nRéservations : 06 88 17 24 23\nemail : lilivoyage@icloud.com","links":[["https://morbihan.com/a-voir-a-faire/activites-et-loisirs/lili-voyages-ile-aux-moines-fr-4405517/","Voir le site"]],"emoji":"⛴️","layer":"transports"},
+  {"name":"Location du Port","lat":47.601031,"lon":-2.852846,"cat":"Location vélo","color":"SaddleBrown","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/V%C3%A9locouestport.jpg/1280px-V%C3%A9locouestport.jpg","description":"","links":[],"emoji":"🚲","layer":"poi-alim"},
+  {"name":"Mary Boat Trip","lat":47.596623,"lon":-2.846264,"cat":"Hébergement, Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Maryboattrip.jpg/1280px-Maryboattrip.jpg?","description":"Restaurant - Bar\nrue du Commerce\ntél : 02.97.26.32.50","links":[["https://www.maryboattrip.com/","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"P'tit Louis","lat":47.598422,"lon":-2.849064,"cat":"Location vélo","color":"SaddleBrown","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/P%27titlouis.jpg/1280px-P%27titlouis.jpg","description":"Location de cycles\nrue Bénoni Praud\n56780 Ile aux Moines","links":[],"emoji":"🚲","layer":"poi-alim"},
+  {"name":"Petit Casino","lat":47.596793,"lon":-2.846095,"cat":"Alimentation","color":"Yellow","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Petitcasino.jpg/1280px-Petitcasino.jpg","description":"Supérette\nLu-Sa : 09:00-19:00\nPlace de La Mairie","links":[],"emoji":"🥖","layer":"poi-alim"},
+  {"name":"Pierre MARTIN Ostréiculteur","lat":47.601117,"lon":-2.839298,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/6/6d/Pierre_Martin_composition.jpg?_=20260405125218","description":"Dégustation d'huitres\nBeg Moussir\ntél : 02 97 26 31 56\nPortable : 06 88 58 32 91","links":[["https://huitres-ileauxmoines.fr","Voir le site"]],"emoji":"🍽️","layer":"poi-main"},
+  {"name":"Port/Harbour","lat":47.601707,"lon":-2.854128,"cat":"Transport","color":"SpringGreen","image":"","description":"Embarquement pour le Golfe du Morbihan","links":[["http://www.compagnie-du-golfe.fr","Voir le site"],["http://www.navix.fr/bateau/tour-du-golfe-avec-escales","Voir le site"],["https://www.passeurdesiles.com/","Voir le site"]],"emoji":"⛴️","layer":"transports"},
+  {"name":"Sophie de Kerno","lat":47.596751,"lon":-2.845759,"cat":"Restaurant","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/5/59/Sophiekerno.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260515124409","description":"Traiteur\nCuisine familiale et du monde\ntél : 06 80 85 44 56","links":[],"emoji":"🥙","layer":"poi-main"},
+  {"name":"l'Église St Michel","lat":47.598531,"lon":-2.842452,"cat":"Patrimoine religieux","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Eglisestmichel.jpg/1280px-Eglisestmichel.jpg","description":"","links":[["http://www.paroisses-arradon.fr/autour-de-nos-paroisses/lieu/33/eglise-saint-michel-de-l-ile-aux-moines","Voir le site"]],"emoji":"⛪","layer":"poi-heritage"},
+  {"name":"la Chapelle du Guerric","lat":47.592443,"lon":-2.838995,"cat":"Patrimoine religieux","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/EgliseIAM.jpg/1280px-EgliseIAM.jpg","description":"","links":[["https://pop.culture.gouv.fr/notice/merimee/IA56000100","Voir le site"]],"emoji":"⛪","layer":"poi-heritage"},
+  {"name":"la Chapelle Notre Dame d'Espérance","lat":47.597775,"lon":-2.844906,"cat":"Patrimoine religieux","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/ChapelleNotreDamedesperance.jpg/1280px-ChapelleNotreDamedesperance.jpg","description":"","links":[["http://www.paroisses-arradon.fr/autour-de-nos-paroisses/lieu/48/notre-dame-d-esperance","Voir le site"]],"emoji":"⛪","layer":"poi-heritage"},
+  {"name":"la Grande Plage","lat":47.598509,"lon":-2.851419,"cat":"Plage","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/La_Grande_plage.jpg/1280px-La_Grande_plage.jpg","description":"la plus grande plage de l'Ile-aux-Moines","links":[],"emoji":"🏖️","layer":"plages"},
+  {"name":"la Plage de Port Miquel","lat":47.596487,"lon":-2.841591,"cat":"Plage","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/3/34/Portmiquel2.jpg","description":"","links":[],"emoji":"🏖️","layer":"plages"},
+ // {"name":"la Plage de Tahiti","lat":47.575719,"lon":-2.852717,"cat":"Plage","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/f/f9/Tahiti.jpg?_=20260412143807","description":"","links":[],"emoji":"🏖️","layer":"plages"},
+  {"name":"la Plage du Goret","lat":47.584385,"lon":-2.855748,"cat":"Plage","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/0/0a/Leportdugoret.jpg","description":"","links":[],"emoji":"🏖️","layer":"plages"},
+  {"name":"la Plage du Rudel","lat":47.580018,"lon":-2.857229,"cat":"Plage","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Rudel.jpg/250px-Rudel.jpg","description":"","links":[],"emoji":"🏖️","layer":"plages"},
+  {"name":"la Plage du Vran","lat":47.590131,"lon":-2.845073,"cat":"Plage","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/f/fc/Plage_du_Vran.jpg?_=20260421071901","description":"","links":[],"emoji":"🏖️","layer":"plages"},
+  {"name":"le Calvaire du Trech","lat":47.60706,"lon":-2.83812,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/CalvaireIAM.jpg/1280px-CalvaireIAM.jpg?","description":"","links":[["https://www.croixbretagne.fr/Ccb/Content/liste.jsp?comId=21825&statut=0","voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Château du Guerric","lat":47.591621,"lon":-2.839923,"cat":"Patrimoine & curiosités","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/b/b1/Chateauduguerric.jpg?_=20260801101158","description":"","links":[["https://pop.culture.gouv.fr/notice/merimee/IA56000100","Voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Cromlech de Kergonan","lat":47.590605,"lon":-2.850673,"cat":"Mégalithe","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/0/09/Cromlech.jpg?_=20260403120832","description":"","links":[["https://fr.wikipedia.org/wiki/Cromlec%27h_de_Kergonan","Voir le site"],["https://www.lieux-insolites.fr/morbihan/moines/moines.htm","Voir le site"],["https://megalithes-du-golfe.fr/sites_ile_aux_moines/sites_ile_aux_moines.html","Voir le site"]],"emoji":"🗿","layer":"poi-heritage"},
+  {"name":"le Dolmen de Kerno","lat":47.582305,"lon":-2.855378,"cat":"Mégalithe","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/2/2f/Dolmen_de_Kerno_Ile-aux-Moines.jpg?_=20260407093030","description":" Cette tombe de petites dimensions (1,60 m de long sur 1,50 m de large) est incomplète. Seuls subsistent la chambre funéraire, constituée de 4 orthostates de granite formant les supports de la table de couverture, ainsi qu'un amas de pierres de granite devant ce qui peut être identifié comme l'entrée.","links":[["https://www.lieux-insolites.fr/morbihan/moines/moines.htm#google_vignette","Voir le site"],["https://megalithes-du-golfe.fr/sites_ile_aux_moines/sites_ile_aux_moines.html","Voir le site"]],"emoji":"🗿","layer":"poi-heritage"},
+  {"name":"le Dolmen Er Boglieux","lat":47.571318,"lon":-2.857722,"cat":"Mégalithe","color":"Blue","image":"https://upload.wikimedia.org/wikipedia/commons/4/4b/Dolmen_Er_Boglieux_Ile-aux-Moines.jpg?_=20260407093030","description":"Aujourd'hui, la chambre funéraire est formée de 9 orthostates, qui paraissent petites de par leur enfouissement dans une masse tumulaire encore artiellement\nconservée, et d'une dalle de couverture d'environ 25 tonnes (4,15 m de long, 3,60 m de large, 0,80 m d'épaisseur)","links":[["https://fr.wikipedia.org/wiki/Dolmen_de_Penhap","Voir le site"],["https://megalithes-du-golfe.fr/sites_ile_aux_moines/sites_ile_aux_moines.html","Voir le site"]],"emoji":"🗿","layer":"poi-heritage"},
+  {"name":"le Jardin du Rinville","lat":47.594411,"lon":-2.850443,"cat":"Loisirs","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/a/a3/Manerinville.jpg?_=20260612080002","description":"Centre de loisirs et lieu de manifestations culturelles","links":[],"emoji":"🌿","layer":"loisirs"},
+  {"name":"Au Cachalot","lat":47.599674,"lon":-2.850748,"cat":"Bar","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Aucachalot.jpg/1280px-Aucachalot.jpg","description":"Epicerie & Cave à Vin\n241 Rue Benoni Praud\nTél : 02.97.26.31.52","links":[],"emoji":"🍺","layer":"poi-alim"},
+  {"name":"Glaces artisanales","lat":47.599406,"lon":-2.850566,"cat":"Restauration rapide","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Glacesartisanales.jpg/1280px-Glacesartisanales.jpg","description":"","links":[],"emoji":"🥙","layer":"poi-alim"},
+  {"name":"Office de tourisme","lat":47.600803,"lon":-2.852159,"cat":"Information","color":"MintCream","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Officedetourisme_0.jpg/1280px-Officedetourisme_0.jpg","description":"","links":[],"emoji":"ℹ️","layer":"poi-main"},
+  {"name":"Port/Harbour — IZENAH","lat":47.601316,"lon":-2.851931,"cat":"Transport","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Izenahsweet.jpg/1920px-Izenahsweet.jpg?_=20260411090456","description":"Embarquement pour Port-Blanc avec IZENAH Croisières","links":[["http://www.izenah-croisieres.com/liaisons-régulières","Voir le site"]],"emoji":"⛴️","layer":"transports"},
+  {"name":"la Cale de Brouël","lat":47.590816,"lon":-2.824194,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Calebrouel.jpg/250px-Calebrouel.jpg","description":"Cale de Brouël","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Cale de Carlez","lat":47.565892,"lon":-2.854546,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Caledecarlez.jpg/250px-Caledecarlez.jpg","description":"Cale de Carlez","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Croix de Brouël","lat":47.59053,"lon":-2.82466,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/CroixBrouelIAM.jpg/1280px-CroixBrouelIAM.jpg?","description":"","links":[["https://www.croixbretagne.fr/Ccb/Content/liste.jsp?comId=21825&statut=0","voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Croix de Kerno","lat":47.585641,"lon":-2.852854,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/b/bf/Croixdekerno.jpg?_=20260403120831","description":"","links":[["https://www.croixbretagne.fr/Ccb/Content/liste.jsp?comId=21825&statut=0","voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Croix de Locmiquel","lat":47.598375,"lon":-2.842653,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Croix_de_l%27%C3%A9glise_St_Michel.jpg/1280px-Croix_de_l%27%C3%A9glise_St_Michel.jpg","description":"","links":[["https://www.croixbretagne.fr/Ccb/Content/liste.jsp?comId=21825&statut=0","voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Croix de Penhap","lat":47.569501,"lon":-2.855244,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Croixdepenhap_%281%29.jpg/250px-Croixdepenhap_%281%29.jpg","description":"Croix de Penhap","links":[["https://www.croixbretagne.fr/Ccb/Content/liste.jsp?comId=21825&statut=0","voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Croix du Bois d'Amour","lat":47.601085,"lon":-2.854337,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Croixduboisdamour.jpg/1280px-Croixduboisdamour.jpg","description":"Cette croix porte l'inscription 1846","links":[["https://www.croixbretagne.fr/Ccb/Content/liste.jsp?comId=21825&statut=0","voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine de Kerno","lat":47.582185,"lon":-2.852572,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/e/e4/Fontaine_de_Kerno.jpg?_=20260421071901","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine de Kerquecu","lat":47.588706,"lon":-2.850067,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/d/dd/Kerquecu.jpg?_=20260622081025","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine du Guerric","lat":47.592761,"lon":-2.840186,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/7/72/Fontaineguerric.jpg?_=20260705083351","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine du Guip","lat":47.572357,"lon":-2.855877,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/8/8f/Fontaines_du_Guip.jpg?_=20260614124358","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine du Lério","lat":47.59858,"lon":-2.84963,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/FontaineLerio_%281%29.jpg/250px-FontaineLerio_%281%29.jpg","description":"Fontaine du Lério","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine du Prado","lat":47.594574,"lon":-2.843839,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Fontaineduprado.jpg/250px-Fontaineduprado.jpg","description":"Fontaine du Prado","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Fontaine du Salzen","lat":47.579468,"lon":-2.851998,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/f/f2/Fontaine_du_Salsen.jpg?_=20260421071904","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Place du Marché","lat":47.59682,"lon":-2.845856,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/0/0b/Place_du_march%C3%A9_Ile-aux-Moines.jpg?_=20260416112804","description":"Place centrale du Bourg","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"la Rue des Escaliers","lat":47.597742,"lon":-2.847406,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/d/d1/Lesmarches.jpg?_=20260403120836","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Chantier du Guip","lat":47.572679,"lon":-2.855871,"cat":"Patrimoine & curiosités","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Chantierduguip.jpg/250px-Chantierduguip.jpg","description":"Chantier du Guip","links":[["https://fr.wikipedia.org/wiki/Chantier_du_Guip","Voir le site"]],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Cimetière","lat":47.59885,"lon":-2.84228,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/f/f3/Cimetiere_de_l%27Ile-aux-Moines.jpg?_=20260403120829","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"les Dolmens de Pen Nioul","lat":47.560376,"lon":-2.859825,"cat":"Mégalithe","color":"MediumBlue","image":"https://upload.wikimedia.org/wikipedia/commons/1/13/Dolmens_de_Pen_Nioul.jpg?_=20260407135831","description":"","links":[["https://pop.culture.gouv.fr/notice/merimee/PA56000123/","Voir le site"],["https://megalithes-du-golfe.fr/sites_ile_aux_moines/sites_ile_aux_moines.html","Voir le site"]],"emoji":"🗿","layer":"poi-heritage"},
+  {"name":"les Fontaines du Vran","lat":47.59126,"lon":-2.848066,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Fontaines_du_Vran.jpg/250px-Fontaines_du_Vran.jpg","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"les Pierres à laver de Port Miquel","lat":47.597236,"lon":-2.84209,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Pierrealaverportmiquel.jpg/1280px-Pierrealaverportmiquel.jpg","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"les Trois Fontaines","lat":47.591969,"lon":-2.854761,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/b/b6/Lestroisfontaines.jpg","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Puits de Locmiquel","lat":47.598263,"lon":-2.842079,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/f/f1/Fontainedeleglise.jpg?_=20260403120833","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Puits du Gras Houarn","lat":47.592511,"lon":-2.832005,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/4/40/Puitsdugrazhouarn.jpg?_=20260729122141","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"le Puits du Naudeux","lat":47.591325,"lon":-2.835782,"cat":"Patrimoine & curiosités","color":"Red","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Puits_IAM.jpg/1280px-Puits_IAM.jpg","description":"","links":[],"emoji":"🏛️","layer":"poi-heritage"},
+  {"name":"Om Mani Padme Hum","lat":47.592157,"lon":-2.854857,"cat":"Curiosités","color":"DarkSalmon","image":"https://upload.wikimedia.org/wikipedia/commons/c/c1/Ommanipadmehum.jpg?_=20260415114252","description":"OM MANI PÉMÉ HOUNG","links":[["https://fr.wikipedia.org/wiki/Om_mani_padme_hum","Voir le site"]],"emoji":"✨","layer":"poi-heritage"},
+  {"name":"ISLA bijoux","lat":47.600316,"lon":-2.85123,"cat":"Commerce","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Islabijoux.jpg/250px-Islabijoux.jpg","description":"Bijoux & Accessoires, Créateur de Bijoux","links":[],"emoji":"🛒","layer":"poi-alim"},
+  {"name":"DECHETS TRI","lat":47.593604,"lon":-2.850319,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"Déchèterie\nLe Rinville","links":[["https://horairedechetterie.fr/decheterie-de-lile-aux-moines.html#google_vignette","Voir le site"]],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.600723,"lon":-2.851832,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.598328,"lon":-2.848485,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59852,"lon":-2.849413,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.597225,"lon":-2.848962,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59656,"lon":-2.848554,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.595496,"lon":-2.848361,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.601287,"lon":-2.853248,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.600984,"lon":-2.842873,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.599754,"lon":-2.843152,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.599356,"lon":-2.843056,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59899,"lon":-2.842916,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59869,"lon":-2.842369,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.598401,"lon":-2.842321,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.597638,"lon":-2.843222,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.596758,"lon":-2.843265,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.596954,"lon":-2.84327,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.596639,"lon":-2.844456,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.596006,"lon":-2.845185,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.595706,"lon":-2.842794,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.595094,"lon":-2.841951,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.594277,"lon":-2.842895,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.593365,"lon":-2.84577,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592924,"lon":-2.845759,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592873,"lon":-2.845094,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592598,"lon":-2.844386,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.591962,"lon":-2.844826,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592215,"lon":-2.846618,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592381,"lon":-2.848495,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.591571,"lon":-2.849332,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592244,"lon":-2.849783,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59262,"lon":-2.850362,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592634,"lon":-2.85298,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.595478,"lon":-2.849611,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.594299,"lon":-2.850244,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.593524,"lon":-2.85224,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.595841,"lon":-2.846969,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.596512,"lon":-2.847015,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.597001,"lon":-2.845985,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.597214,"lon":-2.847594,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.600441,"lon":-2.843227,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.599131,"lon":-2.844,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.598379,"lon":-2.844493,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.598046,"lon":-2.844687,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.592417,"lon":-2.839601,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.591882,"lon":-2.834494,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59126,"lon":-2.832134,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59181,"lon":-2.836082,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.572762,"lon":-2.85593,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.572139,"lon":-2.857454,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.578769,"lon":-2.856424,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.580275,"lon":-2.85593,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.582808,"lon":-2.854171,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.583531,"lon":-2.853634,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.584501,"lon":-2.853334,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.58715,"lon":-2.853119,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.588105,"lon":-2.853398,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.585731,"lon":-2.852776,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.589653,"lon":-2.852519,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.59071,"lon":-2.85357,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Poubelles","lat":47.590666,"lon":-2.850459,"cat":"Poubelles","color":"#7f8c8d","image":"","description":"","links":[],"emoji":"🗑️","layer":"poubelles"},
+  {"name":"Toilettes publiques","lat":47.580154,"lon":-2.856091,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/f/f7/Toilettesdurudel.jpg?_=20260726065058","description":"Toilettes sèches Rudel","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.570924,"lon":-2.857647,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/5/53/Toilettesdolmen.jpg?_=20260726065058","description":"Toilettes sèches Er Boglieux","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.605888,"lon":-2.837262,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/9/90/Toilettesdutrechjpg.jpg?_=20260725121104","description":"Toilettes publiques Le Trec'h","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.59877,"lon":-2.850759,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/e/ef/Toilettesgdeplage.jpg?_=20260726065058","description":"Toilettes publiques Grande Plage","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.600596,"lon":-2.851875,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/3/39/Toilettesgrandpont.jpg?_=20260726065100","description":"Toilettes publiques Le Port","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.601168,"lon":-2.853334,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/9/95/Toilettesport.jpg?_=20260726065100","description":"Toilettes publiques Le Port","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.597059,"lon":-2.845867,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/0/00/Toilettesdubourg.jpg?_=20260725121101","description":"Toilettes publiques Le Bourg","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.590652,"lon":-2.824967,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/a/a3/Toilettesdebrouel.jpg?_=20260725142252","description":"Toilettes publiques : Pointe de Brouël","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.584805,"lon":-2.855759,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/f/f1/Toilettesgored.jpg?_=20260726065100","description":"Toilettes publiques Gored","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.598668,"lon":-2.84253,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/7/7e/Toilettesdeleglise.jpg?_=20260725121101","description":"Toilettes publiques Eglise","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Toilettes publiques","lat":47.597506,"lon":-2.842799,"cat":"Toilettes","color":"#2980b9","image":"https://upload.wikimedia.org/wikipedia/commons/7/74/Toilettesdeportmiquel.jpg?_=20260725121102","description":"Toilettes publiques Port Miquel","links":[],"emoji":"🚻","layer":"toilettes"},
+  {"name":"Défibrillateur du Bourg","lat":47.596371,"lon":-2.846954,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/6/6a/SIFR_PS430~1_std.lang.all.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260509084449","description":"BOULANGERIE / rue du Commerce\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.596807/-2.847476&node_id=12492252892","voir site"]],"emoji":"♥️","layer":"Défibrillateurs"},
+  {"name":"Défibrillateur du Port","lat":47.601049,"lon":-2.852942,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/6/6a/SIFR_PS430~1_std.lang.all.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260509084449","description":"PORT / rue Bénoni Praud\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.600837/-2.852795&node_id=8993207003","voir site"]],"emoji":"♥️","layer":"Défibrillateurs"},
+  {"name":"Défibrillateur de l'EHPAD","lat":47.596986,"lon":-2.843986,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/6/6a/SIFR_PS430~1_std.lang.all.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260509084449","description":"EHPAD / rue de l'Eglise\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.596678/-2.846115&node_id=12492252890","voir site"]],"emoji":"♥️","layer":"Défibrillateurs"},
+  {"name":"Défibrillateur de BROUËL","lat":47.591983,"lon":-2.834060,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/d/df/Defibrillateur_de_Brou%C3%ABl.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20261015090159","description":"Panneau BROUËL / rue du Pont du Guéric / impasse du Gras Hoarn\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.596678/-2.846115&node_id=12492252890","voir site"]],"emoji":"♥️","layer":"Défibrillateurs"},
+  {"name":"Défibrillateur du Chantier du GUIP","lat":47.57289,"lon":-2.85623,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/d/dd/DefibrillateurGuip.jpg?_=20260601091851","description":"Chantier du GUIP / Anse de PenHap\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.596678/-2.846115&node_id=12492252890","voir site"]],"emoji":"♥️","layer":"Défibrillateurs"},
+  {"name":"Défibrillateur de la Plage du Gored","lat":47.58487,"lon":-2.85575,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/6/69/D%C3%A9fibrillateurGored.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original","description":"Plage du Gored Sur les Toilettes publiques\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.596678/-2.846115&node_id=12492252890","voir site"]],"emoji":"♥️","layer":"Défibrillateurs"},  
+  {"name":"Défibrillateur de la Salle Polyvalente","lat":47.593958,"lon":-2.843137,"cat":"Défibrillateurs","color":"#0a9967","image":"https://upload.wikimedia.org/wikipedia/commons/f/fc/Defibrillateursallepo.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260819081621","description":"Salle Polyvalente / Route de Brouël\nUn défibrillateur automatisé externe (DAE) est un appareil portable, fonctionnant au moyen d'une batterie, dont le rôle est d'analyser l'activité du cœur d'une personne en arrêt cardio-respiratoire. Cette analyse est entièrement automatique, ce qui évite à l'opérateur toute prise de décision.","links":[["https://openaedmap.org/fr/#map=17/47.596678/-2.846115&node_id=12492252890","voir site"]],"emoji":"❤️","layer":"Défibrillateurs"},
+  {"name":"Pharmacie","lat":47.596693,"lon":-2.846156,"cat":"Santé","color":"#e74c3c","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pharmacie.jpg/250px-Pharmacie.jpg","description":"rue des Escaliers\ntél : 02 97 26 31 49","links":[],"emoji":"🏥","layer":"sante"},
+  {"name":"Résidence Léon VINET","lat":47.597158,"lon":-2.84453,"cat":"Santé","color":"#e74c3c","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/R%C3%A9sidencel%C3%A9onvinet.jpg/1280px-R%C3%A9sidencel%C3%A9onvinet.jpg?_=20260303053411","description":"EHPAD\nrue de l'Eglise\ntél: 02 97 26 37 26","links":[],"emoji":"🏥","layer":"sante"},
+  {"name":"Santé - Cabinet Médical","lat":47.597891,"lon":-2.843142,"cat":"Santé","color":"#e74c3c","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Maisondesant%C3%A9.jpg/1280px-Maisondesant%C3%A9.jpg?","description":"247 rue de l'Église\nMédecin : 02.97.68.40.58 - Dr Jean-Paul Malaper\nInfirmiers : 06.70.59.50.16\nKinésithérapeutes : Sébastien Martinez 06.62.76.47.20 / Dorian Massat 06.75.56.13.23\nOstéopathe : 06.51.67.72.56 - Alexa Chatelet","links":[],"emoji":"🏥","layer":"sante"},
+  {"name":"VTC Ile-aux-Moines","lat":47.600800,"lon":-2.852014,"cat":"vtc","color":"#f39c12","image":"https://upload.wikimedia.org/wikipedia/commons/a/a6/Authentik.webp?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260901053619","description":"**l'AUTHENTIK**\nChristophe tél : 06 85 61 15 48\nHoraires du Lundi au Samedi\n8h30 - 13h30 & 15h30 - 19h30","links":[],"emoji":"🚗","layer":"vtc"},
+  {"name":"Navette Port-Blanc","lat":47.6010996,"lon":-2.851896,"cat":"Transport","color":"#1a2f5a","image":"https://upload.wikimedia.org/wikipedia/commons/c/c2/Izenahcroisieres.jpg","description":"Tous les jours de l'année\nDépart des navettes toutes les 30 mn à 5 et 35 de Port-Blanc et à l'heure et 1/2h de l'île aux Moines","links":[["https://www.izenah-croisieres.com/liaisons-regulieres/individuelle/lile-aux-moines-en-direct","Voir le site"]],"emoji":"⛴️","layer":"vtc"},
+  {"name":"le VRAN","lat":47.59039,"lon":-2.84467,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/4/43/Tables_du_Vran.jpg?_=20260523084431","description":"Aire de Pique-nique de la plage du VRAN","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"CAMPING MUNICIPAL du VIEUX MOULIN","lat":47.592924,"lon":-2.844515,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/c/c9/Tablescamping_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260511094144","description":"Aire de Pique-nique du CAMPING MUNICIPAL","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"CROMLECH de KERGONAN","lat":47.590648,"lon":-2.850845,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/3/36/Tablescromelech_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260513092739","description":"Aire de Pique-nique de KERGONAN","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"le RUDEL","lat":47.580184,"lon":-2.856129,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/7/75/Tablesrudel_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260511094147","description":"Aire de Pique-nique du Rudel","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"le TOULPRY","lat":47.597131,"lon":-2.848962,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/8/87/TablesToulpry_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260511094145","description":"Aire de Pique-nique du Toulpry","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"PEN-HAP","lat":47.576287,"lon":-2.856134,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/b/b7/Tablepenhap_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260511094147","description":"Aire de Pique-nique de Penhap","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"GORET","lat":47.584897,"lon":-2.856076,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/4/45/Tablesgoret_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260511094147","description":"Aire de Pique-nique de la plage du Goret","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"PORT - MIQUEL","lat":47.596084,"lon":-2.841412,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/e/e7/Tablesportmiquel_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260511094144","description":"Aire de Pique-nique de Port-Miquel","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"la POINTE du TREC'H","lat":47.606987,"lon":-2.837818,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/1/10/Tablespiquenique.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260509085251","description":"Aire de Pique-nique de la Pointe du Trec'h","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"la POINTE du TREC'H","lat":47.607132,"lon":-2.837654,"cat":"Pique-nique","color":"#27ae60","image":"https://upload.wikimedia.org/wikipedia/commons/1/17/Tabledutrech.jpg?_=20260523084431","description":"Aire de Pique-nique de la cale du Trec'h","links":[],"emoji":"🧺","layer":"pique-nique"},
+  {"name":"01 - le Bois'Amour","lat":47.600018,"lon":-2.853345,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Plaque_N%C2%B01.jpg/960px-Plaque_N%C2%B01.jpg?_=20260226101305","description":"Plaque de secours N° 1","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"02 - le Drehen","lat":47.598524,"lon":-2.851177,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/c/c8/Plaque_N%C2%B02.jpg?_=20260226101305","description":"","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"03 - Beg er Mendu","lat":47.596259,"lon":-2.851521,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/c/c2/Plaque_N%C2%B03.jpg?_=20260226101308","description":"Plaque de secours N° 3","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"04 - le Rinville","lat":47.594233,"lon":-2.852717,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/5/51/Plaque_de_secours_N%C2%B04.jpg","description":"Plaque de secours N° 4","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"05 - le Gazolven","lat":47.592222,"lon":-2.854707,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/5/58/Plaque_de_secours_N%C2%B05.jpg","description":"Plaque de secours N° 5","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"06 - le Greignon","lat":47.590594,"lon":-2.85578,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/b/b8/Plaque_N%C2%B06.jpg?_=20260226101308","description":"Plaque de secours N° 6","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"07 - le Greignon","lat":47.589538,"lon":-2.85651,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/5/55/Plaque_de_secours_N%C2%B07.jpg?_=20260405085823","description":"Plaque de secours N° 7","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"08 - le Rahic (ouest)","lat":47.58728,"lon":-2.856038,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/c/c0/Plaque_de_secours_N%C2%B08.jpg","description":"Plaque de secours N° 8","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"09 - le Goret","lat":47.584711,"lon":-2.855619,"cat":"Secours","color":"#c0392b","image":"","description":"Plaque de secours N° 9","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"10 - le Goret","lat":47.583269,"lon":-2.857100,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/9/94/Plaque_de_secours_N%C2%B010.jpg","description":"Plaque de secours N° 10","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"11 - le Rudel","lat":47.581686,"lon":-2.857078,"cat":"Secours","color":"#c0392b","image":"","description":"Plaque de secours N° 11","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"12 - le Rudel","lat":47.580032,"lon":-2.856971,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/e/ed/Plaque_de_secours_N%C2%B012.jpg?_=20260405113403","description":"Plaque de secours N° 12","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"13 - Coste Hechen","lat":47.576561,"lon":-2.858789,"cat":"Secours","color":"#c0392b","image":"","description":"Plaque de secours N° 13","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"14 - les 3 sapins","lat":47.574325,"lon":-2.859272,"cat":"Secours","color":"#c0392b","image":"","description":"Plaque de secours N° 14","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"15 - Boglieux","lat":47.571437,"lon":-2.859911,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Plaque_de_secours_N%C2%B0_15.jpg/960px-Plaque_de_secours_N%C2%B0_15.jpg?_=20260404143712","description":"Plaque de secours N° 15","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"16 - Bois de Kerbozec","lat":47.568839,"lon":-2.862035,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/b/bd/Plaque_de_secours_N%C2%B016.jpg?_=20260405113836","description":"Plaque de secours N° 16","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"17 - Kerbozec","lat":47.567409,"lon":-2.860946,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/6/63/Plaque_de_secours_N%C2%B017.jpg?_=20260405114229","description":"Plaque de secours N° 17","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"18 - Raz Vihan","lat":47.565469,"lon":-2.860785,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/c/ca/Plaque_de_secours_N%C2%B018.jpg?_=20260405114608","description":"Plaque de secours N° 18","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"19 - Raz Vras","lat":47.562619,"lon":-2.860509,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/2/23/Plaque_de_secours_N%C2%B019.jpg?_=20260405115020","description":"Plaque de secours N° 19","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"20 - Pointe de Nioul","lat":47.560057,"lon":-2.859712,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/1/1b/Plaque_de_secours_N%C2%B020.jpg?_=20260405085823","description":"Plaque de secours N° 20","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"21 - Le Nioul","lat":47.561788,"lon":-2.858344,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Plaque_de_secours_N%C2%B021.jpg/250px-Plaque_de_secours_N%C2%B021.jpg","description":"Plaque de secours N° 21","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"22 - Port Diahuen","lat":47.564497,"lon":-2.858433,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/b/bf/Plaque_de_secours_N%C2%B022.jpg?_=20260412140148","description":"Plaque de secours N° 22","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"23 - Kerbozec (sud)","lat":47.56662,"lon":-2.857947,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/d/d4/Plaque_de_secours_N%C2%B0_23.jpg?_=20260421141512","description":"Plaque de secours N° 23","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"24 - Carlez","lat":47.565968,"lon":-2.854407,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Plaque_N%C2%B024.jpg/1280px-Plaque_N%C2%B024.jpg","description":"Plaque de secours N° 24","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"25 - Brannec","lat":47.566189,"lon":-2.85019,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Plaque_de_secours_N%C2%B025.jpg/250px-Plaque_de_secours_N%C2%B025.jpg","description":"Plaque de secours N° 25","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"26 - Brannec","lat":47.567355,"lon":-2.849793,"cat":"Secours","color":"#c0392b","image":"","description":"Plaque de secours N° 26","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"27 - Penhap","lat":47.568361,"lon":-2.853098,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/c/c5/Plaque_de_secours_N%C2%B0_27.jpg?_=20260421141511","description":"Plaque de secours N° 27","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"30 - Le guip","lat":47.574409,"lon":-2.855939,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/a/a7/PlaquesecoursN%C2%B030.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20260808134841","description":"Plaque de secours N° 30","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"31 - Anse du guip","lat":47.575397,"lon":-2.853098,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/9/97/Plaque_de_secours_N%C2%B0_31.jpg?_=20260405110109","description":"Plaque de secours N° 31","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"32 - Pointe du Sperneguy","lat":47.578161,"lon":-2.850641,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/c/c7/Plaque_de_secours_N%C2%B0_32.jpg?_=20260405111008","description":"Plaque de secours N° 32","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"33 - le Salzen","lat":47.579848,"lon":-2.852036,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Plaque_de_secours_N%C2%B033.jpg/250px-Plaque_de_secours_N%C2%B033.jpg","description":"Plaque de secours N° 33","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"34 - Kerno (est)","lat":47.582171,"lon":-2.852041,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Plaque_de_secours_N%C2%B034.jpg/250px-Plaque_de_secours_N%C2%B034.jpg","description":"Plaque de secours N° 34","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"35 - Croix de Kerno (est)","lat":47.584458,"lon":-2.850974,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Plaque_de_secours_N%C2%B035.jpg/250px-Plaque_de_secours_N%C2%B035.jpg","description":"Plaque de secours N° 35","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"36 - Croix de Kerno","lat":47.586404,"lon":-2.850802,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Plaque_de_secours_N%C2%B036.jpg/250px-Plaque_de_secours_N%C2%B036.jpg","description":"Plaque de secours N° 36","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"37 - le Vran","lat":47.588691,"lon":-2.847884,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/9/93/Plaque_de_secours_N%C2%B0_37.jpg?_=20260405111815","description":"Plaque de secours N° 37","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"38 - le Vran","lat":47.590087,"lon":-2.846682,"cat":"Secours","color":"#c0392b","image":"","description":"Plaque de secours N° 38","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"39 - le Naudeux","lat":47.589972,"lon":-2.843281,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/4/42/Plaque_de_secours_N%C2%B039.jpg?_=20260721101931","description":"Plaque de secours N° 39","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"40 - le Naudeux","lat":47.589391,"lon":-2.840384,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/1/12/Plaque_de_secours_N%C2%B040.jpg?_=20260721101931","description":"Plaque de secours N° 40","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"41 - le Bois de la Chêvre","lat":47.588168,"lon":-2.836543,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/3/35/Plaque_de_secours_N%C2%B041.jpg","description":"Plaque de secours N° 41","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"42 - le Lann","lat":47.589566,"lon":-2.836007,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/5/5c/Plaque_de_secours_N%C2%B0_42.jpg?_=20260405112246","description":"Plaque de secours N° 42","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"43 - Brouël (sud)","lat":47.589884,"lon":-2.83049,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/2/28/Plaque_de_secours_N%C2%B0_43.jpg?_=20260405112804","description":"Plaque de secours N° 43","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"44 - Brouël (sud)","lat":47.589587,"lon":-2.827912,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/1/15/Plaque_de_secours_N%C2%B0_44.jpg?_=20260421141511","description":"Plaque de secours N° 44","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"53 - le Trec'h (est)","lat":47.599804,"lon":-2.840105,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Plaque_de_secours_N%C2%B053.jpg/250px-Plaque_de_secours_N%C2%B053.jpg","description":"","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"54 - Beg Moussir","lat":47.603834,"lon":-2.838094,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Plaque_de_secours_N%C2%B054.jpg/250px-Plaque_de_secours_N%C2%B054.jpg","description":"","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"55 - la Pointe du Trech","lat":47.605939,"lon":-2.837166,"cat":"Secours","color":"#c0392b","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Plaque_de_secours_N%C2%B055.jpg/250px-Plaque_de_secours_N%C2%B055.jpg","description":"","links":[],"emoji":"🔴","layer":"secours"},
+  {"name":"Résidence la Voile d'Or","lat":47.592466,"lon":-2.845044,"cat":"Hébergement","color":"#2d5e3f","image":"https://upload.wikimedia.org/wikipedia/commons/2/22/Voile_d%27or.jpg?_=20260416115109","description":"Résidence de tourisme\n158 Rue du Vieux Moulin\n56780 Île-aux-Moines","links":[["https://www.pierreetvacances.com/fr-fr/fp_OVO_location-residence-la-voile-d-or?&adlgid=c%7Co%7Cr%C3%A9sidence%20la%20voile%20d%27or%7C%7Ce&msclkid=a83d19f496141e7e39ef70145f3b068a&utm_source=bing&utm_medium=cpc&utm_campaign=MST_PV_FR_FRA_Search_Generic_Residences_Mer&utm_term=r%C3%A9sidence%20la%20voile%20d%27or&utm_content=FR%7CBretagne%7CNULL%7CL%27ile-aux-Moines%7CLa%20Voile%20d%27Or&gclid=a83d19f496141e7e39ef70145f3b068a&gclsrc=3p.ds&gad_source=7&gad_campaignid=9340796847","Voir le site"]],"emoji":"🌿","layer":"poi-main"}
+];
