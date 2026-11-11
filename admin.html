@@ -1,4 +1,5 @@
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <title>M'IAM — Gestionnaire de l'Agenda</title>
@@ -397,17 +398,14 @@ label {
 
 <script>
 /* -----------------------------------------------------------
-   CONFIGURATION — À ADAPTER À VOTRE DÉPÔT
+   CONFIGURATION
    -----------------------------------------------------------
-   Remplacez la ligne ci-dessous par l'URL "raw" réelle de votre
-   fichier evenements.js publié sur GitHub. Elle ressemble à :
-
-   https://raw.githubusercontent.com/VOTRE-UTILISATEUR/VOTRE-DEPOT/main/Gestionevenements/evenements.js
-
-   (le nom de la branche - "main" ou "master" - et le chemin du
-   fichier dans le dépôt dépendent de votre organisation)
+   Adresse du fichier evenements.js PUBLIÉ sur le site M'IAM.
+   C'est exactement le fichier que voient les visiteurs.
+   (Le fichier doit se trouver à la racine du dépôt, à côté de
+   index.html : c'est là que la carte le lit.)
    ----------------------------------------------------------- */
-const GITHUB_RAW_URL = "https://raw.githubusercontent.com/VOTRE-UTILISATEUR/VOTRE-DEPOT/main/Gestionevenements/evenements.js";
+const GITHUB_RAW_URL = "https://izenahgoud.github.io/miam-ile-aux-moines/evenements.js";
 
 /* -----------------------------------------------------------
    LISTE DES LIEUX — remplissage automatique du <select>
@@ -780,3 +778,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
+</html>
