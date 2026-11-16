@@ -88,6 +88,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
 .poi-marker.evt-marker{width:28px;height:28px}
 .poi-marker.evt-marker span{font-size:12px}
 .poi-marker.evt-marker:hover{transform:rotate(-45deg) scale(1.3)!important;box-shadow:0 0 0 2.5px #e8d5a3,0 4px 16px rgba(155,89,182,.6)!important}
+.pmr-badge{position:absolute;right:-9px;top:2px;transform:rotate(45deg);width:15px;height:15px;border-radius:50%;background:#0057b8;color:#fff;border:1.5px solid #fff;font-style:normal;font-size:9px;line-height:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.poi-pmr{display:inline-flex;align-items:center;gap:6px;background:#0057b8;color:#fff;border-radius:10px;padding:4px 10px;font-size:12px;font-weight:500;margin-bottom:10px}  
 .user-dot{width:16px;height:16px;border-radius:50%;background:#4fc87a;border:3px solid white;box-shadow:0 0 8px rgba(79,200,122,.6)}
 .leaflet-control-zoom,.leaflet-popup{display:none}
 #version-badge{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(26,58,42,0.6);color:rgba(232,213,163,0.95);font-size:11px;font-weight:500;padding:4px 10px;border-radius:10px;pointer-events:none;font-family:"DM Sans",sans-serif;letter-spacing:.06em;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
@@ -224,6 +226,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
     <div class="poi-content">
       <div class="poi-cat-badge" id="poi-cat"></div>
       <div id="poi-name"></div>
+      <div id="poi-pmr" class="poi-pmr" style="display:none" role="note"></div>
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:12px"><div class="poi-dist-badge" id="poi-dist" style="display:none">📍 <span id="poi-dist-val"></span></div><button id="walk-btn" onclick="calcWalk()">🚶 Distance à pied</button><span id="walk-result"></span></div>
       <div id="poi-desc"></div>
       <div class="poi-links" id="poi-links"></div>
@@ -378,7 +381,7 @@ function createMarker(poi) {
   const num=poi.cat==="Secours"?(poi.name.match(/^\s*(\d+)\s*-/)||[])[1]:null;
   const icon=num
     ?L.divIcon({className:"",html:`<div class="poi-marker secours-marker" style="background:${color}"><span>${parseInt(num,10)}</span></div>`,iconSize:[28,28],iconAnchor:[14,28]})
-    :L.divIcon({className:"",html:`<div class="poi-marker" style="background:${color}"><span>${poi.emoji||"📍"}</span></div>`,iconSize:[24,24],iconAnchor:[12,24]});
+    :L.divIcon({className:"",html:`<div class="poi-marker" style="background:${color}"><span>${poi.emoji||"📍"}</span>${poi.pmr?'<i class="pmr-badge" aria-hidden="true">♿</i>':''}</div>`,iconSize:[24,24],iconAnchor:[12,24]});
   const m=L.marker([poi.lat,poi.lon],{icon});
   if(layerState[poi.layer||"poi-main"]) m.addTo(map);
   m.on("click",()=>openPOI(poi,m));
