@@ -460,6 +460,9 @@ function openPOI(poi,marker) {
   if(el){el.classList.add("active-marker");activeMarkerEl=el;}
   const img=document.getElementById("poi-image"),ph=document.getElementById("poi-image-placeholder");
   document.getElementById("poi-name").textContent=poi.name;
+  const pmrEl=document.getElementById("poi-pmr");
+  if(poi.pmr){pmrEl.textContent="♿ Accessible PMR"+(poi.pmr_info?" — "+poi.pmr_info:"");pmrEl.style.display="inline-flex";}
+  else{pmrEl.style.display="none";}
   const catEl=document.getElementById("poi-cat");
   catEl.textContent=(poi.emoji||"")+" "+poi.cat;
   catEl.style.background="";
@@ -581,6 +584,7 @@ function ouvrirPanneauEvenement(evt) {
   catEl.style.background='#9b59b6';
   catEl.textContent='🗓 '+(evt.association||'Événement');
   document.getElementById('poi-name').textContent=evt.nom;
+  document.getElementById('poi-pmr').style.display='none';
   document.getElementById('poi-dist').style.display='none';
   document.getElementById('walk-btn').classList.remove('visible');
   document.getElementById('walk-result').textContent='';
@@ -648,7 +652,8 @@ function doSearch(q) {
     const name = (p.name||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const cat  = (p.cat||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
     const desc = (p.description||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    return name.includes(term) || cat.includes(term) || desc.includes(term);
+    return name.includes(term) || cat.includes(term) || desc.includes(term)
+      || (p.pmr && term.length>=3 && ['pmr','handicap','accessible','fauteuil'].some(w=>w.startsWith(term)));
   }).slice(0, 12);
 
   if (found.length === 0) {
@@ -698,6 +703,6 @@ document.addEventListener('keydown', e => {
 });
 </script>
 <div id="crealion"><img src="https://ibb.co/1J6zCWpq" alt="créalion"></div>
-<div id="version-badge">v3.4.1</div>
+<div id="version-badge">v3.5.0</div>
 </body>
 </html>
