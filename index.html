@@ -361,7 +361,9 @@ async function getWalkingDistance(lat1,lon1,lat2,lon2){
       headers:{"Content-Type":"application/json","Authorization":ORS_KEY},
       body:JSON.stringify({coordinates:[[lon1,lat1],[lon2,lat2]]})
     });
+    if(!r.ok) return null;
     const d=await r.json();
+    if(!d.routes||!d.routes[0]) return null;
     const s=d.routes[0].summary;
     const dist=s.distance<1000?Math.round(s.distance)+" m":(s.distance/1000).toFixed(1)+" km";
     const mins=Math.round(s.duration/60);
