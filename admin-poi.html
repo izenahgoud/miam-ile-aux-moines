@@ -214,7 +214,15 @@ tr:hover td{background:#fafaf8}
         <select id="f-layer"></select>
         <span class="form-hint">Détermine dans quelle case du menu « Catégories » le lieu apparaît. Proposée automatiquement selon la catégorie.</span>
       </div>
-
+      <div class="form-row">
+        <label>Accessibilité</label>
+        <label style="text-transform:none;font-size:14px;color:var(--text);display:flex;align-items:center;gap:8px;letter-spacing:0">
+          <input type="checkbox" id="f-pmr" style="width:auto;padding:0"> ♿ Accessible aux personnes à mobilité réduite (PMR)
+        </label>
+        <input type="text" id="f-pmr-info" placeholder="Précision facultative (ex : accès de plain-pied)" style="margin-top:8px">
+        <span class="form-hint">Ne cochez que si l'accessibilité a été vérifiée sur place.</span>
+      </div>
+      
       <div class="form-row">
         <label>Position sur la carte *</label>
         <div id="pick-map"></div>
@@ -510,8 +518,7 @@ function renderTable(){
     const img = p.image
       ? `<img class="poi-img" src="${esc(p.image)}" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.querySelector('.poi-img-empty').style.display='flex'"><div class="poi-img-empty" style="display:none">${emo}</div>`
       : `<div class="poi-img-empty">${emo}</div>`;
-    const tags = (isHttp(p) ? '<span class="tag">photo http</span>' : '') + (dupKeys.has(keyOf(p)) ? '<span class="tag">doublon</span>' : '') + (badLayer(p) ? '<span class="tag" style="background:#fff0f0;color:#c0392b">invisible sur la carte</span>' : '');
-    return `<tr><td>${img}</td>
+    const tags = (p.pmr ? '<span class="tag" style="background:#e6f1fb;color:#185FA5">♿ PMR</span>' : '') + (isHttp(p) ? '<span class="tag">photo http</span>' : '') + (dupKeys.has(keyOf(p)) ? '<span class="tag">doublon</span>' : '') + (badLayer(p) ? '<span class="tag" style="background:#fff0f0;color:#c0392b">invisible sur la carte</span>' : '');    return `<tr><td>${img}</td>
       <td><span class="poi-name">${esc(p.name)}</span>${tags}</td>
       <td><span class="poi-cat">${emo} ${esc(p.cat)}</span></td>
       <td><span class="coords">${Number(p.lat).toFixed(4)}, ${Number(p.lon).toFixed(4)}</span></td>
@@ -600,6 +607,7 @@ function openAdd(){
   $('f-cat').value = 'Restaurant'; updateEmoji();
   $('f-lat').value = ''; $('f-lon').value = ''; $('f-paste').value = '';
   $('f-image').value = ''; $('f-desc').value = '';
+  $('f-pmr').checked = false; $('f-pmr-info').value = '';
   fillLinks([]);
   previewImg();
   $('modal').classList.add('open');
@@ -618,6 +626,7 @@ function openEdit(idx){
   $('f-lat').value = p.lat; $('f-lon').value = p.lon; $('f-paste').value = '';
   $('f-image').value = p.image || '';
   $('f-desc').value = p.description || '';
+  $('f-pmr').checked = !!p.pmr; $('f-pmr-info').value = p.pmr_info || '';
   fillLinks(p.links);
   previewImg();
   $('modal').classList.add('open');
@@ -666,6 +675,10 @@ function savePOI(){
     emoji: $('f-emoji').value.trim() || CAT_EMOJIS[cat] || '📍',
     layer: $('f-layer').value
   });
+
+  const pmrInfo = $('f-pmr-info').value.trim();
+  if ($('f-pmr').checked){ poi.pmr = true; if (pmrInfo) poi.pmr_info = pmrInfo; else delete poi.pmr_info; }
+  else { delete poi.pmr; delete poi.pmr_info; }
 
   const k = keyOf(poi);
   if (_POIS.some((p,i) => i !== idx && keyOf(p) === k)) return err('Un lieu identique (même nom, même position) existe déjà.');
@@ -726,7 +739,7 @@ function removeDuplicates(){
 /* ============ Export ============ */
 function buildExportText(){
   const lines = _POIS.map((p,i) => '  ' + JSON.stringify(p) + (i < _POIS.length-1 ? ',' : ''));
-  const head = "// M'IAM — Points d'intérêt de l'Île-aux-Moines\n// Pour modifier un POI : trouvez-le par son nom (Ctrl+F), modifiez les valeurs entre guillemets\n// Champs : name, lat, lon, cat, image, description, links, emoji, layer\n// RÈGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI\n\n";
+  const head = "// M'IAM — Points d'intérêt de l'Île-aux-Moines\n// Pour modifier un POI : trouvez-le par son nom (Ctrl+F), modifiez les valeurs entre guillemets\n// Champs : name, lat, lon, cat, image, description, links, emoji, layer, pmr, pmr_info\n// RÈGLE : ne jamais modifier les accolades { }, crochets [ ] ni les virgules entre POI\n\n";
   const tail = commentLines.length ? commentLines.join('\n') + '\n' : '';
   return head + "const POIS = [\n" + lines.join('\n') + '\n' + tail + '];\n';
 }
