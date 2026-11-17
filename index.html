@@ -159,6 +159,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--forest);color:var(--text)
   <div id="lp-header"><h2>Catégories</h2><button id="lp-close" onclick="toggleLayersPanel()">✕</button></div>
   <div id="lp-scroll">
     <div class="lg">
+      <div class="lg-title">Accessibilité</div>
+      <div class="lr" data-layer="pmr-only" onclick="togglePmr(this)"><div class="tog off"></div><div class="ld" style="background:#0057b8"></div><div class="ll">♿ Seulement les lieux accessibles PMR <span class="lc" id="pmr-count"></span></div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="lg">
       <div class="lg-title">Commerces &amp; Sites</div>
       <div class="lr" data-layer="poi-main" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#c0392b"></div><div class="ll">Restaurants, Bars, Hébergements…</div></div>
       <div class="lr" data-layer="poi-alim" onclick="toggleLayer(this)"><div class="tog off"></div><div class="ld" style="background:#8deb5e"></div><div class="ll">Alimentation, Commerces…</div></div>
@@ -392,6 +397,24 @@ function createMarker(poi) {
 }
 markers=POIS.map(createMarker);
 
+let pmrOnly=false;
+document.getElementById("pmr-count").textContent=POIS.filter(p=>p.pmr).length?`(${POIS.filter(p=>p.pmr).length})`:"";
+function markerVisible(m){
+  const p=m._poi;
+  return layerState[p.layer||"poi-main"] && (!pmrOnly || p.pmr);
+}
+function refreshMarkers(){
+  markers.forEach(m=>{ markerVisible(m)?m.addTo(map):map.removeLayer(m); });
+}
+function togglePmr(row){
+  pmrOnly=!pmrOnly;
+  const tog=row.querySelector(".tog");
+  tog.classList.toggle("on",pmrOnly);
+  tog.classList.toggle("off",!pmrOnly);
+  refreshMarkers();
+  if(pmrOnly) showAlert("♿ Seuls les lieux accessibles PMR des catégories cochées sont affichés");
+}
+
 function createPolyline(t) {
   const layerId=getTraceLayer(t);
   const opts={color:t.color,weight:t.weight||3,opacity:0.85};
@@ -411,11 +434,7 @@ function toggleLayer(row) {
   tog.classList.toggle("on",!isOn);
   tog.classList.toggle("off",isOn);
   layerState[layerId]=!isOn;
-  markers.forEach(m=>{
-    const mLayer=m._poi.layer||"poi-main";
-    if(mLayer!==layerId) return;
-    layerState[mLayer]?m.addTo(map):map.removeLayer(m);
-  });
+    refreshMarkers();
   polylines.forEach(p=>{
     if(p._layerId!==layerId) return;
     layerState[layerId]?p.addTo(map):map.removeLayer(p);
@@ -679,6 +698,7 @@ function doSearch(q) {
 }
 
 function selectSearchResult(idx) {
+  if (pmrOnly && !poi.pmr){ const r=document.querySelector('.lr[data-layer="pmr-only"]'); if(r) togglePmr(r); }
   const poi = POIS[idx];
   if (!poi) return;
   closeSearch();
@@ -705,6 +725,6 @@ document.addEventListener('keydown', e => {
 });
 </script>
 <div id="crealion"><img src="icons/crealion.png" alt="créalion" onerror="this.style.display='none'"></div>
-<div id="version-badge">v3.5.0</div>
+<div id="version-badge">v3.5.1</div>
 </body>
 </html>
