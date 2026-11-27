@@ -1,4 +1,4 @@
-const CACHE = "miam-iam-v3.5.4";
+const CACHE = "miam-iam-v3.5.5";
 
 const ASSETS = [
   "./",
