@@ -366,7 +366,7 @@ if('serviceWorker' in navigator){
 
 async function getWalkingDistance(lat1,lon1,lat2,lon2){
   try{
-    const r=await fetch("https://api.openrouteservice.org/v2/directions/foot-walking",{
+    const r=await fetch("https://api.heigit.org/openrouteservice/v2/directions/foot-walking",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":ORS_KEY},
       body:JSON.stringify({coordinates:[[lon1,lat1],[lon2,lat2]]})
